@@ -1,0 +1,157 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090c10">
+<title>CTE Draft Central — TV</title>
+<link rel="stylesheet" href="common.css">
+<style>
+body{overflow:hidden}.tv{height:100vh;display:grid;grid-template-rows:auto 1fr auto;gap:8px;padding:8px}
+.clock{min-width:260px}.clock .big{font:900 34px/1 monospace;margin:5px 0}.clock .owner{font-size:18px;font-weight:900}
+.clock-status{font-size:12px;font-weight:950;letter-spacing:.14em;color:var(--muted);margin-bottom:3px}
+.clock-status.pick-in{color:var(--gold2);animation:statusGlow .7s infinite alternate}
+@keyframes statusGlow{to{text-shadow:0 0 16px #f1cb6b}}
+.board-wrap{overflow:auto;padding:8px}.board{min-width:1180px;height:100%;display:grid;gap:6px}
+.round{display:grid;grid-template-columns:88px repeat(12,1fr);gap:4px;min-height:0}
+.round-label{display:flex;flex-direction:column;justify-content:center;align-items:center;border:1px solid var(--gold);border-radius:8px;background:#0d1116}
+.round-label b{font-size:30px}.pick{position:relative;background:linear-gradient(180deg,#1a2028,#11161c);border:1px solid #505a67;border-radius:7px;padding:5px;display:flex;flex-direction:column;min-height:110px;overflow:hidden}
+.pick.current{outline:3px solid var(--gold2);box-shadow:0 0 18px #d7a83d88}.pick.traded{border-color:var(--gold)}.trade{position:absolute;right:0;top:0;background:var(--gold);color:#111;font-size:9px;font-weight:900;padding:2px 5px;border-radius:0 6px 0 5px}
+.num{font-weight:900}.owner-name{font-size:12px;font-weight:900;color:var(--gold2);text-transform:uppercase;margin:2px 0 4px}
+.selection{margin-top:auto;background:#f3f5f7;color:#111;border-radius:5px;min-height:58px;padding:6px;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.player{font-size:14px;font-weight:950;line-height:1.05;text-transform:uppercase}.meta{font-size:11px;font-weight:800;margin-top:4px;color:#414a56}
+.bottom{display:flex;justify-content:space-between;align-items:center;padding:7px 12px;font-size:12px}
+.timer.warn{color:#ffcf61}.timer.danger{color:#ff6666;animation:pulse .7s infinite alternate}@keyframes pulse{to{opacity:.45}}
+.fullscreen-btn{position:fixed;right:18px;bottom:18px;z-index:50;background:#8d6819;color:#fff;border:1px solid #e3bf62;border-radius:9px;padding:10px 14px;font-weight:900;box-shadow:0 8px 24px #000a;cursor:pointer}
+.fullscreen-btn:hover{filter:brightness(1.15)}
+:fullscreen .fullscreen-btn{opacity:.28}
+:fullscreen .fullscreen-btn:hover{opacity:1}
+@media(max-width:900px){
+  body{overflow:auto}.tv{height:auto;min-height:calc(100vh - 76px);padding:7px}
+  .topbar{grid-template-columns:58px 1fr}.topbar .clock{grid-column:1/-1;min-width:0}
+  .board-wrap{overflow:auto;-webkit-overflow-scrolling:touch}
+  .board{min-width:1080px;min-height:620px}
+  .bottom{flex-direction:column;align-items:flex-start;gap:5px}
+  .fullscreen-btn{right:10px;bottom:calc(82px + var(--safe-bottom));padding:9px 11px;font-size:12px}
+}
+@media(max-width:480px){
+  .board{min-width:980px}.pick{min-height:105px}.brand .muted{font-size:10px}
+}
+:fullscreen .site-nav{display:none}
+:fullscreen body{padding-bottom:0}
+
+.content{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:8px}
+.side-panel{padding:10px;display:flex;flex-direction:column;min-height:0}.side-panel h3{margin:0 0 8px;color:var(--gold2);font-size:13px;letter-spacing:.13em;text-align:center}
+.up-next{display:grid;gap:7px}.next-card{border:1px solid #424c59;border-radius:9px;background:#0b0f14;padding:10px}.next-card:first-child{border-color:var(--gold);box-shadow:0 0 12px #d7a83d33}.next-pick{font-size:13px;font-weight:950}.next-owner{font-size:17px;font-weight:950;color:var(--gold2);margin-top:2px}.next-note{font-size:10px;color:var(--muted);margin-top:3px}
+.progress-wrap{margin-top:auto;padding-top:10px}.progress-label{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}.progress-bar{height:8px;background:#252c35;border-radius:99px;overflow:hidden;margin-top:5px}.progress-fill{height:100%;background:linear-gradient(90deg,#9b721e,var(--gold2));width:0%}
+.bottom{min-height:48px;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:0 12px;overflow:hidden}.ticker-label{color:#111;background:var(--gold);font-weight:950;font-size:11px;letter-spacing:.1em;padding:6px 9px;border-radius:5px;white-space:nowrap}.ticker-window{overflow:hidden;white-space:nowrap}.ticker-track{display:inline-flex;gap:32px;min-width:100%;align-items:center;animation:ticker 28s linear infinite}.ticker-item{font-size:13px;font-weight:800;color:#e3e7ed}.ticker-item b{color:var(--gold2)}@keyframes ticker{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+.suspense-overlay{position:fixed;inset:0;z-index:450;display:none;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at center,#2d2514 0,#0b0d11 48%,#050607 100%)}
+.suspense-overlay.show{display:flex;animation:overlayIn .3s ease-out}
+.suspense-card{width:min(980px,94vw);text-align:center;border:2px solid var(--gold);border-radius:18px;padding:34px 24px;background:linear-gradient(180deg,#171c23,#0a0d11);box-shadow:0 0 70px #d7a83d55,0 30px 90px #000}
+.suspense-title{font-size:clamp(42px,8vw,96px);font-weight:1000;color:var(--gold2);letter-spacing:.08em;text-shadow:0 0 30px #d7a83d55}
+.suspense-pick{font-size:clamp(22px,3vw,38px);font-weight:900;color:var(--silver);margin-top:18px}
+.suspense-owner{font-size:clamp(28px,5vw,58px);font-weight:1000;color:#fff;margin-top:8px}
+.suspense-note{margin-top:22px;color:var(--muted);font-size:15px;letter-spacing:.14em}
+.suspense-dot{display:inline-block;width:9px;height:9px;background:var(--gold2);border-radius:50%;margin:0 4px;animation:dotPulse 1s infinite alternate}
+.suspense-dot:nth-child(2){animation-delay:.2s}.suspense-dot:nth-child(3){animation-delay:.4s}
+@keyframes dotPulse{to{opacity:.25;transform:translateY(-4px)}}
+.pick-overlay{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at center,#2b2515 0,#0b0d11 48%,#050607 100%)}.pick-overlay.show{display:flex;animation:overlayIn .35s ease-out}@keyframes overlayIn{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:scale(1)}}
+.pick-announcement{width:min(980px,94vw);text-align:center;border:2px solid var(--gold);border-radius:18px;padding:28px 24px;background:linear-gradient(180deg,#171c23,#0a0d11);box-shadow:0 0 60px #d7a83d44,0 30px 90px #000}.announcement-logo{width:110px;height:110px;object-fit:cover;border-radius:50%;border:2px solid var(--gold);margin-bottom:12px}.pick-is-in{color:var(--gold2);font-size:clamp(24px,4vw,46px);font-weight:950;letter-spacing:.17em;margin-bottom:16px}.announcement-pick{color:var(--silver);font-size:clamp(18px,2.5vw,30px);font-weight:900}.announcement-owner{color:var(--gold2);font-size:clamp(24px,4vw,48px);font-weight:950;margin:6px 0 22px}.announcement-player{color:#fff;font-size:clamp(40px,7vw,88px);font-weight:1000;line-height:.96;text-transform:uppercase;text-shadow:0 3px 0 #000}.announcement-meta{color:var(--silver);font-size:clamp(20px,3vw,36px);font-weight:900;margin-top:15px}.announcement-nfl{color:var(--muted);font-size:15px;margin-top:9px}.announcement-progress{height:5px;background:#242b34;border-radius:99px;overflow:hidden;margin-top:24px}.announcement-progress span{display:block;height:100%;background:var(--gold2);width:100%;animation:announcementTimer 5s linear forwards}@keyframes announcementTimer{to{width:0%}}
+@media(max-width:1100px){.content{grid-template-columns:1fr}.side-panel{display:none}}@media(max-width:900px){.bottom{grid-template-columns:auto 1fr}.conn{display:none}}
+
+</style>
+<script src="draft-data.js"></script><script src="rookies.js"></script><script src="firebase-config.js"></script>
+</head><body>
+<nav class="site-nav" aria-label="Primary">
+  <div class="site-nav-inner">
+    <a class="nav-link NAV_HOME" href="index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
+    <a class="nav-link NAV_COUNTDOWN" href="countdown.html"><span class="nav-icon">⏳</span><span>Countdown</span></a>
+    <a class="nav-link NAV_BOARD active" href="tv.html"><span class="nav-icon">📺</span><span>Draft Board</span></a>
+    <a class="nav-link NAV_ADMIN" href="admin.html"><span class="nav-icon">🎙️</span><span>Commissioner</span></a>
+    <a class="nav-link NAV_HISTORY" href="history.html"><span class="nav-icon">🏆</span><span>Champions</span></a>
+  </div>
+</nav>
+
+<button id="fullscreenBtn" class="fullscreen-btn" type="button">⛶ FULL SCREEN</button>
+<div class="tv">
+<header class="panel topbar">
+<img src="cte-league-logo.png" class="logo">
+<div class="brand"><h1>CTE LEAGUE</h1><h2>2026 ROOKIE DRAFT</h2><div class="muted">COMMISSIONER BRENDAN BOWEN • 12 TEAMS • 4 ROUNDS • LINEAR</div></div>
+<div class="badge clock"><div id="clockStatus" class="clock-status">ON THE CLOCK</div><div id="pickNo" class="owner">1.01</div><div id="pickOwner" class="owner">Jesse</div><div id="timer" class="big timer">1:00</div></div>
+</header>
+<main class="content"><section class="panel board-wrap"><div id="board" class="board"></div></section><aside class="panel side-panel"><h3>UP NEXT</h3><div id="upNext" class="up-next"></div><div class="progress-wrap"><div class="progress-label"><span>DRAFT PROGRESS</span><span id="progressText">0 / 48</span></div><div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div></div></aside></main>
+<footer class="panel bottom"><span class="ticker-label">RECENT PICKS</span><div class="ticker-window"><div id="ticker" class="ticker-track"></div></div><span id="conn" class="conn">Connecting…</span></footer>
+</div>
+<div id="suspenseOverlay" class="suspense-overlay" aria-live="assertive">
+  <div class="suspense-card">
+    <img src="cte-league-logo.png" class="announcement-logo" alt="">
+    <div class="suspense-title">THE PICK IS IN</div>
+    <div id="suspensePick" class="suspense-pick"></div>
+    <div id="suspenseOwner" class="suspense-owner"></div>
+    <div class="suspense-note">SELECTION BEING PROCESSED <span class="suspense-dot"></span><span class="suspense-dot"></span><span class="suspense-dot"></span></div>
+  </div>
+</div>
+<div id="pickOverlay" class="pick-overlay" aria-live="assertive"><div class="pick-announcement"><img src="cte-league-logo.png" class="announcement-logo" alt=""><div class="pick-is-in">THE PICK IS IN</div><div id="announcePick" class="announcement-pick"></div><div id="announceOwner" class="announcement-owner"></div><div id="announcePlayer" class="announcement-player"></div><div id="announceMeta" class="announcement-meta"></div><div id="announceNFL" class="announcement-nfl"></div><div class="announcement-progress"><span></span></div></div></div>
+<script type="module">
+import {connectCTE} from './firebase-bridge.js';
+const owners=window.CTE_DRAFT_DATA.owners,traded=new Set(window.CTE_DRAFT_DATA.traded),picks=Object.keys(owners);
+let state={picks:{},meta:{currentIndex:0,seconds:60,running:false,lastTick:null,pickStatus:'on_clock'},history:{}};let initialized=false;let knownHistoryKeys=new Set();let overlayTimer=null;
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function calcSeconds(meta){
+  let s=Number(meta.seconds??60);
+  if(meta.running && meta.lastTick) s=Math.max(0,s-Math.floor((Date.now()-meta.lastTick)/1000));
+  return s;
+}
+function render(){
+  const b=document.getElementById('board');b.innerHTML='';
+  for(let r=1;r<=4;r++){const row=document.createElement('div');row.className='round';row.innerHTML=`<div class="round-label"><span>ROUND</span><b>${r}</b></div>`;
+    for(let i=1;i<=12;i++){const p=`${r}.${String(i).padStart(2,'0')}`,idx=picks.indexOf(p),d=state.picks?.[p]||{};
+      const c=document.createElement('div');c.className='pick'+(traded.has(p)?' traded':'')+(idx===Number(state.meta?.currentIndex||0)?' current':'');
+      c.innerHTML=`${traded.has(p)?'<div class="trade">TRADED</div>':''}<div class="num">${p}</div><div class="owner-name">${owners[p]}</div><div class="selection">${d.player?`<div class="player">${esc(d.player)}</div><div class="meta">${esc(d.pos)}${d.pos&&d.team?' • ':''}${esc(d.team)}${d.nflPick?` • NFL #${esc(d.nflPick)}`:''}</div>`:'—'}</div>`;
+      row.appendChild(c);}
+    b.appendChild(row);}
+  const idx=Number(state.meta?.currentIndex||0),p=picks[idx]||picks[0];document.getElementById('pickNo').textContent=p;document.getElementById('pickOwner').textContent=owners[p];
+const pickStatus=state.meta?.pickStatus||'on_clock';
+const statusEl=document.getElementById('clockStatus');
+statusEl.textContent=pickStatus==='pick_in'?'THE PICK IS IN':'ON THE CLOCK';
+statusEl.className='clock-status'+(pickStatus==='pick_in'?' pick-in':'');
+document.getElementById('suspensePick').textContent=`PICK ${p}`;
+document.getElementById('suspenseOwner').textContent=owners[p];
+document.getElementById('suspenseOverlay').classList.toggle('show',pickStatus==='pick_in');
+  renderUpNext();renderTicker();renderProgress();updateTimer();
+}
+function sortedHistory(){return Object.entries(state.history||{}).map(([key,value])=>({key,...value})).sort((a,b)=>(a.time||0)-(b.time||0));}
+function renderUpNext(){const idx=Number(state.meta?.currentIndex||0),el=document.getElementById('upNext'),up=picks.slice(idx+1,idx+4);el.innerHTML=up.length?up.map((p,i)=>`<div class="next-card"><div class="next-pick">${i===0?'NEXT: ':''}${p}</div><div class="next-owner">${esc(owners[p])}</div><div class="next-note">${traded.has(p)?'TRADED PICK':'ORIGINAL PICK'}</div></div>`).join(''):'<div class="status">No picks remaining.</div>';};
+function renderTicker(){const el=document.getElementById('ticker'),recent=sortedHistory().slice(-8).reverse();if(!recent.length){el.innerHTML='<span class="ticker-item">Draft results will appear here.</span>';return;}const items=recent.map(h=>`<span class="ticker-item"><b>${esc(h.pick)}</b> ${esc(owners[h.pick]||'')} — ${esc(h.player)} ${esc(h.pos||'')} ${esc(h.team||'')}</span>`).join('');el.innerHTML=items+items;};
+function renderProgress(){const drafted=Object.values(state.picks||{}).filter(d=>d?.player).length;document.getElementById('progressText').textContent=`${drafted} / ${picks.length}`;document.getElementById('progressFill').style.width=`${drafted/picks.length*100}%`;};
+function showAnnouncement(h){if(!h?.player)return;document.getElementById('suspenseOverlay').classList.remove('show');document.getElementById('announcePick').textContent=`WITH PICK ${h.pick}`;document.getElementById('announceOwner').textContent=owners[h.pick]||'';document.getElementById('announcePlayer').textContent=h.player;document.getElementById('announceMeta').textContent=[h.pos,h.team].filter(Boolean).join(' • ');document.getElementById('announceNFL').textContent=h.nflPick?`SELECTED #${h.nflPick} IN THE 2026 NFL DRAFT`:'';const o=document.getElementById('pickOverlay'),p=o.querySelector('.announcement-progress span');p.style.animation='none';void p.offsetWidth;p.style.animation='announcementTimer 5s linear forwards';o.classList.add('show');clearTimeout(overlayTimer);overlayTimer=setTimeout(()=>o.classList.remove('show'),5000);};
+function detectNewHistory(raw){const e=Object.entries(raw||{});if(!initialized){knownHistoryKeys=new Set(e.map(([k])=>k));initialized=true;return;}const fresh=e.filter(([k])=>!knownHistoryKeys.has(k)).map(([key,value])=>({key,...value})).sort((a,b)=>(a.time||0)-(b.time||0));e.forEach(([k])=>knownHistoryKeys.add(k));if(fresh.length)showAnnouncement(fresh[fresh.length-1]);};
+function updateTimer(){const s=calcSeconds(state.meta||{}),el=document.getElementById('timer');el.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;el.className='big timer'+(s<=10?' danger':s<=20?' warn':'')}
+setInterval(updateTimer,250);
+
+const fullscreenBtn=document.getElementById('fullscreenBtn');
+function updateFullscreenButton(){
+  fullscreenBtn.textContent=document.fullscreenElement?'✕ EXIT FULL SCREEN':'⛶ FULL SCREEN';
+}
+fullscreenBtn.addEventListener('click',async()=>{
+  try{
+    if(document.fullscreenElement){
+      await document.exitFullscreen();
+    }else{
+      await document.documentElement.requestFullscreen();
+    }
+  }catch(err){
+    alert('Full-screen mode was blocked by the browser. Press F11 instead.');
+  }
+});
+document.addEventListener('fullscreenchange',updateFullscreenButton);
+updateFullscreenButton();document.getElementById('pickOverlay').addEventListener('click',()=>document.getElementById('pickOverlay').classList.remove('show'));
+
+try{
+  const c=await connectCTE();
+  c.onValue(c.roomRef,s=>{
+    const raw=s.val()||{};detectNewHistory(raw.history);const normalized={...raw,picks:{},history:raw.history||{}};Object.entries(raw.picks||{}).forEach(([k,v])=>normalized.picks[k.replace('_','.')]=v);state=normalized;
+    render();
+    document.getElementById('conn').innerHTML='<span class="ok">LIVE</span>';
+  });
+}catch(e){
+  document.getElementById('conn').innerHTML='<span class="bad">'+esc(e.message)+'</span>';
+  render();
+}
+</script></body></html>

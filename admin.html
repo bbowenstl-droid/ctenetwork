@@ -1,0 +1,172 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090c10">
+<title>CTE Draft Central — Commissioner</title>
+<link rel="stylesheet" href="common.css">
+<style>
+body{min-height:100vh}.admin{max-width:900px;margin:auto}.topbar{grid-template-columns:76px 1fr}.logo{width:62px;height:62px}
+.cols{display:grid;grid-template-columns:1.1fr .9fr;gap:10px;margin-top:10px}.section{padding:14px}.section h3{margin:0 0 10px;color:var(--gold2)}
+.current{font-size:28px;font-weight:950}.owner{font-size:20px;color:var(--gold2);font-weight:900}.timer{font:900 52px/1 monospace;margin:10px 0}
+.controls{display:flex;gap:7px;flex-wrap:wrap}.form{display:grid;grid-template-columns:1fr 90px 90px;gap:7px}.history{max-height:360px;overflow:auto}.item{padding:8px 0;border-bottom:1px solid #27303a;font-size:13px}.item b{color:var(--gold2)}
+.picklist{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-height:320px;overflow:auto}.pickbtn{padding:8px;background:#141a21;border:1px solid #414b57;color:#fff;border-radius:7px}.pickbtn.active{border-color:var(--gold);background:#453713}
+.status-control{margin:12px 0;padding:12px;border:1px solid #4a5563;border-radius:11px;background:#0b0f14}
+.status-control h4{margin:0 0 8px;color:var(--gold2);letter-spacing:.1em}
+.status-display{font-size:13px;color:var(--muted);margin-bottom:9px}
+.btn.pick-in{background:#9b721e;border-color:#f1cb6b;box-shadow:0 0 14px #d7a83d55}
+.btn.pick-in.active{background:#d7a83d;color:#111;border-color:#ffe39a;animation:statusPulse .8s infinite alternate}
+@keyframes statusPulse{to{box-shadow:0 0 26px #f1cb6b99}}
+.search-wrap{position:relative}.suggestions{position:absolute;z-index:20;left:0;right:0;top:100%;background:#10151b;border:1px solid var(--gold);border-radius:8px;max-height:280px;overflow:auto;display:none;box-shadow:0 16px 35px #000c}.suggestions.show{display:block}.suggestion{padding:10px;border-bottom:1px solid #29313a;cursor:pointer}.suggestion:hover,.suggestion.selected{background:#3c3117}.suggestion b{display:block}.suggestion small{color:#b7c0cc}.pool-count{font-size:12px;color:var(--gold2);margin:6px 0}.manual-row{display:none;margin-top:8px}.manual-row.show{display:grid}
+@media(max-width:700px){
+  .shell.admin{padding:10px 10px 30px}.topbar{position:sticky;top:0;z-index:30}
+  .cols{grid-template-columns:1fr}.section{padding:13px}
+  .current{font-size:34px}.owner{font-size:24px}.timer{font-size:64px;text-align:center}
+  .controls{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .controls .btn,.controls button{width:100%;min-height:48px}
+  .form{grid-template-columns:1fr 78px 78px}
+  .picklist{grid-template-columns:repeat(3,1fr);max-height:none}
+  .pickbtn{min-height:48px;font-size:12px}
+  .history{max-height:none}
+  .suggestions{position:fixed;left:10px;right:10px;top:22%;max-height:55vh}
+}
+@media(max-width:410px){
+  .picklist{grid-template-columns:repeat(2,1fr)}
+  .form{grid-template-columns:1fr 70px 70px}
+}
+</style>
+<script src="draft-data.js"></script><script src="rookies.js"></script><script src="firebase-config.js"></script>
+</head><body>
+<nav class="site-nav" aria-label="Primary">
+  <div class="site-nav-inner">
+    <a class="nav-link NAV_HOME" href="index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
+    <a class="nav-link NAV_COUNTDOWN" href="countdown.html"><span class="nav-icon">⏳</span><span>Countdown</span></a>
+    <a class="nav-link NAV_BOARD" href="tv.html"><span class="nav-icon">📺</span><span>Draft Board</span></a>
+    <a class="nav-link NAV_ADMIN active" href="admin.html"><span class="nav-icon">🎙️</span><span>Commissioner</span></a>
+    <a class="nav-link NAV_HISTORY" href="history.html"><span class="nav-icon">🏆</span><span>Champions</span></a>
+  </div>
+</nav>
+<div class="shell admin">
+<header class="panel topbar"><img src="cte-league-logo.png" class="logo"><div class="brand"><h1>CTE DRAFT CENTRAL</h1><h2>COMMISSIONER CONTROL</h2></div></header>
+<div class="cols">
+<section class="panel section">
+<h3>ON THE CLOCK</h3><div id="current" class="current">1.01</div><div id="owner" class="owner">Jesse</div><div id="timer" class="timer">1:00</div>
+<div class="controls"><button class="btn gold" id="start">Start</button><button class="btn" id="pause">Pause</button><button class="btn" id="reset">Reset</button><button class="btn" id="next">Next Pick</button></div>
+<div class="status-control">
+  <h4>CURRENT PICK STATUS</h4>
+  <div id="pickStatusDisplay" class="status-display">ON THE CLOCK</div>
+  <div class="controls">
+    <button class="btn pick-in" id="markPickIn">THE PICK IS IN</button>
+    <button class="btn" id="backOnClock">BACK ON THE CLOCK</button>
+  </div>
+</div>
+<hr style="border-color:#29313b">
+<h3>SEARCH ROOKIE</h3>
+<div class="search-wrap">
+  <input id="rookieSearch" placeholder="Start typing a player name…" autocomplete="off">
+  <div id="suggestions" class="suggestions"></div>
+</div>
+<div id="poolCount" class="pool-count"></div>
+<div id="chosen" class="status">No player selected.</div>
+<div class="controls" style="margin-top:8px">
+  <button class="btn green" id="save">Draft Selected Player</button>
+  <button class="btn" id="manualToggle">Manual Write-In</button>
+  <button class="btn" id="clear">Clear Pick</button>
+</div>
+<div id="manualRow" class="form manual-row"><input id="player" placeholder="Player name"><input id="pos" placeholder="POS"><input id="team" placeholder="NFL"></div>
+<div id="status" class="status" style="margin-top:8px">Connecting…</div>
+</section>
+<section class="panel section">
+<h3>SELECT ANY PICK</h3><div id="picklist" class="picklist"></div>
+<hr style="border-color:#29313b"><h3>DRAFT HISTORY</h3><div id="history" class="history"></div>
+</section>
+</div>
+<section class="panel section" style="margin-top:10px"><h3>TOOLS</h3><div class="controls"><button class="btn" id="export">Export CSV</button><button class="btn red" id="resetDraft">Reset Entire Draft</button><a class="btn" href="tv.html" target="_blank">Open TV Board</a><a class="btn" href="countdown.html" target="_blank">Open Countdown</a></div></section>
+</div>
+<script type="module">
+import {connectCTE} from './firebase-bridge.js';
+const owners=window.CTE_DRAFT_DATA.owners,picks=Object.keys(owners),rookies=window.CTE_ROOKIES||[];
+let c,state={picks:{},meta:{currentIndex:0,seconds:60,running:false,lastTick:null,pickStatus:'on_clock'},history:{}};
+let selectedRookie=null, suggestionIndex=-1;
+const $=id=>document.getElementById(id);
+function calcSeconds(m){let s=Number(m.seconds??60);if(m.running&&m.lastTick)s=Math.max(0,s-Math.floor((Date.now()-m.lastTick)/1000));return s}
+function render(){const idx=Number(state.meta?.currentIndex||0),p=picks[idx]||picks[0],s=calcSeconds(state.meta||{});
+$('current').textContent=p;$('owner').textContent=owners[p];$('timer').textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+const pickStatus=state.meta?.pickStatus||'on_clock';
+$('pickStatusDisplay').textContent=pickStatus==='pick_in'?'THE PICK IS IN':'ON THE CLOCK';
+$('markPickIn').classList.toggle('active',pickStatus==='pick_in');
+$('timer').style.color=s<=10?'#ff6666':s<=20?'#ffcf61':'#fff';
+document.querySelectorAll('.pickbtn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+const d=state.picks?.[p]||{};
+if(d.player && !selectedRookie){
+  $('chosen').textContent=`Current selection: ${d.player} — ${d.pos||''} ${d.team||''}`;
+}
+renderPoolCount();
+const hist=Object.values(state.history||{}).sort((a,b)=>(a.time||0)-(b.time||0));$('history').innerHTML=hist.map(h=>`<div class="item"><b>${h.pick} ${owners[h.pick]}</b><br>${h.player||''} ${h.pos||''} ${h.team||''}</div>`).join('')||'<div class="status">No picks yet.</div>'}
+
+function draftedNames(){
+  return new Set(Object.values(state.picks||{}).map(d=>(d.player||'').toLowerCase()).filter(Boolean));
+}
+function availableRookies(query=''){
+  const drafted=draftedNames(),q=query.trim().toLowerCase();
+  return rookies.filter(r=>!drafted.has(r.name.toLowerCase()) && (!q || r.name.toLowerCase().includes(q) || r.pos.toLowerCase().includes(q) || r.team.toLowerCase().includes(q))).slice(0,12);
+}
+function renderPoolCount(){
+  const remaining=rookies.length-draftedNames().size;
+  $('poolCount').textContent=`${remaining} of ${rookies.length} preloaded rookies available`;
+}
+function chooseRookie(r){
+  selectedRookie=r;suggestionIndex=-1;
+  $('rookieSearch').value=r.name;
+  $('chosen').textContent=`Selected: ${r.name} — ${r.pos} • ${r.team} • NFL pick #${r.pick}`;
+  $('suggestions').classList.remove('show');
+}
+function renderSuggestions(){
+  const list=availableRookies($('rookieSearch').value),box=$('suggestions');
+  box.innerHTML=list.map((r,i)=>`<div class="suggestion ${i===suggestionIndex?'selected':''}" data-i="${i}"><b>${r.name}</b><small>${r.pos} • ${r.team} • NFL pick #${r.pick}</small></div>`).join('');
+  box.classList.toggle('show',list.length>0 && document.activeElement===$('rookieSearch'));
+  box.querySelectorAll('.suggestion').forEach(el=>el.onclick=()=>chooseRookie(list[Number(el.dataset.i)]));
+}
+function makePickButtons(){const el=$('picklist');picks.forEach((p,i)=>{const b=document.createElement('button');b.className='pickbtn';b.textContent=`${p} ${owners[p]}`;b.onclick=()=>c.update(c.metaRef,{currentIndex:i,pickStatus:'on_clock'});el.appendChild(b)})}
+async function setTimer(patch){const m=state.meta||{},s=calcSeconds(m);await c.update(c.metaRef,{seconds:s,...patch,lastTick:patch.running?Date.now():null})}
+$('start').onclick=()=>setTimer({running:true,pickStatus:'on_clock'});
+$('pause').onclick=()=>setTimer({running:false});
+$('reset').onclick=()=>c.update(c.metaRef,{seconds:60,running:false,lastTick:null,pickStatus:'on_clock'});
+$('markPickIn').onclick=async()=>{
+  const s=calcSeconds(state.meta||{});
+  await c.update(c.metaRef,{pickStatus:'pick_in',running:false,seconds:s,lastTick:null});
+};
+$('backOnClock').onclick=()=>c.update(c.metaRef,{pickStatus:'on_clock'});
+$('next').onclick=()=>{const i=Math.min(picks.length-1,Number(state.meta?.currentIndex||0)+1);c.update(c.metaRef,{currentIndex:i,seconds:60,running:false,lastTick:null,pickStatus:'on_clock'})};
+$('save').onclick=async()=>{
+  const idx=Number(state.meta?.currentIndex||0),p=picks[idx];
+  const manual=$('manualRow').classList.contains('show');
+  let player,pos,team,nflPick=null;
+  if(manual){
+    player=$('player').value.trim();pos=$('pos').value.trim().toUpperCase();team=$('team').value.trim().toUpperCase();
+  }else if(selectedRookie){
+    ({name:player,pos,team,pick:nflPick}=selectedRookie);
+  }
+  if(!player)return alert('Select a rookie or use Manual Write-In.');
+  await c.set(c.ref(c.db,`rooms/${c.room}/picks/${p.replace('.','_')}`),{player,pos,team,nflPick});
+  await c.push(c.historyRef,{pick:p,player,pos,team,nflPick,time:Date.now()});
+  selectedRookie=null;$('rookieSearch').value='';$('chosen').textContent='No player selected.';
+  $('player').value='';$('pos').value='';$('team').value='';
+  const ni=Math.min(picks.length-1,idx+1);
+  await c.update(c.metaRef,{currentIndex:ni,seconds:60,running:false,lastTick:null,pickStatus:'on_clock'});
+};
+$('clear').onclick=async()=>{const p=picks[Number(state.meta?.currentIndex||0)];await c.remove(c.ref(c.db,`rooms/${c.room}/picks/${p.replace('.','_')}`))};
+$('export').onclick=()=>{let rows=[['Pick','Owner','Player','Position','NFL Team']];picks.forEach(p=>{const d=state.picks?.[p]||{};rows.push([p,owners[p],d.player||'',d.pos||'',d.team||''])});const csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='CTE_2026_Draft_Results.csv';a.click()};
+$('resetDraft').onclick=async()=>{if(confirm('Erase the entire draft?'))await c.set(c.roomRef,{picks:{},history:{},meta:{currentIndex:0,seconds:60,running:false,lastTick:null,pickStatus:'on_clock'}})};
+
+$('rookieSearch').addEventListener('input',()=>{selectedRookie=null;suggestionIndex=-1;$('chosen').textContent='No player selected.';renderSuggestions()});
+$('rookieSearch').addEventListener('focus',renderSuggestions);
+$('rookieSearch').addEventListener('keydown',e=>{
+  const list=availableRookies($('rookieSearch').value);
+  if(e.key==='ArrowDown'){e.preventDefault();suggestionIndex=Math.min(list.length-1,suggestionIndex+1);renderSuggestions()}
+  else if(e.key==='ArrowUp'){e.preventDefault();suggestionIndex=Math.max(0,suggestionIndex-1);renderSuggestions()}
+  else if(e.key==='Enter'&&list.length){e.preventDefault();chooseRookie(list[Math.max(0,suggestionIndex)])}
+  else if(e.key==='Escape')$('suggestions').classList.remove('show');
+});
+document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))$('suggestions').classList.remove('show')});
+$('manualToggle').onclick=()=>{$('manualRow').classList.toggle('show');selectedRookie=null;$('chosen').textContent=$('manualRow').classList.contains('show')?'Manual write-in mode.':'No player selected.'};
+setInterval(()=>render(),250);
+try{c=await connectCTE();makePickButtons();c.onValue(c.roomRef,s=>{const raw=s.val()||{};const normalized={...raw,picks:{}};Object.entries(raw.picks||{}).forEach(([k,v])=>normalized.picks[k.replace('_','.')]=v);state=normalized;render();$('status').innerHTML='<span class="ok">LIVE — phone and TV are synced.</span>'})}catch(e){$('status').innerHTML='<span class="bad">'+e.message+'</span>'}
+</script></body></html>
