@@ -14,6 +14,17 @@ body{min-height:100vh}.admin{max-width:900px;margin:auto}.topbar{grid-template-c
 .btn.pick-in{background:#9b721e;border-color:#f1cb6b;box-shadow:0 0 14px #d7a83d55}
 .btn.pick-in.active{background:#d7a83d;color:#111;border-color:#ffe39a;animation:statusPulse .8s infinite alternate}
 @keyframes statusPulse{to{box-shadow:0 0 26px #f1cb6b99}}
+.goodell-box{margin-top:12px;padding:13px;border:1px solid var(--gold);border-radius:11px;background:linear-gradient(180deg,#201b10,#0b0f14)}
+.goodell-box h4{margin:0 0 7px;color:var(--gold2);letter-spacing:.11em}
+.goodell-copy{font-size:12px;color:var(--muted);line-height:1.4;margin-bottom:9px}
+.goodell-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.goodell-actions .btn{width:100%}
+#finalizeGoodell,#cancelGoodell{display:none}
+.goodell-active #stageGoodell{display:none}
+.goodell-active #finalizeGoodell,.goodell-active #cancelGoodell{display:flex}
+.goodell-active{box-shadow:0 0 22px #d7a83d44}
+.goodell-summary{font-size:13px;font-weight:800;color:#fff;margin:8px 0;display:none}
+.goodell-active .goodell-summary{display:block}
 .search-wrap{position:relative}.suggestions{position:absolute;z-index:20;left:0;right:0;top:100%;background:#10151b;border:1px solid var(--gold);border-radius:8px;max-height:280px;overflow:auto;display:none;box-shadow:0 16px 35px #000c}.suggestions.show{display:block}.suggestion{padding:10px;border-bottom:1px solid #29313a;cursor:pointer}.suggestion:hover,.suggestion.selected{background:#3c3117}.suggestion b{display:block}.suggestion small{color:#b7c0cc}.pool-count{font-size:12px;color:var(--gold2);margin:6px 0}.manual-row{display:none;margin-top:8px}.manual-row.show{display:grid}
 @media(max-width:700px){
   .shell.admin{padding:10px 10px 30px}.topbar{position:sticky;top:0;z-index:30}
@@ -71,6 +82,18 @@ body{min-height:100vh}.admin{max-width:900px;margin:auto}.topbar{grid-template-c
   <button class="btn" id="clear">Clear Pick</button>
 </div>
 <div id="manualRow" class="form manual-row"><input id="player" placeholder="Player name"><input id="pos" placeholder="POS"><input id="team" placeholder="NFL"></div>
+
+<div id="goodellBox" class="goodell-box">
+  <h4>GOODELL MODE</h4>
+  <div class="goodell-copy">Stages the selected player on the TV, reads the formal announcement, and reveals the pick before you finalize it.</div>
+  <div id="goodellSummary" class="goodell-summary"></div>
+  <div class="goodell-actions">
+    <button class="btn gold" id="stageGoodell">🎙️ Start Goodell Reveal</button>
+    <button class="btn green" id="finalizeGoodell">✓ Finalize Pick</button>
+    <button class="btn red" id="cancelGoodell">Cancel Reveal</button>
+  </div>
+</div>
+
 <div id="status" class="status" style="margin-top:8px">Connecting…</div>
 </section>
 <section class="panel section">
@@ -83,7 +106,7 @@ body{min-height:100vh}.admin{max-width:900px;margin:auto}.topbar{grid-template-c
 <script type="module">
 import {connectCTE} from './firebase-bridge.js';
 const owners=window.CTE_DRAFT_DATA.owners,picks=Object.keys(owners),rookies=window.CTE_ROOKIES||[];
-let c,state={picks:{},meta:{currentIndex:0,seconds:60,running:false,lastTick:null,pickStatus:'on_clock'},history:{}};
+let c,state={picks:{},meta:{currentIndex:0,seconds:60,running:false,lastTick:null,pickStatus:'on_clock',goodell:null},history:{}};
 let selectedRookie=null, suggestionIndex=-1;
 const $=id=>document.getElementById(id);
 function calcSeconds(m){let s=Number(m.seconds??60);if(m.running&&m.lastTick)s=Math.max(0,s-Math.floor((Date.now()-m.lastTick)/1000));return s}
@@ -124,7 +147,33 @@ function renderSuggestions(){
   box.classList.toggle('show',list.length>0 && document.activeElement===$('rookieSearch'));
   box.querySelectorAll('.suggestion').forEach(el=>el.onclick=()=>chooseRookie(list[Number(el.dataset.i)]));
 }
-function makePickButtons(){const el=$('picklist');picks.forEach((p,i)=>{const b=document.createElement('button');b.className='pickbtn';b.textContent=`${p} ${owners[p]}`;b.onclick=()=>c.update(c.metaRef,{currentIndex:i,pickStatus:'on_clock'});el.appendChild(b)})}
+function getCandidate(){
+  const manual=$('manualRow').classList.contains('show');
+  if(manual){
+    return {
+      player:$('player').value.trim(),
+      pos:$('pos').value.trim().toUpperCase(),
+      team:$('team').value.trim().toUpperCase(),
+      nflPick:null
+    };
+  }
+  if(selectedRookie){
+    return {
+      player:selectedRookie.name,
+      pos:selectedRookie.pos,
+      team:selectedRookie.team,
+      nflPick:selectedRookie.pick
+    };
+  }
+  return null;
+}
+function clearCandidate(){
+  selectedRookie=null;
+  $('rookieSearch').value='';
+  $('chosen').textContent='No player selected.';
+  $('player').value='';$('pos').value='';$('team').value='';
+}
+function makePickButtons(){const el=$('picklist');picks.forEach((p,i)=>{const b=document.createElement('button');b.className='pickbtn';b.textContent=`${p} ${owners[p]}`;b.onclick=()=>c.update(c.metaRef,{currentIndex:i,pickStatus:'on_clock',goodell:null});el.appendChild(b)})}
 async function setTimer(patch){const m=state.meta||{},s=calcSeconds(m);await c.update(c.metaRef,{seconds:s,...patch,lastTick:patch.running?Date.now():null})}
 $('start').onclick=()=>setTimer({running:true,pickStatus:'on_clock'});
 $('pause').onclick=()=>setTimer({running:false});
@@ -133,28 +182,69 @@ $('markPickIn').onclick=async()=>{
   const s=calcSeconds(state.meta||{});
   await c.update(c.metaRef,{pickStatus:'pick_in',running:false,seconds:s,lastTick:null});
 };
-$('backOnClock').onclick=()=>c.update(c.metaRef,{pickStatus:'on_clock'});
-$('next').onclick=()=>{const i=Math.min(picks.length-1,Number(state.meta?.currentIndex||0)+1);c.update(c.metaRef,{currentIndex:i,seconds:60,running:false,lastTick:null,pickStatus:'on_clock'})};
+$('backOnClock').onclick=()=>c.update(c.metaRef,{pickStatus:'on_clock',goodell:null});
+$('next').onclick=()=>{const i=Math.min(picks.length-1,Number(state.meta?.currentIndex||0)+1);c.update(c.metaRef,{currentIndex:i,seconds:60,running:false,lastTick:null,pickStatus:'on_clock',goodell:null})};
 $('save').onclick=async()=>{
   const idx=Number(state.meta?.currentIndex||0),p=picks[idx];
-  const manual=$('manualRow').classList.contains('show');
-  let player,pos,team,nflPick=null;
-  if(manual){
-    player=$('player').value.trim();pos=$('pos').value.trim().toUpperCase();team=$('team').value.trim().toUpperCase();
-  }else if(selectedRookie){
-    ({name:player,pos,team,pick:nflPick}=selectedRookie);
-  }
-  if(!player)return alert('Select a rookie or use Manual Write-In.');
+  const candidate=getCandidate();
+  if(!candidate?.player)return alert('Select a rookie or use Manual Write-In.');
+  const {player,pos,team,nflPick}=candidate;
   await c.set(c.ref(c.db,`rooms/${c.room}/picks/${p.replace('.','_')}`),{player,pos,team,nflPick});
-  await c.push(c.historyRef,{pick:p,player,pos,team,nflPick,time:Date.now()});
-  selectedRookie=null;$('rookieSearch').value='';$('chosen').textContent='No player selected.';
-  $('player').value='';$('pos').value='';$('team').value='';
+  await c.push(c.historyRef,{pick:p,player,pos,team,nflPick,time:Date.now(),mode:'quick'});
+  clearCandidate();
   const ni=Math.min(picks.length-1,idx+1);
-  await c.update(c.metaRef,{currentIndex:ni,seconds:60,running:false,lastTick:null,pickStatus:'on_clock'});
+  await c.update(c.metaRef,{currentIndex:ni,seconds:60,running:false,lastTick:null,pickStatus:'on_clock',goodell:null});
+};
+
+$('stageGoodell').onclick=async()=>{
+  const idx=Number(state.meta?.currentIndex||0),pick=picks[idx];
+  const candidate=getCandidate();
+  if(!candidate?.player)return alert('Select a rookie or use Manual Write-In first.');
+  const seconds=calcSeconds(state.meta||{});
+  await c.update(c.metaRef,{
+    running:false,
+    seconds,
+    lastTick:null,
+    pickStatus:'goodell',
+    goodell:{
+      active:true,
+      token:`${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      startedAt:Date.now(),
+      pick,
+      owner:owners[pick],
+      player:candidate.player,
+      pos:candidate.pos||'',
+      team:candidate.team||'',
+      nflPick:candidate.nflPick||null
+    }
+  });
+};
+$('finalizeGoodell').onclick=async()=>{
+  const g=state.meta?.goodell;
+  if(!g?.active)return alert('No Goodell reveal is staged.');
+  const currentPick=picks[Number(state.meta?.currentIndex||0)];
+  if(g.pick!==currentPick && !confirm(`The staged reveal is for ${g.pick}, but ${currentPick} is selected. Finalize ${g.pick} anyway?`))return;
+  await c.set(c.ref(c.db,`rooms/${c.room}/picks/${g.pick.replace('.','_')}`),{
+    player:g.player,pos:g.pos||'',team:g.team||'',nflPick:g.nflPick||null
+  });
+  await c.push(c.historyRef,{
+    pick:g.pick,player:g.player,pos:g.pos||'',team:g.team||'',nflPick:g.nflPick||null,
+    time:Date.now(),mode:'goodell'
+  });
+  clearCandidate();
+  const currentIndex=picks.indexOf(g.pick);
+  const nextIndex=Math.min(picks.length-1,currentIndex+1);
+  await c.update(c.metaRef,{
+    currentIndex:nextIndex,seconds:60,running:false,lastTick:null,
+    pickStatus:'on_clock',goodell:null
+  });
+};
+$('cancelGoodell').onclick=async()=>{
+  await c.update(c.metaRef,{pickStatus:'pick_in',goodell:null});
 };
 $('clear').onclick=async()=>{const p=picks[Number(state.meta?.currentIndex||0)];await c.remove(c.ref(c.db,`rooms/${c.room}/picks/${p.replace('.','_')}`))};
 $('export').onclick=()=>{let rows=[['Pick','Owner','Player','Position','NFL Team']];picks.forEach(p=>{const d=state.picks?.[p]||{};rows.push([p,owners[p],d.player||'',d.pos||'',d.team||''])});const csv=rows.map(r=>r.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='CTE_2026_Draft_Results.csv';a.click()};
-$('resetDraft').onclick=async()=>{if(confirm('Erase the entire draft?'))await c.set(c.roomRef,{picks:{},history:{},meta:{currentIndex:0,seconds:60,running:false,lastTick:null,pickStatus:'on_clock'}})};
+$('resetDraft').onclick=async()=>{if(confirm('Erase the entire draft?'))await c.set(c.roomRef,{picks:{},history:{},meta:{currentIndex:0,seconds:60,running:false,lastTick:null,pickStatus:'on_clock',goodell:null}})};
 
 $('rookieSearch').addEventListener('input',()=>{selectedRookie=null;suggestionIndex=-1;$('chosen').textContent='No player selected.';renderSuggestions()});
 $('rookieSearch').addEventListener('focus',renderSuggestions);

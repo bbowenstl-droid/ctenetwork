@@ -137,3 +137,30 @@ DEPLOYMENT
    c. Confirm the TV displays the suspense slate.
    d. Submit a player.
    e. Confirm the player reveal animation appears.
+
+
+VERSION 4.3 — GOODELL MODE
+WORKFLOW
+1. Select a rookie on the commissioner page.
+2. Optionally press THE PICK IS IN first for the suspense slate.
+3. Press START GOODELL REVEAL.
+4. The TV runs a three-stage formal announcement:
+   - “With the ___ pick...”
+   - Owner name and “selects...”
+   - Player, position, NFL team, and NFL draft number
+5. Press FINALIZE PICK on the commissioner page after the reveal.
+6. The pick is added to the board and ticker, and the next owner goes on the clock.
+
+TV AUDIO
+- Click ENABLE ANNOUNCER once on the TV page.
+- This browser permission step enables text-to-speech.
+- The preference is saved in that browser.
+- Goodell Mode still works visually when audio is disabled.
+
+STANDARD QUICK PICKS
+- “Draft Selected Player” remains available and immediately records a pick without Goodell Mode.
+
+DEPLOYMENT
+Upload every file from this folder to the root of the GitHub repository, replacing existing files.
+GitHub Pages will republish automatically.
+Hard-refresh admin.html and tv.html after the deployment finishes.

@@ -51,6 +51,39 @@ body{overflow:hidden}.tv{height:100vh;display:grid;grid-template-rows:auto 1fr a
 .suspense-dot{display:inline-block;width:9px;height:9px;background:var(--gold2);border-radius:50%;margin:0 4px;animation:dotPulse 1s infinite alternate}
 .suspense-dot:nth-child(2){animation-delay:.2s}.suspense-dot:nth-child(3){animation-delay:.4s}
 @keyframes dotPulse{to{opacity:.25;transform:translateY(-4px)}}
+.goodell-overlay{
+  position:fixed;inset:0;z-index:700;display:none;align-items:center;justify-content:center;
+  padding:22px;background:
+    radial-gradient(circle at center,#2d2514 0,#0a0d11 52%,#040506 100%);
+}
+.goodell-overlay.show{display:flex}
+.goodell-stage{
+  width:min(1100px,95vw);min-height:min(650px,88vh);
+  border:2px solid var(--gold);border-radius:20px;
+  background:linear-gradient(180deg,#181d24,#090c10);
+  box-shadow:0 0 80px #d7a83d44,0 35px 100px #000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:30px;overflow:hidden;position:relative
+}
+.goodell-stage:before{
+  content:"";position:absolute;inset:0;opacity:.12;
+  background:repeating-linear-gradient(135deg,transparent 0 24px,#d7a83d 25px 26px);
+  pointer-events:none
+}
+.goodell-logo{width:115px;height:115px;object-fit:cover;border-radius:50%;border:2px solid var(--gold);z-index:1}
+.goodell-kicker{z-index:1;color:var(--gold2);font-size:clamp(17px,2.5vw,28px);font-weight:950;letter-spacing:.18em;margin-top:16px}
+.goodell-main{z-index:1;font-size:clamp(38px,7vw,86px);font-weight:1000;line-height:.98;margin-top:18px;text-transform:uppercase}
+.goodell-sub{z-index:1;font-size:clamp(22px,4vw,48px);font-weight:950;color:var(--gold2);margin-top:16px}
+.goodell-detail{z-index:1;font-size:clamp(17px,2.5vw,30px);font-weight:850;color:var(--silver);margin-top:12px}
+.goodell-wait{z-index:1;color:var(--muted);letter-spacing:.13em;margin-top:24px;font-size:13px}
+.goodell-audio{
+  position:fixed;left:18px;bottom:58px;z-index:760;background:#8d6819;color:#fff;
+  border:1px solid #e3bf62;border-radius:9px;padding:9px 12px;font-weight:900;cursor:pointer
+}
+.goodell-audio.enabled{background:#245d3b;border-color:#57b77a}
+.goodell-phase{display:none}
+.goodell-phase.show{display:block;animation:goodellFade .45s ease-out}
+@keyframes goodellFade{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
 .pick-overlay{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;padding:24px;background:radial-gradient(circle at center,#2b2515 0,#0b0d11 48%,#050607 100%)}.pick-overlay.show{display:flex;animation:overlayIn .35s ease-out}@keyframes overlayIn{from{opacity:0;transform:scale(1.03)}to{opacity:1;transform:scale(1)}}
 .pick-announcement{width:min(980px,94vw);text-align:center;border:2px solid var(--gold);border-radius:18px;padding:28px 24px;background:linear-gradient(180deg,#171c23,#0a0d11);box-shadow:0 0 60px #d7a83d44,0 30px 90px #000}.announcement-logo{width:110px;height:110px;object-fit:cover;border-radius:50%;border:2px solid var(--gold);margin-bottom:12px}.pick-is-in{color:var(--gold2);font-size:clamp(24px,4vw,46px);font-weight:950;letter-spacing:.17em;margin-bottom:16px}.announcement-pick{color:var(--silver);font-size:clamp(18px,2.5vw,30px);font-weight:900}.announcement-owner{color:var(--gold2);font-size:clamp(24px,4vw,48px);font-weight:950;margin:6px 0 22px}.announcement-player{color:#fff;font-size:clamp(40px,7vw,88px);font-weight:1000;line-height:.96;text-transform:uppercase;text-shadow:0 3px 0 #000}.announcement-meta{color:var(--silver);font-size:clamp(20px,3vw,36px);font-weight:900;margin-top:15px}.announcement-nfl{color:var(--muted);font-size:15px;margin-top:9px}.announcement-progress{height:5px;background:#242b34;border-radius:99px;overflow:hidden;margin-top:24px}.announcement-progress span{display:block;height:100%;background:var(--gold2);width:100%;animation:announcementTimer 5s linear forwards}@keyframes announcementTimer{to{width:0%}}
 @media(max-width:1100px){.content{grid-template-columns:1fr}.side-panel{display:none}}@media(max-width:900px){.bottom{grid-template-columns:auto 1fr}.conn{display:none}}
@@ -68,6 +101,7 @@ body{overflow:hidden}.tv{height:100vh;display:grid;grid-template-rows:auto 1fr a
   </div>
 </nav>
 
+<button id="audioBtn" class="goodell-audio" type="button">🔇 ENABLE ANNOUNCER</button>
 <button id="fullscreenBtn" class="fullscreen-btn" type="button">⛶ FULL SCREEN</button>
 <div class="tv">
 <header class="panel topbar">
@@ -78,6 +112,27 @@ body{overflow:hidden}.tv{height:100vh;display:grid;grid-template-rows:auto 1fr a
 <main class="content"><section class="panel board-wrap"><div id="board" class="board"></div></section><aside class="panel side-panel"><h3>UP NEXT</h3><div id="upNext" class="up-next"></div><div class="progress-wrap"><div class="progress-label"><span>DRAFT PROGRESS</span><span id="progressText">0 / 48</span></div><div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div></div></aside></main>
 <footer class="panel bottom"><span class="ticker-label">RECENT PICKS</span><div class="ticker-window"><div id="ticker" class="ticker-track"></div></div><span id="conn" class="conn">Connecting…</span></footer>
 </div>
+<div id="goodellOverlay" class="goodell-overlay" aria-live="assertive">
+  <div class="goodell-stage">
+    <img src="cte-league-logo.png" class="goodell-logo" alt="">
+    <div id="goodellPhase1" class="goodell-phase">
+      <div class="goodell-kicker">2026 CTE LEAGUE ROOKIE DRAFT</div>
+      <div id="goodellPickLine" class="goodell-main"></div>
+    </div>
+    <div id="goodellPhase2" class="goodell-phase">
+      <div class="goodell-kicker">THE SELECTION IS BEING ANNOUNCED</div>
+      <div id="goodellOwnerLine" class="goodell-main"></div>
+      <div class="goodell-sub">SELECTS...</div>
+    </div>
+    <div id="goodellPhase3" class="goodell-phase">
+      <div id="goodellPlayerLine" class="goodell-main"></div>
+      <div id="goodellMetaLine" class="goodell-sub"></div>
+      <div id="goodellNFLLine" class="goodell-detail"></div>
+    </div>
+    <div class="goodell-wait">COMMISSIONER BRENDAN BOWEN • OFFICIAL ANNOUNCEMENT</div>
+  </div>
+</div>
+
 <div id="suspenseOverlay" class="suspense-overlay" aria-live="assertive">
   <div class="suspense-card">
     <img src="cte-league-logo.png" class="announcement-logo" alt="">
@@ -91,7 +146,7 @@ body{overflow:hidden}.tv{height:100vh;display:grid;grid-template-rows:auto 1fr a
 <script type="module">
 import {connectCTE} from './firebase-bridge.js';
 const owners=window.CTE_DRAFT_DATA.owners,traded=new Set(window.CTE_DRAFT_DATA.traded),picks=Object.keys(owners);
-let state={picks:{},meta:{currentIndex:0,seconds:60,running:false,lastTick:null,pickStatus:'on_clock'},history:{}};let initialized=false;let knownHistoryKeys=new Set();let overlayTimer=null;
+let state={picks:{},meta:{currentIndex:0,seconds:60,running:false,lastTick:null,pickStatus:'on_clock'},history:{}};let initialized=false;let knownHistoryKeys=new Set();let overlayTimer=null;let goodellToken=null;let goodellTimers=[];let audioEnabled=localStorage.getItem('cteGoodellAudio')==='1';
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function calcSeconds(meta){
   let s=Number(meta.seconds??60);
@@ -113,17 +168,91 @@ statusEl.textContent=pickStatus==='pick_in'?'THE PICK IS IN':'ON THE CLOCK';
 statusEl.className='clock-status'+(pickStatus==='pick_in'?' pick-in':'');
 document.getElementById('suspensePick').textContent=`PICK ${p}`;
 document.getElementById('suspenseOwner').textContent=owners[p];
-document.getElementById('suspenseOverlay').classList.toggle('show',pickStatus==='pick_in');
+document.getElementById('suspenseOverlay').classList.toggle('show',pickStatus==='pick_in'&&!state.meta?.goodell?.active);
   renderUpNext();renderTicker();renderProgress();updateTimer();
 }
 function sortedHistory(){return Object.entries(state.history||{}).map(([key,value])=>({key,...value})).sort((a,b)=>(a.time||0)-(b.time||0));}
 function renderUpNext(){const idx=Number(state.meta?.currentIndex||0),el=document.getElementById('upNext'),up=picks.slice(idx+1,idx+4);el.innerHTML=up.length?up.map((p,i)=>`<div class="next-card"><div class="next-pick">${i===0?'NEXT: ':''}${p}</div><div class="next-owner">${esc(owners[p])}</div><div class="next-note">${traded.has(p)?'TRADED PICK':'ORIGINAL PICK'}</div></div>`).join(''):'<div class="status">No picks remaining.</div>';};
 function renderTicker(){const el=document.getElementById('ticker'),recent=sortedHistory().slice(-8).reverse();if(!recent.length){el.innerHTML='<span class="ticker-item">Draft results will appear here.</span>';return;}const items=recent.map(h=>`<span class="ticker-item"><b>${esc(h.pick)}</b> ${esc(owners[h.pick]||'')} — ${esc(h.player)} ${esc(h.pos||'')} ${esc(h.team||'')}</span>`).join('');el.innerHTML=items+items;};
 function renderProgress(){const drafted=Object.values(state.picks||{}).filter(d=>d?.player).length;document.getElementById('progressText').textContent=`${drafted} / ${picks.length}`;document.getElementById('progressFill').style.width=`${drafted/picks.length*100}%`;};
-function showAnnouncement(h){if(!h?.player)return;document.getElementById('suspenseOverlay').classList.remove('show');document.getElementById('announcePick').textContent=`WITH PICK ${h.pick}`;document.getElementById('announceOwner').textContent=owners[h.pick]||'';document.getElementById('announcePlayer').textContent=h.player;document.getElementById('announceMeta').textContent=[h.pos,h.team].filter(Boolean).join(' • ');document.getElementById('announceNFL').textContent=h.nflPick?`SELECTED #${h.nflPick} IN THE 2026 NFL DRAFT`:'';const o=document.getElementById('pickOverlay'),p=o.querySelector('.announcement-progress span');p.style.animation='none';void p.offsetWidth;p.style.animation='announcementTimer 5s linear forwards';o.classList.add('show');clearTimeout(overlayTimer);overlayTimer=setTimeout(()=>o.classList.remove('show'),5000);};
+function showAnnouncement(h){if(!h?.player||h.mode==='goodell')return;document.getElementById('suspenseOverlay').classList.remove('show');document.getElementById('announcePick').textContent=`WITH PICK ${h.pick}`;document.getElementById('announceOwner').textContent=owners[h.pick]||'';document.getElementById('announcePlayer').textContent=h.player;document.getElementById('announceMeta').textContent=[h.pos,h.team].filter(Boolean).join(' • ');document.getElementById('announceNFL').textContent=h.nflPick?`SELECTED #${h.nflPick} IN THE 2026 NFL DRAFT`:'';const o=document.getElementById('pickOverlay'),p=o.querySelector('.announcement-progress span');p.style.animation='none';void p.offsetWidth;p.style.animation='announcementTimer 5s linear forwards';o.classList.add('show');clearTimeout(overlayTimer);overlayTimer=setTimeout(()=>o.classList.remove('show'),5000);};
+function ordinalWord(n){
+  const words={1:'FIRST',2:'SECOND',3:'THIRD',4:'FOURTH',5:'FIFTH',6:'SIXTH',7:'SEVENTH',8:'EIGHTH',9:'NINTH',10:'TENTH',11:'ELEVENTH',12:'TWELFTH',
+  13:'THIRTEENTH',14:'FOURTEENTH',15:'FIFTEENTH',16:'SIXTEENTH',17:'SEVENTEENTH',18:'EIGHTEENTH',19:'NINETEENTH',20:'TWENTIETH',
+  21:'TWENTY-FIRST',22:'TWENTY-SECOND',23:'TWENTY-THIRD',24:'TWENTY-FOURTH',25:'TWENTY-FIFTH',26:'TWENTY-SIXTH',27:'TWENTY-SEVENTH',
+  28:'TWENTY-EIGHTH',29:'TWENTY-NINTH',30:'THIRTIETH',31:'THIRTY-FIRST',32:'THIRTY-SECOND',33:'THIRTY-THIRD',34:'THIRTY-FOURTH',
+  35:'THIRTY-FIFTH',36:'THIRTY-SIXTH',37:'THIRTY-SEVENTH',38:'THIRTY-EIGHTH',39:'THIRTY-NINTH',40:'FORTIETH',
+  41:'FORTY-FIRST',42:'FORTY-SECOND',43:'FORTY-THIRD',44:'FORTY-FOURTH',45:'FORTY-FIFTH',46:'FORTY-SIXTH',47:'FORTY-SEVENTH',48:'FORTY-EIGHTH'};
+  return words[n]||`${n}TH`;
+}
+function clearGoodellTimers(){
+  goodellTimers.forEach(clearTimeout);goodellTimers=[];
+  if('speechSynthesis'in window)window.speechSynthesis.cancel();
+}
+function setGoodellPhase(phase){
+  ['goodellPhase1','goodellPhase2','goodellPhase3'].forEach((id,i)=>
+    document.getElementById(id).classList.toggle('show',i===phase-1)
+  );
+}
+function speakGoodell(g){
+  if(!audioEnabled||!('speechSynthesis'in window))return;
+  window.speechSynthesis.cancel();
+  const overall=((Number(g.pick.split('.')[0])-1)*12)+Number(g.pick.split('.')[1]);
+  const text=`With the ${ordinalWord(overall).toLowerCase()} pick in the 2026 C T E League Rookie Draft, ${g.owner} selects... ${g.player}, ${g.pos}, ${g.team}.`;
+  const utter=new SpeechSynthesisUtterance(text);
+  utter.rate=.82;utter.pitch=.82;utter.volume=1;
+  const voices=window.speechSynthesis.getVoices();
+  const preferred=voices.find(v=>/David|Mark|Guy|Daniel|Alex/i.test(v.name))||voices.find(v=>/^en-US/i.test(v.lang));
+  if(preferred)utter.voice=preferred;
+  window.speechSynthesis.speak(utter);
+}
+function launchGoodell(g){
+  if(!g?.active||g.token===goodellToken)return;
+  goodellToken=g.token;
+  clearGoodellTimers();
+  document.getElementById('suspenseOverlay').classList.remove('show');
+  document.getElementById('pickOverlay').classList.remove('show');
+  const overall=((Number(g.pick.split('.')[0])-1)*12)+Number(g.pick.split('.')[1]);
+  document.getElementById('goodellPickLine').textContent=`WITH THE ${ordinalWord(overall)} PICK`;
+  document.getElementById('goodellOwnerLine').textContent=g.owner;
+  document.getElementById('goodellPlayerLine').textContent=g.player;
+  document.getElementById('goodellMetaLine').textContent=[g.pos,g.team].filter(Boolean).join(' • ');
+  document.getElementById('goodellNFLLine').textContent=g.nflPick?`SELECTED #${g.nflPick} IN THE 2026 NFL DRAFT`:'';
+  document.getElementById('goodellOverlay').classList.add('show');
+  setGoodellPhase(1);
+  goodellTimers.push(setTimeout(()=>setGoodellPhase(2),3000));
+  goodellTimers.push(setTimeout(()=>setGoodellPhase(3),6500));
+  speakGoodell(g);
+}
+function updateGoodell(g){
+  if(g?.active){
+    launchGoodell(g);
+  }else{
+    clearGoodellTimers();
+    goodellToken=null;
+    document.getElementById('goodellOverlay').classList.remove('show');
+  }
+}
 function detectNewHistory(raw){const e=Object.entries(raw||{});if(!initialized){knownHistoryKeys=new Set(e.map(([k])=>k));initialized=true;return;}const fresh=e.filter(([k])=>!knownHistoryKeys.has(k)).map(([key,value])=>({key,...value})).sort((a,b)=>(a.time||0)-(b.time||0));e.forEach(([k])=>knownHistoryKeys.add(k));if(fresh.length)showAnnouncement(fresh[fresh.length-1]);};
 function updateTimer(){const s=calcSeconds(state.meta||{}),el=document.getElementById('timer');el.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;el.className='big timer'+(s<=10?' danger':s<=20?' warn':'')}
 setInterval(updateTimer,250);
+
+const audioBtn=document.getElementById('audioBtn');
+function updateAudioButton(){
+  audioBtn.textContent=audioEnabled?'🔊 ANNOUNCER ENABLED':'🔇 ENABLE ANNOUNCER';
+  audioBtn.classList.toggle('enabled',audioEnabled);
+}
+audioBtn.addEventListener('click',()=>{
+  audioEnabled=!audioEnabled;
+  localStorage.setItem('cteGoodellAudio',audioEnabled?'1':'0');
+  updateAudioButton();
+  if(audioEnabled&&'speechSynthesis'in window){
+    const test=new SpeechSynthesisUtterance('Announcer enabled.');
+    test.volume=.5;test.rate=1;
+    window.speechSynthesis.speak(test);
+  }
+});
+updateAudioButton();
 
 const fullscreenBtn=document.getElementById('fullscreenBtn');
 function updateFullscreenButton(){
@@ -147,6 +276,7 @@ try{
   const c=await connectCTE();
   c.onValue(c.roomRef,s=>{
     const raw=s.val()||{};detectNewHistory(raw.history);const normalized={...raw,picks:{},history:raw.history||{}};Object.entries(raw.picks||{}).forEach(([k,v])=>normalized.picks[k.replace('_','.')]=v);state=normalized;
+    updateGoodell(state.meta?.goodell);
     render();
     document.getElementById('conn').innerHTML='<span class="ok">LIVE</span>';
   });
