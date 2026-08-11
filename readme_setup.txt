@@ -164,3 +164,10 @@ DEPLOYMENT
 Upload every file from this folder to the root of the GitHub repository, replacing existing files.
 GitHub Pages will republish automatically.
 Hard-refresh admin.html and tv.html after the deployment finishes.
+
+STEP 6 - LIVE SLEEPER SYNC
+- Live Sleeper pages now fetch fresh data on every page load (no session/local cache).
+- Duplicate API requests inside one page load are deduplicated in memory.
+- Scores, Standings, Teams, Home, and Records include an Updated timestamp + manual Refresh.
+- Scores auto-refresh every 60 seconds while the page remains open.
+- Record Book now includes completed 2026 games in all-time stats as the season progresses.
