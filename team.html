@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner Profile • CTE League HQ</title><link rel="stylesheet" href="league-v14.css?v=14"><script src="data/league-data.js?v=14"></script><script src="data/owner-profiles.js?v=12"></script><script src="js/sleeper-api.js?v=14"></script><script src="js/league-engine.js?v=14"></script><script src="js/stats-engine.js?v=11"></script><script src="js/league-ui-v14.js?v=14"></script></head><body><script>CTE_UI.shellStart('teams')</script>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner Profile • CTE Network</title><link rel="stylesheet" href="league-v15.css?v=15"><script src="data/league-data.js?v=15"></script><script src="data/owner-profiles.js?v=15"></script><script src="js/sleeper-api.js?v=15"></script><script src="js/league-engine.js?v=15"></script><script src="js/stats-engine.js?v=15"></script><script src="js/cte-network-core-v15.js?v=15"></script></head><body><div class="league-shell"><header class="league-header"><img src="cte-league-logo.png" alt="CTE League logo"><div><div class="league-kicker">OFFICIAL HOME OF THE CTE LEAGUE</div><h1 class="league-title">CTE NETWORK</h1><div class="muted">Year 2 • Established 2025</div></div></header></div><nav class="league-nav"><div class="league-nav-inner"><a href="index.html" class="">Home</a><a href="scores.html" class="">Scores</a><a href="schedule.html" class="">Schedule</a><a href="standings.html" class="">Standings</a><a href="teams.html" class="active">Teams</a><a href="transactions.html" class="">Transactions</a><a href="records.html" class="">Records</a><a href="league-history.html" class="">History</a><a href="draft-central.html" class="">Draft Central</a></div></nav><main class="league-shell"><noscript class="notice error">JavaScript is required for live Sleeper data. The CTE Network navigation will still work.</noscript>
 <div id="profile"><div class="league-card loading">Loading owner profile from Sleeper…</div></div>
 <script>
 const ownerId=new URLSearchParams(location.search).get('owner');
@@ -8,7 +8,7 @@ const esc=CTE_UI.esc;
 if(!owner||owner.status!=='active'){
  document.getElementById('profile').innerHTML='<div class="league-card notice error"><h2>Owner not found</h2><a class="btn" href="teams.html">← Back to teams</a></div>';
 }else{
- document.title=`${owner.name} • CTE League HQ`;
+ document.title=`${owner.name} • CTE Network`;
  loadProfile({fresh:true});
 }
 function playerImg(id){return `https://sleepercdn.com/content/nfl/players/${encodeURIComponent(id)}.jpg`}
@@ -122,4 +122,4 @@ async function loadProfile(options={}){
    <section class="league-card profile-trades"><div class="section-head compact"><div><div class="eyebrow">Deal Log</div><h2>Trade History</h2></div><span class="live-stamp">${tradeHistory.length} completed trades</span></div><div class="trade-history-list">${renderTradeHistory(tradeHistory)}</div></section>`;
  }catch(e){box.innerHTML=`<div class="league-card notice error"><h2>Could not load profile</h2><p>${esc(e.message)}</p><a class="btn" href="teams.html">← Back to teams</a></div>`}
 }
-</script><script>CTE_UI.shellEnd()</script></body></html>
+</script></main><footer class="footer">CTE Network • Official Home of the CTE League • Powered by Sleeper</footer></body></html>
