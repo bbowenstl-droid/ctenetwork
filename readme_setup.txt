@@ -171,3 +171,6 @@ STEP 6 - LIVE SLEEPER SYNC
 - Scores, Standings, Teams, Home, and Records include an Updated timestamp + manual Refresh.
 - Scores auto-refresh every 60 seconds while the page remains open.
 - Record Book now includes completed 2026 games in all-time stats as the season progresses.
+
+
+STEP 14: Added schedule.html and matchup.html. Schedule is live from Sleeper, includes 2025/2026 selector, Game of the Week, and dedicated matchup detail pages with starting lineups and historical series.

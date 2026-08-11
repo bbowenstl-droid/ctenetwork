@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner Profile • CTE League HQ</title><link rel="stylesheet" href="league-v11.css?v=11"><script src="data/league-data.js?v=11"></script><script src="data/owner-profiles.js?v=11"></script><script src="js/sleeper-api.js?v=11"></script><script src="js/league-engine.js?v=11"></script><script src="js/stats-engine.js?v=11"></script><script src="js/league-ui-v11.js?v=11"></script></head><body><script>CTE_UI.shellStart('teams')</script>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner Profile • CTE League HQ</title><link rel="stylesheet" href="league-v14.css?v=14"><script src="data/league-data.js?v=14"></script><script src="data/owner-profiles.js?v=12"></script><script src="js/sleeper-api.js?v=14"></script><script src="js/league-engine.js?v=14"></script><script src="js/stats-engine.js?v=11"></script><script src="js/league-ui-v14.js?v=14"></script></head><body><script>CTE_UI.shellStart('teams')</script>
 <div id="profile"><div class="league-card loading">Loading owner profile from Sleeper…</div></div>
 <script>
 const ownerId=new URLSearchParams(location.search).get('owner');
@@ -16,7 +16,78 @@ function playerCard(id,players,starter){
  const p=players[id]||{};const name=p.full_name||[p.first_name,p.last_name].filter(Boolean).join(' ')||id;const pos=p.position||'—';const team=p.team||'FA';
  return `<article class="roster-player"><img src="${playerImg(id)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><div class="roster-player-info"><div class="roster-player-name">${esc(name)}</div><div class="roster-player-meta">${esc(pos)} • ${esc(team)}${p.age?' • Age '+esc(p.age):''}</div></div>${starter?'<span class="starter-badge">STARTER</span>':''}</article>`;
 }
+function scoutingRows(scouting={}){const labels={trading:'Trading',waivers:'Waiver Wire',trash:'Trash Talk',stability:'Stability',chaos:'Chaos'};return Object.entries(labels).map(([key,label])=>{const score=Math.max(0,Math.min(10,Number(scouting[key]||0)));return `<div class="scout-row"><span class="scout-label">${label}</span><div class="scout-track"><div class="scout-fill" style="width:${score*10}%"></div></div><span class="scout-score">${score}/10</span></div>`}).join('')}
 function recentGamesFor(ownerId,result,limit=5){return (result.games||[]).filter(g=>g.ownerA===ownerId||g.ownerB===ownerId).slice().sort((a,b)=>b.season-a.season||b.week-a.week).slice(0,limit)}
+function txDate(ms){if(!ms)return '';return new Date(Number(ms)).toLocaleString([], {month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'})}
+function txTypeLabel(t){return t==='trade'?'Trade':t==='waiver'?'Waiver Claim':t==='free_agent'?'Free Agency':String(t||'Transaction').replaceAll('_',' ')}
+function rosterOwnerForSeason(season,rosterId,week=null){
+ const rid=String(rosterId);
+ if(Number(season)===2025 && rid==='7' && (week==null || Number(week)<=3)) return 'jeremy';
+ return CTE_LEAGUE_DATA.league.seasons[season]?.rosterOwnerMap?.[rid]||null;
+}
+function transactionTouchesOwner(tx,season,ownerId,week){
+ const rosterIds=new Set((tx.roster_ids||[]).map(String));
+ Object.values(tx.adds||{}).forEach(x=>rosterIds.add(String(x)));
+ Object.values(tx.drops||{}).forEach(x=>rosterIds.add(String(x)));
+ (tx.draft_picks||[]).forEach(p=>{rosterIds.add(String(p.owner_id));rosterIds.add(String(p.previous_owner_id));rosterIds.add(String(p.roster_id))});
+ return [...rosterIds].some(rid=>rosterOwnerForSeason(season,rid,week)===ownerId);
+}
+function transactionAssetsForOwner(tx,season,ownerId,players,week){
+ const rosterIds=Object.entries(CTE_LEAGUE_DATA.league.seasons[season]?.rosterOwnerMap||{}).filter(([rid,oid])=>rosterOwnerForSeason(season,rid,week)===ownerId).map(([rid])=>String(rid));
+ const owns=rid=>rosterIds.includes(String(rid));
+ const rows=[];
+ Object.entries(tx.adds||{}).forEach(([pid,rid])=>{if(owns(rid)){const p=players[pid]||{};rows.push({kind:'add',text:`+ ${p.full_name||[p.first_name,p.last_name].filter(Boolean).join(' ')||pid}`})}});
+ Object.entries(tx.drops||{}).forEach(([pid,rid])=>{if(owns(rid)){const p=players[pid]||{};rows.push({kind:'drop',text:`− ${p.full_name||[p.first_name,p.last_name].filter(Boolean).join(' ')||pid}`})}});
+ (tx.draft_picks||[]).forEach(p=>{if(owns(p.owner_id))rows.push({kind:'pick',text:`Received ${p.season} Round ${p.round} pick`});if(owns(p.previous_owner_id))rows.push({kind:'pickout',text:`Sent ${p.season} Round ${p.round} pick`})});
+ return rows;
+}
+async function loadRecentTransactions(ownerId,players,options={}){
+ const season=2026,cfg=CTE_LEAGUE_DATA.league.seasons[season];
+ const league=await CTE_Sleeper.getLeague(cfg.sleeperLeagueId,options);const currentWeek=Math.max(1,Number(league.settings?.leg||1));
+ const weeks=Array.from({length:currentWeek},(_,i)=>i+1);
+ const all=(await Promise.all(weeks.map(w=>CTE_Sleeper.getTransactions(cfg.sleeperLeagueId,w,options).then(list=>(list||[]).map(tx=>({...tx,_week:w})))))).flat()
+   .filter(tx=>(!tx.status||tx.status==='complete')&&transactionTouchesOwner(tx,season,ownerId,tx._week))
+   .sort((a,b)=>Number(b.created||0)-Number(a.created||0));
+ return all.slice(0,8).map(tx=>({tx,assets:transactionAssetsForOwner(tx,season,ownerId,players,tx._week)}));
+}
+async function loadDraftHistory(ownerId,players,options={}){
+ const output=[];
+ for(const season of [2025,2026]){
+  const cfg=CTE_LEAGUE_DATA.league.seasons[season];const drafts=await CTE_Sleeper.getDrafts(cfg.sleeperLeagueId,options);
+  for(const draft of (drafts||[])){
+   const picks=await CTE_Sleeper.getDraftPicks(draft.draft_id,options);
+   for(const p of (picks||[])){
+    let oid=rosterOwnerForSeason(season,p.roster_id,1);
+    if(Number(season)===2025 && String(p.roster_id)==='7') oid='jeremy';
+    if(oid!==ownerId)continue;
+    const player=players[p.player_id]||{};const name=player.full_name||[player.first_name,player.last_name].filter(Boolean).join(' ')||p.metadata?.first_name+' '+p.metadata?.last_name||p.player_id;
+    output.push({season,round:Number(p.round||0),pickNo:Number(p.pick_no||0),draftSlot:Number(p.draft_slot||0),playerId:p.player_id,name,position:player.position||p.metadata?.position||'',team:player.team||p.metadata?.team||''});
+   }
+  }
+ }
+ return output.sort((a,b)=>b.season-a.season||a.pickNo-b.pickNo);
+}
+async function loadTradeHistory(ownerId,players,options={}){
+ const output=[];
+ for(const season of [2025,2026]){
+  const cfg=CTE_LEAGUE_DATA.league.seasons[season];const league=await CTE_Sleeper.getLeague(cfg.sleeperLeagueId,options);const maxWeek=cfg.status==='current'?Math.max(1,Number(league.settings?.leg||1)):18;
+  const batches=await Promise.all(Array.from({length:maxWeek},(_,i)=>{const w=i+1;return CTE_Sleeper.getTransactions(cfg.sleeperLeagueId,w,options).then(list=>(list||[]).filter(tx=>tx.type==='trade'&&(!tx.status||tx.status==='complete')).map(tx=>({...tx,_week:w,_season:season}))) }));
+  batches.flat().forEach(tx=>{if(transactionTouchesOwner(tx,season,ownerId,tx._week))output.push({tx,season,week:tx._week,assets:transactionAssetsForOwner(tx,season,ownerId,players,tx._week)})});
+ }
+ return output.sort((a,b)=>Number(b.tx.created||0)-Number(a.tx.created||0));
+}
+function renderActivity(items){
+ if(!items.length)return '<div class="muted">No transactions yet.</div>';
+ return items.map(({tx,assets})=>`<article class="profile-activity"><div class="profile-activity-top"><span class="activity-type ${esc(tx.type||'')}">${esc(txTypeLabel(tx.type))}</span><span>${esc(txDate(tx.created))}</span></div><div class="activity-assets">${assets.length?assets.map(a=>`<div class="activity-asset ${a.kind}">${esc(a.text)}</div>`).join(''):'<div class="muted">Part of transaction</div>'}</div></article>`).join('');
+}
+function renderDraftHistory(picks){
+ if(!picks.length)return '<div class="muted">No draft picks recorded for this owner yet.</div>';
+ return `<div class="draft-history-grid">${picks.map(p=>`<article class="draft-history-card"><div class="draft-pick-label">${p.season} • R${p.round} • Pick ${p.pickNo}</div><div class="draft-player-row"><img src="${playerImg(p.playerId)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><div><strong>${esc(p.name)}</strong><span>${esc([p.position,p.team].filter(Boolean).join(' • '))}</span></div></div></article>`).join('')}</div>`;
+}
+function renderTradeHistory(trades){
+ if(!trades.length)return '<div class="muted">No completed trades recorded for this owner.</div>';
+ return trades.slice(0,12).map(({tx,season,week,assets})=>`<article class="trade-history-row"><div><strong>${season} • Week ${week}</strong><span>${esc(txDate(tx.created))}</span></div><div class="trade-history-assets">${assets.length?assets.map(a=>`<span class="trade-chip ${a.kind}">${esc(a.text)}</span>`).join(''):'<span class="muted">Trade participant</span>'}</div></article>`).join('');
+}
 async function loadProfile(options={}){
  const box=document.getElementById('profile');
  try{
@@ -32,16 +103,23 @@ async function loadProfile(options={}){
   const takeover=owner.tookOverFromOwnerId?`Took over from ${esc(CTE_LEAGUE_DATA.owners[owner.tookOverFromOwnerId]?.name||owner.tookOverFromOwnerId)}`:'Founding owner';
   const h2hRows=Object.values(h2h).filter(r=>r.ownerId===ownerId&&r.games).sort((a,b)=>b.games-a.games||b.wins-a.wins).map(r=>`<tr><td>${CTE_UI.ownerLink(r.opponentId,CTE_LEAGUE_DATA.owners[r.opponentId]?.name||r.opponentId)}</td><td>${r.wins}-${r.losses}${r.ties?'-'+r.ties:''}</td><td>${CTE_UI.fmt(r.pf)}</td><td>${CTE_UI.fmt(r.pa)}</td></tr>`).join('');
   const recentRows=recent.map(g=>{const a=g.ownerA===ownerId;const pf=a?g.scoreA:g.scoreB,pa=a?g.scoreB:g.scoreA,opp=a?g.ownerB:g.ownerA,res=pf>pa?'W':pf<pa?'L':'T';return `<div class="profile-game"><span class="game-result ${res==='W'?'win':res==='L'?'loss':''}">${res}</span><div><strong>${g.season} • Week ${g.week}</strong><div class="muted">vs ${CTE_UI.ownerLink(opp,CTE_LEAGUE_DATA.owners[opp]?.name||opp)}</div></div><div class="profile-game-score">${CTE_UI.fmt(pf)} – ${CTE_UI.fmt(pa)}</div></div>`}).join('')||'<div class="muted">No completed games yet.</div>';
+  const [recentTransactions,draftHistory,tradeHistory]=await Promise.all([loadRecentTransactions(ownerId,players,options),loadDraftHistory(ownerId,players,options),loadTradeHistory(ownerId,players,options)]);
   box.innerHTML=`
    <a class="profile-back" href="teams.html">← All owners</a>
-   <section class="profile-hero"><div class="profile-identity"><div class="eyebrow">${esc(CTE_UI.divisionName(owner.currentDivisionId))}</div><h1>${esc(owner.name)}</h1><div class="profile-team-name">${esc(live.sleeperTeamName||owner.currentTeamName)}</div><p>${esc(profile.bio||'CTE League owner profile.')}</p><div class="profile-pills"><span>${takeover}</span><span>Joined ${owner.joined.season}${owner.joined.week>1?' • Week '+owner.joined.week:''}</span><span>Roster #${esc(live.rosterId)}</span></div></div><div class="profile-record"><div class="eyebrow">Current Season</div><strong>${currentRecord}</strong><span>2026 Record</span></div></section>
+   <section class="profile-hero"><div class="profile-identity"><div class="eyebrow">${esc(CTE_UI.divisionName(owner.currentDivisionId))}</div><h1>${esc(owner.name)}</h1><div class="profile-team-name">${esc(live.sleeperTeamName||owner.currentTeamName)}</div><div class="profile-tagline">${esc(profile.tagline||'CTE League Owner')}</div><div class="profile-pills"><span>${takeover}</span><span>Joined ${owner.joined.season}${owner.joined.week>1?' • Week '+owner.joined.week:''}</span><span>Roster #${esc(live.rosterId)}</span></div></div><div class="profile-record"><div class="eyebrow">Current Season</div><strong>${currentRecord}</strong><span>2026 Record</span></div></section>
+   <section class="owner-personality"><article class="owner-bio-card"><div class="eyebrow">CTE Bot File</div><h2>Owner Bio</h2><div class="owner-tagline">${esc(profile.tagline||'CTE League Owner')}</div><p>${esc(profile.bio||'CTE League owner profile.')}</p><div class="owner-fandom">🏈 Football allegiance: ${esc(profile.nfl||'None listed')}</div></article><article class="scout-card"><div class="eyebrow">Completely Scientific</div><h2>Owner Scouting Report</h2>${scoutingRows(profile.scouting)}<div class="scout-note">CTE ratings are commissioner-approved slander, not advanced analytics. Sleeper activity can be layered into these ratings later.</div></article></section>
    <section class="profile-stat-grid"><div class="profile-stat"><span>Career Record</span><strong>${career.wins||0}-${career.losses||0}${career.ties?'-'+career.ties:''}</strong></div><div class="profile-stat"><span>Championships</span><strong>${titles}</strong></div><div class="profile-stat"><span>Career PF</span><strong>${CTE_UI.fmt(career.pointsFor||0)}</strong></div><div class="profile-stat"><span>Avg Score</span><strong>${CTE_UI.fmt(career.avgScore||0)}</strong></div><div class="profile-stat"><span>High Score</span><strong>${career.highScore==null?'—':CTE_UI.fmt(career.highScore)}</strong></div><div class="profile-stat"><span>Playoff Record</span><strong>${career.playoffWins||0}-${career.playoffLosses||0}</strong></div></section>
    <div class="profile-layout"><div>
     <section class="league-card"><div class="section-head compact"><div><div class="eyebrow">Live from Sleeper</div><h2>Current Roster</h2></div><span class="live-stamp">${ids.length} players</span></div><div class="position-strip">${Object.entries(positionCounts).sort().map(([p,n])=>`<span><strong>${n}</strong> ${esc(p)}</span>`).join('')}</div><h3 class="roster-section-title">Starting Lineup</h3><div class="roster-grid">${starterIds.map(id=>playerCard(id,players,true)).join('')||'<div class="muted">No starters set.</div>'}</div><h3 class="roster-section-title">Bench / Reserve</h3><div class="roster-grid">${benchIds.map(id=>playerCard(id,players,false)).join('')||'<div class="muted">No bench players.</div>'}</div></section>
    </div><aside>
     <section class="league-card"><div class="eyebrow">Recent Results</div><h2>Last 5</h2><div class="profile-games">${recentRows}</div></section>
     <section class="league-card profile-side-card"><div class="eyebrow">Owner vs Owner</div><h2>Head-to-Head</h2><div class="table-wrap profile-h2h"><table class="league-table"><thead><tr><th>Opponent</th><th>Record</th><th>PF</th><th>PA</th></tr></thead><tbody>${h2hRows||'<tr><td colspan="4">No games yet.</td></tr>'}</tbody></table></div></section>
-   </aside></div>`;
+   </aside></div>
+   <section class="profile-history-grid">
+    <article class="league-card"><div class="section-head compact"><div><div class="eyebrow">Live Activity</div><h2>Recent Transactions</h2></div><a class="mini-link" href="transactions.html">League feed →</a></div><div class="profile-activity-list">${renderActivity(recentTransactions)}</div></article>
+    <article class="league-card"><div class="section-head compact"><div><div class="eyebrow">Rookie Draft Archive</div><h2>Draft History</h2></div><span class="live-stamp">${draftHistory.length} picks</span></div>${renderDraftHistory(draftHistory)}</article>
+   </section>
+   <section class="league-card profile-trades"><div class="section-head compact"><div><div class="eyebrow">Deal Log</div><h2>Trade History</h2></div><span class="live-stamp">${tradeHistory.length} completed trades</span></div><div class="trade-history-list">${renderTradeHistory(tradeHistory)}</div></section>`;
  }catch(e){box.innerHTML=`<div class="league-card notice error"><h2>Could not load profile</h2><p>${esc(e.message)}</p><a class="btn" href="teams.html">← Back to teams</a></div>`}
 }
 </script><script>CTE_UI.shellEnd()</script></body></html>
