@@ -20,6 +20,20 @@ window.CTE_LEAGUE_DATA = {
         sleeperLeagueId: "1255586541745475584",
         status: "complete",
         sleeperUserMap: {},
+        rosterOwnerMap: {
+          1: "brendan",
+          2: "jacob",
+          3: "brett",
+          4: "mike",
+          5: "tyler",
+          6: "dan",
+          7: "isaiah",
+          8: "cotton",
+          9: "jerry",
+          10: "jesse",
+          11: "elijah",
+          12: "troy"
+        },
         championOwnerId: "brendan",
         runnerUpOwnerId: "jacob"
       },
@@ -27,7 +41,21 @@ window.CTE_LEAGUE_DATA = {
         yearNumber: 2,
         sleeperLeagueId: "1312109948305436672",
         status: "current",
-        sleeperUserMap: {}
+        sleeperUserMap: {},
+        rosterOwnerMap: {
+          1: "brendan",
+          2: "jacob",
+          3: "brett",
+          4: "mike",
+          5: "carter",
+          6: "dan",
+          7: "isaiah",
+          8: "cotton",
+          9: "jerry",
+          10: "jesse",
+          11: "elijah",
+          12: "troy"
+        }
       }
     }
   },

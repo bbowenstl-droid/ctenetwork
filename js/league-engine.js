@@ -56,17 +56,20 @@
     return best;
   }
 
-  function buildRosterLookup(users, rosters, manualUserMap = {}) {
+  function buildRosterLookup(users, rosters, manualUserMap = {}, rosterOwnerMap = {}) {
     const userById = Object.fromEntries((users || []).map(u => [String(u.user_id), u]));
     const result = {};
 
     for (const roster of rosters || []) {
       const userId = String(roster.owner_id || '');
       const user = userById[userId];
-      const manualOwnerId = manualUserMap[userId];
-      const suggestion = manualOwnerId
-        ? { ownerId: manualOwnerId, confidence: 'confirmed' }
-        : suggestOwnerForUser(user);
+      const manualRosterOwnerId = rosterOwnerMap[String(roster.roster_id)] || rosterOwnerMap[roster.roster_id];
+      const manualUserOwnerId = manualUserMap[userId];
+      const suggestion = manualRosterOwnerId
+        ? { ownerId: manualRosterOwnerId, confidence: 'confirmed-roster' }
+        : manualUserOwnerId
+          ? { ownerId: manualUserOwnerId, confidence: 'confirmed-user' }
+          : suggestOwnerForUser(user);
 
       result[String(roster.roster_id)] = {
         rosterId: roster.roster_id,

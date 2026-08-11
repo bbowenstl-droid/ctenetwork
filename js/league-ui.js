@@ -11,7 +11,7 @@ function nav(active){
 function header(){return `<div class="league-shell"><header class="league-header"><img src="cte-league-logo.png" alt="CTE League logo"><div><div class="league-kicker">DYNASTY FANTASY FOOTBALL</div><h1 class="league-title">CTE LEAGUE HQ</h1><div class="muted">Year 2 • Established 2025</div></div></header></div>`}
 function shellStart(active){document.write(header()+nav(active)+'<main class="league-shell">')}
 function shellEnd(){document.write('</main><footer class="footer">CTE League HQ • Powered by Sleeper + CTE history</footer>')}
-function mapForSeason(season,users,rosters){const cfg=data().league.seasons[season];return window.CTE_LeagueEngine.buildRosterLookup(users,rosters,cfg.sleeperUserMap||{})}
+function mapForSeason(season,users,rosters){const cfg=data().league.seasons[season];return window.CTE_LeagueEngine.buildRosterLookup(users,rosters,cfg.sleeperUserMap||{},cfg.rosterOwnerMap||{})}
 function standingsRows(rosters,lookup){return (rosters||[]).map(r=>{const m=lookup[String(r.roster_id)]||{};const o=owner(m.ownerId);return {ownerId:m.ownerId,name:o.name,team:m.sleeperTeamName||o.currentTeamName||m.sleeperDisplayName||'Unmapped',division:o.currentDivisionId,wins:Number(r.settings?.wins||0),losses:Number(r.settings?.losses||0),ties:Number(r.settings?.ties||0),pf:Number(r.settings?.fpts||0)+Number(r.settings?.fpts_decimal||0)/100,pa:Number(r.settings?.fpts_against||0)+Number(r.settings?.fpts_against_decimal||0)/100,unmapped:!m.ownerId}}).sort((a,b)=>b.wins-a.wins||a.losses-b.losses||b.pf-a.pf)}
 function fmt(n){return Number(n||0).toFixed(2)}
 window.CTE_UI={owner,divisionName,esc,nav,header,shellStart,shellEnd,mapForSeason,standingsRows,fmt};

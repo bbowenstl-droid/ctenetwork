@@ -31,7 +31,7 @@ async function checkSeason(season){
  results.appendChild(card);
  try{
    const snapshot=await CTE_Sleeper.getLeagueSnapshot(config.sleeperLeagueId,{cache:false});
-   const lookup=CTE_LeagueEngine.buildRosterLookup(snapshot.users,snapshot.rosters,config.sleeperUserMap||{});
+   const lookup=CTE_LeagueEngine.buildRosterLookup(snapshot.users,snapshot.rosters,config.sleeperUserMap||{},config.rosterOwnerMap||{});
    const rows=Object.values(lookup);
    const unmatched=rows.filter(r=>!r.ownerId);
    card.innerHTML=`<h2>${season} — Year ${config.yearNumber}</h2>
