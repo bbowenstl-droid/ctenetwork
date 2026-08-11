@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090c10">
+<title>Draft Central • CTE League HQ</title><link rel="stylesheet" href="common.css">
+<style>
+.wrap{max-width:840px;margin:auto;padding:24px 12px 40px}
+.hero{text-align:center;padding:28px 18px}
+.hero img{width:min(38vw,150px);aspect-ratio:1;object-fit:cover;border-radius:50%;border:3px solid var(--gold)}
+.hero h1{font-size:clamp(32px,9vw,52px);margin:14px 0 5px;letter-spacing:.04em}
+.hero-sub{color:var(--gold2);font-weight:800;letter-spacing:.12em}
+.quick-countdown{margin:18px auto 4px;max-width:540px;padding:15px;border:1px solid var(--gold);border-radius:12px;background:#0b0e13}
+.quick-countdown strong{display:block;color:var(--gold2);font-size:22px;margin-bottom:4px}
+.links{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
+.card{padding:22px;text-decoration:none;color:#fff;text-align:left;min-height:150px;display:flex;flex-direction:column}
+.card .ico{font-size:28px}.card h2{color:var(--gold2);margin:9px 0 5px}.card p{margin:0;color:var(--muted);line-height:1.45}
+.card:hover{border-color:var(--gold);transform:translateY(-1px)}
+@media(max-width:620px){.wrap{padding-top:12px}.hero{padding:22px 12px}.links{grid-template-columns:1fr}.card{min-height:auto;padding:18px}}
+</style></head>
+<body>
+
+<nav class="site-nav" aria-label="Primary">
+  <div class="site-nav-inner">
+    <a class="nav-link NAV_HOME active" href="index.html"><span class="nav-icon">🏠</span><span>League HQ</span></a>
+    <a class="nav-link NAV_COUNTDOWN" href="countdown.html"><span class="nav-icon">⏳</span><span>Countdown</span></a>
+    <a class="nav-link NAV_BOARD" href="tv.html"><span class="nav-icon">📺</span><span>Draft Board</span></a>
+    <a class="nav-link NAV_ADMIN" href="admin.html"><span class="nav-icon">🎙️</span><span>Commissioner</span></a>
+    <a class="nav-link NAV_HISTORY" href="history.html"><span class="nav-icon">🏆</span><span>Champions</span></a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section class="panel hero">
+    <img src="cte-league-logo.png" alt="CTE League logo">
+    <h1>CTE DRAFT CENTRAL</h1>
+    <div class="hero-sub">2026 ROOKIE DRAFT</div>
+    <a class="quick-countdown" href="countdown.html" style="display:block;text-decoration:none">
+      <strong id="miniCountdown">Loading countdown…</strong>
+      <span class="muted">August 1, 2026 • 8:30 PM Central</span>
+    </a>
+    <div class="links">
+      <a class="panel card" href="countdown.html"><span class="ico">⏳</span><h2>DRAFT COUNTDOWN</h2><p>Live countdown to draft night.</p></a>
+      <a class="panel card" href="tv.html"><span class="ico">📺</span><h2>TV BOARD</h2><p>Full-screen live draft board for the television.</p></a>
+      <a class="panel card" href="admin.html"><span class="ico">🎙️</span><h2>COMMISSIONER CONTROL</h2><p>Enter selections, control the clock, and manage picks.</p></a>
+      <a class="panel card" href="history.html"><span class="ico">🏆</span><h2>HALL OF CHAMPIONS</h2><p>League champions and title-game history.</p></a>
+    </div>
+  </section>
+</main>
+<script>
+const target=new Date('2026-08-01T20:30:00-05:00');
+function tick(){
+ const d=target-Date.now(),el=document.getElementById('miniCountdown');
+ if(d<=0){el.textContent='DRAFT NIGHT IS HERE';return}
+ const days=Math.floor(d/86400000),hours=Math.floor(d%86400000/3600000),mins=Math.floor(d%3600000/60000);
+ el.textContent=`${days} days • ${hours} hours • ${mins} minutes`;
+}
+tick();setInterval(tick,30000);
+</script>
+</body></html>

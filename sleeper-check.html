@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CTE Sleeper Connection Check</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.wrap{max-width:1100px;margin:auto;padding:28px 14px 60px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.box{padding:18px}.status{font-weight:900}.ok{color:#6ee7a8}.bad{color:#ff8d8d}.muted2{color:var(--muted)}table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}th,td{padding:9px;border-bottom:1px solid #252b35;text-align:left}th{color:var(--gold2)}button{padding:10px 14px;font-weight:900;cursor:pointer}.full{grid-column:1/-1}pre{white-space:pre-wrap;overflow:auto;background:#080b0f;padding:12px;border-radius:8px;max-height:300px}@media(max-width:760px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style></head>
+<body>
+<main class="wrap">
+<section class="panel box">
+<h1>CTE Sleeper Connection Check</h1>
+<p class="muted2">Temporary setup page. It verifies both league IDs and shows how Sleeper users/rosters map to our permanent CTE owner identities.</p>
+<button id="run">Run connection check</button>
+<span id="overall" class="status"></span>
+</section>
+<div id="results" class="grid" style="margin-top:16px"></div>
+</main>
+<script src="data/league-data.js"></script>
+<script src="js/sleeper-api.js"></script>
+<script src="js/league-engine.js"></script>
+<script>
+const results=document.getElementById('results');
+const overall=document.getElementById('overall');
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+
+async function checkSeason(season){
+ const config=CTE_LEAGUE_DATA.league.seasons[season];
+ const card=document.createElement('section'); card.className='panel box';
+ card.innerHTML=`<h2>${season} — Year ${config.yearNumber}</h2><div class="status">Connecting…</div>`;
+ results.appendChild(card);
+ try{
+   const snapshot=await CTE_Sleeper.getLeagueSnapshot(config.sleeperLeagueId,{cache:false});
+   const lookup=CTE_LeagueEngine.buildRosterLookup(snapshot.users,snapshot.rosters,config.sleeperUserMap||{});
+   const rows=Object.values(lookup);
+   const unmatched=rows.filter(r=>!r.ownerId);
+   card.innerHTML=`<h2>${season} — Year ${config.yearNumber}</h2>
+     <div class="status ok">✓ Connected to ${esc(snapshot.league.name)}</div>
+     <p class="muted2">Sleeper season: ${esc(snapshot.league.season)} • ${snapshot.users.length} users • ${snapshot.rosters.length} rosters • ${snapshot.drafts.length} draft(s)</p>
+     <table><thead><tr><th>Roster</th><th>Sleeper</th><th>Team name</th><th>CTE owner</th><th>Match</th></tr></thead><tbody>
+     ${rows.map(r=>`<tr><td>${esc(r.rosterId)}</td><td>${esc(r.sleeperDisplayName)}</td><td>${esc(r.sleeperTeamName)}</td><td>${esc(r.ownerId||'UNMATCHED')}</td><td>${esc(r.confidence)}</td></tr>`).join('')}
+     </tbody></table>
+     ${unmatched.length?`<p class="bad"><strong>${unmatched.length} roster(s) need manual mapping.</strong></p>`:`<p class="ok"><strong>All rosters have an owner match.</strong></p>`}`;
+   return {season,ok:true,snapshot,lookup,unmatched};
+ }catch(err){
+   card.innerHTML=`<h2>${season} — Year ${config.yearNumber}</h2><div class="status bad">✗ Connection failed</div><p>${esc(err.message)}</p>`;
+   return {season,ok:false,error:err};
+ }
+}
+
+document.getElementById('run').addEventListener('click',async()=>{
+ results.innerHTML=''; overall.textContent=' Checking…'; overall.className='status';
+ const seasons=Object.keys(CTE_LEAGUE_DATA.league.seasons).sort();
+ const out=[];
+ for(const season of seasons) out.push(await checkSeason(season));
+ const failed=out.filter(x=>!x.ok);
+ overall.textContent=failed.length?' Some checks failed.':' Both seasons connected.';
+ overall.className='status '+(failed.length?'bad':'ok');
+});
+</script>
+</body></html>
