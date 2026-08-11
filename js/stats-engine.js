@@ -78,8 +78,13 @@ async function loadSeason(season, options={}){
   const unmatched=Object.values(lookup).filter(x=>!x.ownerId);
   if(unmatched.length) throw new Error(`${season} has ${unmatched.length} unmapped roster(s).`);
   const playoffStartWeek=Number(snapshot.league?.settings?.playoff_week_start||15);
-  const maxWeek=Math.max(18, playoffStartWeek+3);
-  const weeks=await window.CTE_Sleeper.getWeeks(cfg.sleeperLeagueId,1,maxWeek,options);
+  const currentLeg=Math.max(1, Number(snapshot.league?.settings?.leg||1));
+  const maxWeek=cfg.status==='current' ? Math.min(18,currentLeg) : Math.max(18, playoffStartWeek+3);
+  // Stats only need matchup scores. Do not fetch transactions here; that would
+  // double the number of Sleeper calls on the Record Book page for no benefit.
+  const weeks=await Promise.all(Array.from({length:maxWeek},(_,i)=>
+    window.CTE_Sleeper.getMatchups(cfg.sleeperLeagueId,i+1,options).then(matchups=>({week:i+1,matchups}))
+  ));
   const games=[];
   for(const w of weeks){
     const resolved=window.CTE_LeagueEngine.resolveGames(w.matchups,lookup,season,w.week);
@@ -96,6 +101,15 @@ async function loadAllCompleteSeasons(options={}){
   const seasons=Object.entries(window.CTE_LEAGUE_DATA.league.seasons)
     .filter(([,cfg])=>cfg.status==='complete')
     .map(([year])=>Number(year)).sort();
+  const out=[];
+  for(const season of seasons) out.push(await loadSeason(season,options));
+  return out;
+}
+
+
+async function loadAllSeasons(options={}){
+  const seasons=Object.keys(window.CTE_LEAGUE_DATA.league.seasons)
+    .map(Number).sort();
   const out=[];
   for(const season of seasons) out.push(await loadSeason(season,options));
   return out;
@@ -138,5 +152,5 @@ function headToHead(games){
   return map;
 }
 
-window.CTE_StatsEngine={loadSeason,loadAllCompleteSeasons,calculateOwnerStats,calculateLeagueRecords,headToHead};
+window.CTE_StatsEngine={loadSeason,loadAllCompleteSeasons,loadAllSeasons,calculateOwnerStats,calculateLeagueRecords,headToHead};
 })();

@@ -1,3 +1,4 @@
+// CTE League UI v7 - cache-safe live sync
 (function(){
 'use strict';
 const data=()=>window.CTE_LEAGUE_DATA;
