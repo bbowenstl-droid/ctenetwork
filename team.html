@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owner Profile • CTE League HQ</title><link rel="stylesheet" href="league-v11.css?v=11"><script src="data/league-data.js?v=11"></script><script src="data/owner-profiles.js?v=11"></script><script src="js/sleeper-api.js?v=11"></script><script src="js/league-engine.js?v=11"></script><script src="js/stats-engine.js?v=11"></script><script src="js/league-ui-v11.js?v=11"></script></head><body><script>CTE_UI.shellStart('teams')</script>
+<div id="profile"><div class="league-card loading">Loading owner profile from Sleeper…</div></div>
+<script>
+const ownerId=new URLSearchParams(location.search).get('owner');
+const owner=CTE_LEAGUE_DATA.owners[ownerId];
+const profile=CTE_OWNER_PROFILES?.[ownerId]||{};
+const esc=CTE_UI.esc;
+if(!owner||owner.status!=='active'){
+ document.getElementById('profile').innerHTML='<div class="league-card notice error"><h2>Owner not found</h2><a class="btn" href="teams.html">← Back to teams</a></div>';
+}else{
+ document.title=`${owner.name} • CTE League HQ`;
+ loadProfile({fresh:true});
+}
+function playerImg(id){return `https://sleepercdn.com/content/nfl/players/${encodeURIComponent(id)}.jpg`}
+function playerCard(id,players,starter){
+ const p=players[id]||{};const name=p.full_name||[p.first_name,p.last_name].filter(Boolean).join(' ')||id;const pos=p.position||'—';const team=p.team||'FA';
+ return `<article class="roster-player"><img src="${playerImg(id)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><div class="roster-player-info"><div class="roster-player-name">${esc(name)}</div><div class="roster-player-meta">${esc(pos)} • ${esc(team)}${p.age?' • Age '+esc(p.age):''}</div></div>${starter?'<span class="starter-badge">STARTER</span>':''}</article>`;
+}
+function recentGamesFor(ownerId,result,limit=5){return (result.games||[]).filter(g=>g.ownerA===ownerId||g.ownerB===ownerId).slice().sort((a,b)=>b.season-a.season||b.week-a.week).slice(0,limit)}
+async function loadProfile(options={}){
+ const box=document.getElementById('profile');
+ try{
+  const cfg=CTE_LEAGUE_DATA.league.seasons[2026];
+  const [snap,players,archives]=await Promise.all([CTE_Sleeper.getLeagueSnapshot(cfg.sleeperLeagueId,options),CTE_Sleeper.getNFLPlayers(),CTE_StatsEngine.loadAllSeasons(options)]);
+  const lookup=CTE_UI.mapForSeason(2026,snap.users,snap.rosters);const live=Object.values(lookup).find(x=>x.ownerId===ownerId);
+  if(!live)throw new Error('Current Sleeper roster could not be matched to this owner.');
+  const roster=(snap.rosters||[]).find(r=>String(r.roster_id)===String(live.rosterId));const settings=roster?.settings||{};const currentRecord=`${Number(settings.wins||0)}-${Number(settings.losses||0)}${Number(settings.ties||0)?'-'+Number(settings.ties||0):''}`;
+  const calc=CTE_StatsEngine.calculateOwnerStats(archives);const career=calc.owners[ownerId]||{};const h2h=CTE_StatsEngine.headToHead(calc.games);const recent=recentGamesFor(ownerId,calc,5);
+  const ids=roster?.players||[];const starters=new Set((roster?.starters||[]).map(String));const starterIds=ids.filter(id=>starters.has(String(id)));const benchIds=ids.filter(id=>!starters.has(String(id)));
+  const positionCounts={};ids.forEach(id=>{const pos=players[id]?.position||'Other';positionCounts[pos]=(positionCounts[pos]||0)+1});
+  const titles=Number(career.championships||0);
+  const takeover=owner.tookOverFromOwnerId?`Took over from ${esc(CTE_LEAGUE_DATA.owners[owner.tookOverFromOwnerId]?.name||owner.tookOverFromOwnerId)}`:'Founding owner';
+  const h2hRows=Object.values(h2h).filter(r=>r.ownerId===ownerId&&r.games).sort((a,b)=>b.games-a.games||b.wins-a.wins).map(r=>`<tr><td>${CTE_UI.ownerLink(r.opponentId,CTE_LEAGUE_DATA.owners[r.opponentId]?.name||r.opponentId)}</td><td>${r.wins}-${r.losses}${r.ties?'-'+r.ties:''}</td><td>${CTE_UI.fmt(r.pf)}</td><td>${CTE_UI.fmt(r.pa)}</td></tr>`).join('');
+  const recentRows=recent.map(g=>{const a=g.ownerA===ownerId;const pf=a?g.scoreA:g.scoreB,pa=a?g.scoreB:g.scoreA,opp=a?g.ownerB:g.ownerA,res=pf>pa?'W':pf<pa?'L':'T';return `<div class="profile-game"><span class="game-result ${res==='W'?'win':res==='L'?'loss':''}">${res}</span><div><strong>${g.season} • Week ${g.week}</strong><div class="muted">vs ${CTE_UI.ownerLink(opp,CTE_LEAGUE_DATA.owners[opp]?.name||opp)}</div></div><div class="profile-game-score">${CTE_UI.fmt(pf)} – ${CTE_UI.fmt(pa)}</div></div>`}).join('')||'<div class="muted">No completed games yet.</div>';
+  box.innerHTML=`
+   <a class="profile-back" href="teams.html">← All owners</a>
+   <section class="profile-hero"><div class="profile-identity"><div class="eyebrow">${esc(CTE_UI.divisionName(owner.currentDivisionId))}</div><h1>${esc(owner.name)}</h1><div class="profile-team-name">${esc(live.sleeperTeamName||owner.currentTeamName)}</div><p>${esc(profile.bio||'CTE League owner profile.')}</p><div class="profile-pills"><span>${takeover}</span><span>Joined ${owner.joined.season}${owner.joined.week>1?' • Week '+owner.joined.week:''}</span><span>Roster #${esc(live.rosterId)}</span></div></div><div class="profile-record"><div class="eyebrow">Current Season</div><strong>${currentRecord}</strong><span>2026 Record</span></div></section>
+   <section class="profile-stat-grid"><div class="profile-stat"><span>Career Record</span><strong>${career.wins||0}-${career.losses||0}${career.ties?'-'+career.ties:''}</strong></div><div class="profile-stat"><span>Championships</span><strong>${titles}</strong></div><div class="profile-stat"><span>Career PF</span><strong>${CTE_UI.fmt(career.pointsFor||0)}</strong></div><div class="profile-stat"><span>Avg Score</span><strong>${CTE_UI.fmt(career.avgScore||0)}</strong></div><div class="profile-stat"><span>High Score</span><strong>${career.highScore==null?'—':CTE_UI.fmt(career.highScore)}</strong></div><div class="profile-stat"><span>Playoff Record</span><strong>${career.playoffWins||0}-${career.playoffLosses||0}</strong></div></section>
+   <div class="profile-layout"><div>
+    <section class="league-card"><div class="section-head compact"><div><div class="eyebrow">Live from Sleeper</div><h2>Current Roster</h2></div><span class="live-stamp">${ids.length} players</span></div><div class="position-strip">${Object.entries(positionCounts).sort().map(([p,n])=>`<span><strong>${n}</strong> ${esc(p)}</span>`).join('')}</div><h3 class="roster-section-title">Starting Lineup</h3><div class="roster-grid">${starterIds.map(id=>playerCard(id,players,true)).join('')||'<div class="muted">No starters set.</div>'}</div><h3 class="roster-section-title">Bench / Reserve</h3><div class="roster-grid">${benchIds.map(id=>playerCard(id,players,false)).join('')||'<div class="muted">No bench players.</div>'}</div></section>
+   </div><aside>
+    <section class="league-card"><div class="eyebrow">Recent Results</div><h2>Last 5</h2><div class="profile-games">${recentRows}</div></section>
+    <section class="league-card profile-side-card"><div class="eyebrow">Owner vs Owner</div><h2>Head-to-Head</h2><div class="table-wrap profile-h2h"><table class="league-table"><thead><tr><th>Opponent</th><th>Record</th><th>PF</th><th>PA</th></tr></thead><tbody>${h2hRows||'<tr><td colspan="4">No games yet.</td></tr>'}</tbody></table></div></section>
+   </aside></div>`;
+ }catch(e){box.innerHTML=`<div class="league-card notice error"><h2>Could not load profile</h2><p>${esc(e.message)}</p><a class="btn" href="teams.html">← Back to teams</a></div>`}
+}
+</script><script>CTE_UI.shellEnd()</script></body></html>

@@ -1,6 +1,25 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teams • CTE League HQ</title><link rel="stylesheet" href="league.css"><script src="data/league-data.js?v=8"></script><script src="js/sleeper-api.js?v=8"></script><script src="js/league-engine.js?v=8"></script><script src="js/league-ui-v8.js?v=8"></script></head><body><script>CTE_UI.shellStart('teams')</script>
-<div class="section-head"><div><div class="eyebrow">Current Owners</div><h2>The 12</h2></div><div class="live-controls"><span id="liveStamp" class="live-stamp">Updating…</span><button id="refreshLive" class="refresh-btn" type="button" title="Pull fresh data from Sleeper">↻ Refresh</button></div></div><div id="teams" class="three-col"><div class="league-card loading">Loading current Sleeper teams…</div></div>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Teams • CTE League HQ</title><link rel="stylesheet" href="league-v11.css?v=11"><script src="data/league-data.js?v=11"></script><script src="data/owner-profiles.js?v=11"></script><script src="js/sleeper-api.js?v=11"></script><script src="js/league-engine.js?v=11"></script><script src="js/league-ui-v11.js?v=11"></script></head><body><script>CTE_UI.shellStart('teams')</script>
+<div class="section-head"><div><div class="eyebrow">Current Owners</div><h2>The 12</h2><div class="muted">Every franchise is tracked by owner identity. Team names can change without breaking league history.</div></div><div class="live-controls"><span id="liveStamp" class="live-stamp">Updating…</span><button id="refreshLive" class="refresh-btn" type="button">↻ Refresh</button></div></div>
+<div id="teams" class="team-directory"><div class="league-card loading">Loading current Sleeper teams…</div></div>
 <script>
-async function loadTeams(options={}){const box=document.getElementById('teams'),btn=document.getElementById('refreshLive');btn.disabled=true;try{const cfg=CTE_LEAGUE_DATA.league.seasons[2026],snap=await CTE_Sleeper.getLeagueSnapshot(cfg.sleeperLeagueId,options),lookup=CTE_UI.mapForSeason(2026,snap.users,snap.rosters),byOwner={};Object.values(lookup).forEach(m=>{if(m.ownerId)byOwner[m.ownerId]=m});const order=['north','south','central','littleBabies'];box.innerHTML=order.flatMap(d=>Object.values(CTE_LEAGUE_DATA.owners).filter(o=>o.status==='active'&&o.currentDivisionId===d).map(o=>{const live=byOwner[o.id];return `<article class="league-card"><div class="eyebrow">${CTE_UI.divisionName(d)}</div><h2 style="margin:8px 0 4px">${CTE_UI.esc(o.name)}</h2><div class="gold" style="font-weight:900">${CTE_UI.esc(live?.sleeperTeamName||o.currentTeamName)}</div><div class="muted" style="margin-top:12px">CTE owner since ${o.joined.season}${o.joined.week>1?' • Week '+o.joined.week:''}</div></article>`})).join('');CTE_UI.setLiveStamp()}catch(e){box.innerHTML=`<div class="league-card notice error">${CTE_UI.esc(e.message)}</div>`}finally{btn.disabled=false}}
+async function loadTeams(options={}){
+ const box=document.getElementById('teams'),btn=document.getElementById('refreshLive');btn.disabled=true;
+ try{
+  const cfg=CTE_LEAGUE_DATA.league.seasons[2026],snap=await CTE_Sleeper.getLeagueSnapshot(cfg.sleeperLeagueId,options),lookup=CTE_UI.mapForSeason(2026,snap.users,snap.rosters),byOwner={};
+  Object.values(lookup).forEach(m=>{if(m.ownerId)byOwner[m.ownerId]=m});
+  const rosterById=Object.fromEntries((snap.rosters||[]).map(r=>[String(r.roster_id),r]));
+  const order=['north','south','central','littleBabies'];
+  box.innerHTML=order.map(d=>{
+   const cards=Object.values(CTE_LEAGUE_DATA.owners).filter(o=>o.status==='active'&&o.currentDivisionId===d).map(o=>{
+    const live=byOwner[o.id];const roster=live?rosterById[String(live.rosterId)]:null;const s=roster?.settings||{};
+    const record=`${Number(s.wins||0)}-${Number(s.losses||0)}${Number(s.ties||0)?'-'+Number(s.ties||0):''}`;
+    const count=(roster?.players||[]).length;
+    return `<a class="team-directory-card" href="team.html?owner=${encodeURIComponent(o.id)}"><div class="team-card-top"><div><div class="eyebrow">${CTE_UI.esc(CTE_UI.divisionName(d))}</div><h3>${CTE_UI.esc(o.name)}</h3><div class="team-card-name">${CTE_UI.esc(live?.sleeperTeamName||o.currentTeamName)}</div></div><div class="team-card-arrow">→</div></div><div class="team-card-stats"><span><strong>${record}</strong> Current</span><span><strong>${count}</strong> Players</span><span><strong>${o.joined.season}</strong> Joined</span></div><div class="team-card-cta">View owner profile & roster</div></a>`;
+   }).join('');
+   return `<section class="directory-division"><div class="directory-title">${CTE_UI.esc(CTE_UI.divisionName(d))}</div><div class="directory-grid">${cards}</div></section>`;
+  }).join('');
+  CTE_UI.setLiveStamp();
+ }catch(e){box.innerHTML=`<div class="league-card notice error">${CTE_UI.esc(e.message)}</div>`}finally{btn.disabled=false}
+}
 document.getElementById('refreshLive').onclick=()=>{CTE_Sleeper.clearCache();loadTeams({fresh:true})};loadTeams({fresh:true});
 </script><script>CTE_UI.shellEnd()</script></body></html>
