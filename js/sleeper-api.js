@@ -64,6 +64,26 @@
     getDraftPicks(draftId, options) { return request(`/draft/${draftId}/picks`, options); },
     getDraftTradedPicks(draftId, options) { return request(`/draft/${draftId}/traded_picks`, options); },
 
+    /** Player reference data is large and changes far less often than league data.
+     * Transaction lists are still fetched fresh on every page load; this directory
+     * is cached locally for 24h only to avoid downloading the entire NFL player map
+     * on every visit.
+     */
+    async getNFLPlayers(options = {}) {
+      const storageKey = 'cte_sleeper_nfl_players_v1';
+      const maxAge = 24 * 60 * 60 * 1000;
+      const fresh = options.fresh === true;
+      if (!fresh) {
+        try {
+          const cached = JSON.parse(localStorage.getItem(storageKey) || 'null');
+          if (cached && cached.savedAt && (Date.now() - cached.savedAt) < maxAge && cached.data) return cached.data;
+        } catch (_) {}
+      }
+      const data = await request('/players/nfl', { fresh: true });
+      try { localStorage.setItem(storageKey, JSON.stringify({ savedAt: Date.now(), data })); } catch (_) {}
+      return data;
+    },
+
     async getLeagueSnapshot(leagueId, options = {}) {
       const [league, users, rosters, tradedPicks, drafts] = await Promise.all([
         api.getLeague(leagueId, options),
