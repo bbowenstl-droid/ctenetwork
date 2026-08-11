@@ -1,0 +1,36 @@
+
+.power-rankings-section{margin-top:42px;padding-top:12px;border-top:1px solid #27303a}
+.power-head{align-items:flex-end}
+.power-intro{max-width:760px;margin:8px 0 0;line-height:1.5}
+.power-intro a{color:#f4c542;font-weight:800}
+.power-podium{display:grid;grid-template-columns:1fr 1.12fr 1fr;gap:14px;align-items:end;margin:22px 0 18px}
+.power-card,.power-row{color:inherit;text-decoration:none}
+.power-card{position:relative;border:1px solid #2d3742;background:linear-gradient(145deg,#151b22,#0d1117);border-radius:16px;padding:22px;text-align:center;overflow:hidden;transition:.18s}
+.power-card:hover,.power-row:hover{transform:translateY(-2px);border-color:#687584}
+.power-card.first{padding-top:30px;border-color:#f4c542;box-shadow:0 0 0 1px rgba(244,197,66,.1)}
+.power-card.second{border-color:#7b8794}
+.power-card.third{border-color:#846b50}
+.power-rank{position:absolute;top:9px;left:13px;font-size:13px;font-weight:950;color:#8793a1}
+.power-medal{font-size:30px;margin-bottom:5px}
+.power-owner{font-size:25px;font-weight:950}
+.power-team{font-weight:760;color:#d7dde5;margin-top:2px}
+.power-division{font-size:12px;color:#8d99a7;margin-top:6px}
+.power-grade{font-size:34px;font-weight:950;color:#f4c542;margin:10px 0 4px}
+.power-tag{font-size:11px;font-weight:900;letter-spacing:.08em;color:#aeb7c2}
+.power-list{border:1px solid #29323c;border-radius:15px;overflow:hidden;background:#0f141a}
+.power-row{display:grid;grid-template-columns:48px minmax(180px,1fr) 60px minmax(170px,.8fr);gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid #252e37;transition:.15s}
+.power-row:last-child{border-bottom:0}
+.rank-num{font-size:21px;font-weight:950;color:#8c98a6;text-align:center}
+.rank-main{display:flex;flex-direction:column}
+.rank-main strong{font-size:17px}
+.rank-main small{font-size:12px;color:#8995a3;margin-top:2px}
+.rank-grade{font-size:18px;font-weight:950;color:#f4c542}
+.rank-tag{font-size:11px;font-weight:900;letter-spacing:.06em;text-align:right;color:#b5bec8}
+.power-note{font-size:12px;color:#7f8b99;margin:12px 3px 0;line-height:1.5}
+@media(max-width:760px){
+  .power-head{align-items:flex-start}
+  .power-podium{grid-template-columns:1fr}
+  .power-card.first{order:-1}
+  .power-row{grid-template-columns:38px 1fr 48px}
+  .rank-tag{display:none}
+}

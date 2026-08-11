@@ -1,6 +1,51 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Standings • CTE Network</title><link rel="stylesheet" href="league-v15.css?v=15"><script src="data/league-data.js?v=15"></script><script src="sleeper-api-v16.js?v=16"></script><script src="js/league-engine.js?v=15"></script><script src="cte-network-core-v15.js?v=15"></script></head><body><div class="league-shell"><header class="league-header"><img src="cte-league-logo.png" alt="CTE League logo"><div><div class="league-kicker">OFFICIAL HOME OF THE CTE LEAGUE</div><h1 class="league-title">CTE NETWORK</h1><div class="muted">Year 2 • Established 2025</div></div></header></div><nav class="league-nav"><div class="league-nav-inner"><a href="index.html" class="">Home</a><a href="news.html" class="">News</a><a href="scores.html" class="">Scores</a><a href="schedule.html" class="">Schedule</a><a href="standings.html" class="active">Standings</a><a href="teams.html" class="">Teams</a><a href="transactions.html" class="">Transactions</a><a href="records.html" class="">Records</a><a href="league-history.html" class="">History</a><a href="draft-central.html" class="">Draft Central</a></div></nav><main class="league-shell"><noscript class="notice error">JavaScript is required for live Sleeper data. The CTE Network navigation will still work.</noscript>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Standings • CTE Network</title><link rel="stylesheet" href="league-v15.css?v=19"><link rel="stylesheet" href="power-rankings-v19.css?v=19"><script src="data/league-data.js?v=15"></script><script src="sleeper-api-v16.js?v=16"></script><script src="js/league-engine.js?v=15"></script><script src="cte-network-core-v15.js?v=15"></script></head><body><div class="league-shell"><header class="league-header"><img src="cte-league-logo.png" alt="CTE League logo"><div><div class="league-kicker">OFFICIAL HOME OF THE CTE LEAGUE</div><h1 class="league-title">CTE NETWORK</h1><div class="muted">Year 2 • Established 2025</div></div></header></div><nav class="league-nav"><div class="league-nav-inner"><a href="index.html" class="">Home</a><a href="news.html" class="">News</a><a href="scores.html" class="">Scores</a><a href="schedule.html" class="">Schedule</a><a href="standings.html" class="active">Standings</a><a href="teams.html" class="">Teams</a><a href="transactions.html" class="">Transactions</a><a href="records.html" class="">Records</a><a href="league-history.html" class="">History</a><a href="draft-central.html" class="">Draft Central</a></div></nav><main class="league-shell"><noscript class="notice error">JavaScript is required for live Sleeper data. The CTE Network navigation will still work.</noscript>
 <div class="section-head"><div><div class="eyebrow">2026 Season</div><h2>Standings</h2></div><div><span id="status" class="status-pill">Connecting…</span><div style="margin-top:7px"><div class="live-controls"><span id="liveStamp" class="live-stamp">Updating…</span><button id="refreshLive" class="refresh-btn" type="button" title="Pull fresh data from Sleeper">↻ Refresh</button></div></div></div></div><div id="content" class="league-card loading">Loading current rosters and records…</div>
 <script>
 async function loadStandings(options={}){const c=document.getElementById('content'),st=document.getElementById('status'),btn=document.getElementById('refreshLive');btn.disabled=true;c.classList.add('loading');try{const cfg=CTE_LEAGUE_DATA.league.seasons[2026],snap=await CTE_Sleeper.getLeagueSnapshot(cfg.sleeperLeagueId,options),lookup=CTE_UI.mapForSeason(2026,snap.users,snap.rosters),rows=CTE_UI.standingsRows(snap.rosters,lookup);const divisions=['north','south','central','littleBabies'];c.classList.remove('loading');c.innerHTML=divisions.map(d=>{const list=rows.filter(r=>r.division===d);return `<div style="margin-bottom:22px"><div class="division-title">${CTE_UI.divisionName(d)}</div><div class="table-wrap"><table class="league-table"><thead><tr><th>Owner</th><th>W</th><th>L</th><th>PF</th><th>PA</th></tr></thead><tbody>${list.map(r=>`<tr><td><a class="profile-cell-link" href="${CTE_UI.profileHref(r.ownerId)}"><div class="owner">${CTE_UI.esc(r.name)}</div><div class="team">${CTE_UI.esc(r.team)}</div></a></td><td>${r.wins}</td><td>${r.losses}</td><td>${CTE_UI.fmt(r.pf)}</td><td>${CTE_UI.fmt(r.pa)}</td></tr>`).join('')}</tbody></table></div></div>`}).join('');st.textContent='Live from Sleeper';st.classList.add('live');CTE_UI.setLiveStamp()}catch(e){c.classList.remove('loading');c.innerHTML=`<div class="notice error">${CTE_UI.esc(e.message)}</div>`;st.textContent='Connection failed'}finally{btn.disabled=false}}
 document.getElementById('refreshLive').onclick=()=>{CTE_Sleeper.clearCache();loadStandings({fresh:true})};loadStandings({fresh:true});
-</script></main><footer class="footer">CTE Network • Official Home of the CTE League • Powered by Sleeper</footer></body></html>
+</script>
+<section class="power-rankings-section">
+  <div class="section-head power-head">
+    <div>
+      <div class="eyebrow">CTE BOT • PRESEASON • AUG. 11, 2026</div>
+      <h2>Power Rankings</h2>
+      <p class="muted power-intro">The official preseason pecking order from <a href="article.html?id=2026-preseason-bible">The 2026 Preseason Bible</a>. These are CTE Bot rankings — not the actual league standings.</p>
+    </div>
+    <a class="btn" href="article.html?id=2026-preseason-bible">Read the full rankings →</a>
+  </div>
+
+  <div class="power-podium">
+    <a class="power-card podium second" href="team.html?owner=brendan">
+      <div class="power-rank">2</div><div class="power-medal">🏆</div>
+      <div class="power-owner">Brendan</div><div class="power-team">Flowers on your Grave</div>
+      <div class="power-division">CTE North</div><div class="power-grade">A+</div>
+      <div class="power-tag">THE BELT IS STILL HERE</div>
+    </a>
+    <a class="power-card podium first" href="team.html?owner=jacob">
+      <div class="power-rank">1</div><div class="power-medal">🥇</div>
+      <div class="power-owner">Jacob</div><div class="power-team">Likely A Dub</div>
+      <div class="power-division">CTE Central</div><div class="power-grade">A+</div>
+      <div class="power-tag">CODE RED</div>
+    </a>
+    <a class="power-card podium third" href="team.html?owner=brett">
+      <div class="power-rank">3</div><div class="power-medal">🥉</div>
+      <div class="power-owner">Brett</div><div class="power-team">Paint Plug</div>
+      <div class="power-division">CTE Central</div><div class="power-grade">A</div>
+      <div class="power-tag">ANNOYINGLY COMPETENT</div>
+    </a>
+  </div>
+
+  <div class="power-list">
+    <a class="power-row" href="team.html?owner=jerry"><span class="rank-num">4</span><span class="rank-main"><strong>Jerry</strong><small>Hulkamania Running Wild • CTE South</small></span><span class="rank-grade">A</span><span class="rank-tag">THE OLD MAN KNOWS BALL</span></a>
+    <a class="power-row" href="team.html?owner=troy"><span class="rank-num">5</span><span class="rank-main"><strong>Troy</strong><small>Hurts to be You • CTE North</small></span><span class="rank-grade">A-</span><span class="rank-tag">WIN NOW</span></a>
+    <a class="power-row" href="team.html?owner=elijah"><span class="rank-num">6</span><span class="rank-main"><strong>Elijah</strong><small>Ej da best #0 • Little Babies</small></span><span class="rank-grade">B+</span><span class="rank-tag">THE KID MIGHT ACTUALLY BE GOOD</span></a>
+    <a class="power-row" href="team.html?owner=isaiah"><span class="rank-num">7</span><span class="rank-main"><strong>Isaiah</strong><small>Elijah Has No Rizz • Little Babies</small></span><span class="rank-grade">B+</span><span class="rank-tag">BREAKOUT CANDIDATE</span></a>
+    <a class="power-row" href="team.html?owner=dan"><span class="rank-num">8</span><span class="rank-main"><strong>Dan</strong><small>DrummaDan • CTE South</small></span><span class="rank-grade">B</span><span class="rank-tag">CONFUSING AS USUAL</span></a>
+    <a class="power-row" href="team.html?owner=cotton"><span class="rank-num">9</span><span class="rank-main"><strong>Cotton</strong><small>Gas Station Sushi • CTE South</small></span><span class="rank-grade">B</span><span class="rank-tag">LAST RIDE</span></a>
+    <a class="power-row" href="team.html?owner=jesse"><span class="rank-num">10</span><span class="rank-main"><strong>Jesse</strong><small>On Burrowed Time • CTE Central</small></span><span class="rank-grade">B-</span><span class="rank-tag">DON'T BURY HIM YET</span></a>
+    <a class="power-row" href="team.html?owner=carter"><span class="rank-num">11</span><span class="rank-main"><strong>Carter</strong><small>If the price is right • Little Babies</small></span><span class="rank-grade">B-</span><span class="rank-tag">UNDER CONSTRUCTION</span></a>
+    <a class="power-row" href="team.html?owner=mike"><span class="rank-num">12</span><span class="rank-main"><strong>Mike</strong><small>KuppofGoffee • CTE North</small></span><span class="rank-grade">C+</span><span class="rank-tag">PROVE US WRONG</span></a>
+  </div>
+  <div class="power-note">Preseason ranking snapshot. Once the season starts, future CTE Bot rankings can replace this list while the Aug. 11 preseason edition remains archived in CTE Network News.</div>
+</section>
+</main><footer class="footer">CTE Network • Official Home of the CTE League • Powered by Sleeper</footer></body></html>
