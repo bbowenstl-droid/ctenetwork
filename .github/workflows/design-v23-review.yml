@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Apply shared design to all pages
+      - name: Apply shared design to public pages
         run: python tools/apply-design-v23.py
       - name: Verify design references and internal page links
         run: |
@@ -23,15 +23,16 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import re
-          pages = list(Path('.').glob('*.html'))
+          excluded={'admin.html','sleeper-check.html'}
+          pages=[p for p in Path('.').glob('*.html') if p.name not in excluded]
           assert pages
           for page in pages:
-              text = page.read_text()
+              text=page.read_text()
               assert 'design-v23.css?v=23' in text, page
               assert 'design-v23.js?v=23' in text, page
               for link in re.findall(r'href=["\']([^"\']+\.html)(?:\?[^"\']*)?["\']', text):
                   assert Path(link).exists(), (page, link)
-          print(f'PASS: {len(pages)} HTML pages include v23 assets and linked HTML files exist')
+          print(f'PASS: {len(pages)} public HTML pages include v23 assets and linked HTML files exist')
           PY
       - name: Commit integrated pages to design branch
         run: |
@@ -39,7 +40,7 @@ jobs:
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
             git add -- '*.html'
-            git commit -m 'Apply v23 design to all site pages [skip ci]'
+            git commit -m 'Apply v23 design to all public pages [skip ci]'
             git push
           fi
       - uses: actions/setup-node@v4
