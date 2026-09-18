@@ -1,16 +1,184 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0d10"><title>Newsroom • CTE Network</title><link rel="stylesheet" href="league-v15.css?v=18"><link rel="stylesheet" href="news-v18.css?v=20"><script src="news-data.js?v=25"></script><script src="news-2026-september.js?v=26"></script><script src="news-2026-09-17-tnf.js?v=27"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="CTE Network"><link rel="apple-touch-icon" href="apple-touch-icon.png?v=22"><link rel="manifest" href="manifest.webmanifest?v=22"><link rel="stylesheet" href="mobile-app-v22.css?v=22"><link rel="stylesheet" href="design-v23.css?v=23"><link rel="stylesheet" href="features-v24.css?v=24"></head><body>
-<div class="league-shell"><header class="league-header"><img src="cte-league-logo.png" alt="CTE League logo"><div><div class="league-kicker">OFFICIAL HOME OF THE CTE LEAGUE</div><h1 class="league-title">CTE NETWORK</h1><div class="muted">Year 2 • Established 2025</div></div></header></div>
-<nav class="league-nav"><div class="league-nav-inner"><a href="index.html">Home</a><a href="news.html" class="active">News</a><a href="scores.html">Scores</a><a href="schedule.html">Schedule</a><a href="rivalries.html">Rivalries</a><a href="standings.html">Standings</a><a href="teams.html">Teams</a><a href="transactions.html">Transactions</a><a href="records.html">Records</a><a href="league-history.html">History</a><a href="draft-central.html">Draft Central</a></div></nav>
-<main class="league-shell"><section class="feature-hero"><div class="eyebrow">CTE BOT NEWSROOM</div><h2>The league has receipts.</h2><p>Matchup previews, game-day notes, recaps, power rankings and every irresponsible piece of analysis—organized and preserved for future bullying purposes.</p><div class="feature-hero-actions"><a class="btn primary" href="game-day.html">Open Game Day →</a><a class="btn" href="changes.html">What changed?</a></div></section><div id="newsroomStats" class="newsroom-stats"></div><div class="newsroom-toolbar"><input id="newsSearch" class="newsroom-search" type="search" placeholder="Search stories, owners or headlines…" aria-label="Search newsroom"><div id="newsFilters" class="newsroom-filters" role="group" aria-label="Filter stories"></div></div><div id="newsGrid"></div></main>
-<script>
-const fmt=d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-const articleHref=id=>`article.html?v=27&id=${encodeURIComponent(id)}`;
-const stories=window.CTE_NEWS||[],grid=document.getElementById('newsGrid'),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let activeCategory='All';
-const bucket=a=>/preview/i.test(a.category)?'Previews':/recap/i.test(a.category)?'Recaps':/power/i.test(a.category)?'Power Rankings':/draft/i.test(a.category)?'Draft':/game|spotlight/i.test(a.category+' '+a.kicker)?'Game Day':'League News';
-const cats=['All',...new Set(stories.map(bucket))];document.getElementById('newsFilters').innerHTML=cats.map((c,i)=>`<button class="filter-chip ${i===0?'active':''}" data-category="${esc(c)}">${esc(c)}</button>`).join('');
-const counts=Object.fromEntries(cats.slice(1).map(c=>[c,stories.filter(a=>bucket(a)===c).length]));document.getElementById('newsroomStats').innerHTML=`<div class="newsroom-stat"><span>Total stories</span><strong>${stories.length}</strong></div><div class="newsroom-stat"><span>Previews</span><strong>${counts.Previews||0}</strong></div><div class="newsroom-stat"><span>Recaps</span><strong>${counts.Recaps||0}</strong></div><div class="newsroom-stat"><span>Power rankings</span><strong>${counts['Power Rankings']||0}</strong></div>`;
-function renderNews(){const q=document.getElementById('newsSearch').value.trim().toLowerCase(),filtered=stories.filter(a=>(activeCategory==='All'||bucket(a)===activeCategory)&&(!q||[a.title,a.subtitle,a.excerpt,a.category,a.kicker,(a.featuredOwners||[]).join(' ')].join(' ').toLowerCase().includes(q)));if(!filtered.length){grid.innerHTML='<div class="league-card change-empty">No newsroom stories match that search.</div>';return}const [lead,...rest]=filtered;grid.innerHTML=`<a class="news-lead" href="${articleHref(lead.id)}"><div><span class="news-badge">${esc(lead.kicker)}</span><h2>${esc(lead.title)}</h2><p class="lead-sub">${esc(lead.subtitle)}</p><p>${esc(lead.excerpt)}</p><div class="news-meta">${fmt(lead.date)} • ${esc(lead.category)}</div><span class="read-more">READ FULL STORY →</span></div></a><div class="feature-section-head"><div><div class="eyebrow">${activeCategory==='All'?'THE ARCHIVE':esc(activeCategory).toUpperCase()}</div><h2>${filtered.length} stor${filtered.length===1?'y':'ies'}</h2></div></div><div class="news-cards">${rest.map(a=>`<a class="news-card" href="${articleHref(a.id)}"><span class="news-badge">${esc(bucket(a))}</span><h3>${esc(a.title)}</h3><p>${esc(a.excerpt)}</p><div class="news-meta">${fmt(a.date)} • ${esc(a.category)}</div><span class="read-more">READ STORY →</span></a>`).join('')}</div>`}
-document.getElementById('newsFilters').onclick=e=>{const b=e.target.closest('[data-category]');if(!b)return;activeCategory=b.dataset.category;document.querySelectorAll('#newsFilters .filter-chip').forEach(x=>x.classList.toggle('active',x===b));renderNews()};document.getElementById('newsSearch').oninput=renderNews;stories.length?renderNews():grid.innerHTML='<div class="notice error">News is temporarily unavailable. Please refresh the page.</div>';
-</script>
-<footer class="footer">CTE Network • Official Home of the CTE League</footer><script src="app-shell-v22.js?v=22"></script><script src="design-v23.js?v=23"></script></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0b0d10" />
+    <title>Newsroom • CTE Network</title>
+    <link rel="stylesheet" href="league-v15.css?v=18" />
+    <link rel="stylesheet" href="news-v18.css?v=20" />
+    <script src="news-data.js?v=25"></script>
+    <script src="news-2026-september.js?v=26"></script>
+    <script src="news-2026-09-17-tnf.js?v=27"></script>
+    <script src="news-2026-09-18-tnf-recap.js?v=28"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="CTE Network" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=22" />
+    <link rel="manifest" href="manifest.webmanifest?v=22" />
+    <link rel="stylesheet" href="mobile-app-v22.css?v=22" />
+    <link rel="stylesheet" href="design-v23.css?v=23" />
+    <link rel="stylesheet" href="features-v24.css?v=24" />
+  </head>
+  <body>
+    <div class="league-shell">
+      <header class="league-header">
+        <img src="cte-league-logo.png" alt="CTE League logo" />
+        <div>
+          <div class="league-kicker">OFFICIAL HOME OF THE CTE LEAGUE</div>
+          <h1 class="league-title">CTE NETWORK</h1>
+          <div class="muted">Year 2 • Established 2025</div>
+        </div>
+      </header>
+    </div>
+    <nav class="league-nav">
+      <div class="league-nav-inner">
+        <a href="index.html">Home</a><a href="news.html" class="active">News</a
+        ><a href="scores.html">Scores</a><a href="schedule.html">Schedule</a
+        ><a href="rivalries.html">Rivalries</a
+        ><a href="standings.html">Standings</a><a href="teams.html">Teams</a
+        ><a href="transactions.html">Transactions</a
+        ><a href="records.html">Records</a
+        ><a href="league-history.html">History</a
+        ><a href="draft-central.html">Draft Central</a>
+      </div>
+    </nav>
+    <main class="league-shell">
+      <section class="feature-hero">
+        <div class="eyebrow">CTE BOT NEWSROOM</div>
+        <h2>The league has receipts.</h2>
+        <p>
+          Matchup previews, game-day notes, recaps, power rankings and every
+          irresponsible piece of analysis—organized and preserved for future
+          bullying purposes.
+        </p>
+        <div class="feature-hero-actions">
+          <a class="btn primary" href="game-day.html">Open Game Day →</a
+          ><a class="btn" href="changes.html">What changed?</a>
+        </div>
+      </section>
+      <div id="newsroomStats" class="newsroom-stats"></div>
+      <div class="newsroom-toolbar">
+        <input
+          id="newsSearch"
+          class="newsroom-search"
+          type="search"
+          placeholder="Search stories, owners or headlines…"
+          aria-label="Search newsroom"
+        />
+        <div
+          id="newsFilters"
+          class="newsroom-filters"
+          role="group"
+          aria-label="Filter stories"
+        ></div>
+      </div>
+      <div id="newsGrid"></div>
+    </main>
+    <script>
+      const fmt = (d) =>
+        new Date(d + "T12:00:00").toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        });
+      const articleHref = (id) =>
+        `article.html?v=28&id=${encodeURIComponent(id)}`;
+      const stories = window.CTE_NEWS || [],
+        grid = document.getElementById("newsGrid"),
+        esc = (v) =>
+          String(v ?? "").replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[c],
+          );
+      let activeCategory = "All";
+      const bucket = (a) =>
+        /preview/i.test(a.category)
+          ? "Previews"
+          : /recap/i.test(a.category)
+            ? "Recaps"
+            : /power/i.test(a.category)
+              ? "Power Rankings"
+              : /draft/i.test(a.category)
+                ? "Draft"
+                : /game|spotlight/i.test(a.category + " " + a.kicker)
+                  ? "Game Day"
+                  : "League News";
+      const cats = ["All", ...new Set(stories.map(bucket))];
+      document.getElementById("newsFilters").innerHTML = cats
+        .map(
+          (c, i) =>
+            `<button class="filter-chip ${i === 0 ? "active" : ""}" data-category="${esc(c)}">${esc(c)}</button>`,
+        )
+        .join("");
+      const counts = Object.fromEntries(
+        cats
+          .slice(1)
+          .map((c) => [c, stories.filter((a) => bucket(a) === c).length]),
+      );
+      document.getElementById("newsroomStats").innerHTML =
+        `<div class="newsroom-stat"><span>Total stories</span><strong>${stories.length}</strong></div><div class="newsroom-stat"><span>Previews</span><strong>${counts.Previews || 0}</strong></div><div class="newsroom-stat"><span>Recaps</span><strong>${counts.Recaps || 0}</strong></div><div class="newsroom-stat"><span>Power rankings</span><strong>${counts["Power Rankings"] || 0}</strong></div>`;
+      function renderNews() {
+        const q = document
+            .getElementById("newsSearch")
+            .value.trim()
+            .toLowerCase(),
+          filtered = stories.filter(
+            (a) =>
+              (activeCategory === "All" || bucket(a) === activeCategory) &&
+              (!q ||
+                [
+                  a.title,
+                  a.subtitle,
+                  a.excerpt,
+                  a.category,
+                  a.kicker,
+                  (a.featuredOwners || []).join(" "),
+                ]
+                  .join(" ")
+                  .toLowerCase()
+                  .includes(q)),
+          );
+        if (!filtered.length) {
+          grid.innerHTML =
+            '<div class="league-card change-empty">No newsroom stories match that search.</div>';
+          return;
+        }
+        const [lead, ...rest] = filtered;
+        grid.innerHTML = `<a class="news-lead" href="${articleHref(lead.id)}"><div><span class="news-badge">${esc(lead.kicker)}</span><h2>${esc(lead.title)}</h2><p class="lead-sub">${esc(lead.subtitle)}</p><p>${esc(lead.excerpt)}</p><div class="news-meta">${fmt(lead.date)} • ${esc(lead.category)}</div><span class="read-more">READ FULL STORY →</span></div></a><div class="feature-section-head"><div><div class="eyebrow">${activeCategory === "All" ? "THE ARCHIVE" : esc(activeCategory).toUpperCase()}</div><h2>${filtered.length} stor${filtered.length === 1 ? "y" : "ies"}</h2></div></div><div class="news-cards">${rest.map((a) => `<a class="news-card" href="${articleHref(a.id)}"><span class="news-badge">${esc(bucket(a))}</span><h3>${esc(a.title)}</h3><p>${esc(a.excerpt)}</p><div class="news-meta">${fmt(a.date)} • ${esc(a.category)}</div><span class="read-more">READ STORY →</span></a>`).join("")}</div>`;
+      }
+      document.getElementById("newsFilters").onclick = (e) => {
+        const b = e.target.closest("[data-category]");
+        if (!b) return;
+        activeCategory = b.dataset.category;
+        document
+          .querySelectorAll("#newsFilters .filter-chip")
+          .forEach((x) => x.classList.toggle("active", x === b));
+        renderNews();
+      };
+      document.getElementById("newsSearch").oninput = renderNews;
+      stories.length
+        ? renderNews()
+        : (grid.innerHTML =
+            '<div class="notice error">News is temporarily unavailable. Please refresh the page.</div>');
+    </script>
+    <footer class="footer">
+      CTE Network • Official Home of the CTE League
+    </footer>
+    <script src="app-shell-v22.js?v=22"></script>
+    <script src="design-v23.js?v=23"></script>
+  </body>
+</html>
