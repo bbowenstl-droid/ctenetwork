@@ -6,7 +6,7 @@ function owner(id){return data()?.owners?.[id]||{id,name:id||'Unknown',currentTe
 function divisionName(id){return data()?.divisions?.[id]?.name||id}
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function nav(active){
- const items=[['index.html','Home','home'],['scores.html','Scores','scores'],['schedule.html','Schedule','schedule'],['standings.html','Standings','standings'],['teams.html','Teams','teams'],['transactions.html','Transactions','transactions'],['records.html','Records','records'],['league-history.html','History','history'],['draft-central.html','Draft','draft']];
+ const items=[['index.html','Home','home'],['game-day.html','Game Day','gameday'],['changes.html','Changes','changes'],['news.html','News','news'],['scores.html','Scores','scores'],['schedule.html','Schedule','schedule'],['rivalries.html','Rivalries','rivalries'],['standings.html','Standings','standings'],['teams.html','Teams','teams'],['transactions.html','Transactions','transactions'],['records.html','Records','records'],['league-history.html','History','history'],['draft-central.html','Draft','draft']];
  return `<nav class="league-nav"><div class="league-nav-inner">${items.map(([href,label,key])=>`<a href="${href}" class="${active===key?'active':''}">${label}</a>`).join('')}</div></nav>`;
 }
 function header(){return `<div class="league-shell"><header class="league-header"><img src="cte-league-logo.png" alt="CTE League logo"><div><div class="league-kicker">DYNASTY FANTASY FOOTBALL</div><h1 class="league-title">CTE NETWORK</h1><div class="muted">Year 2 • Established 2025</div></div></header></div>`}

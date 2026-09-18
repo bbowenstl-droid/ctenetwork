@@ -136,9 +136,30 @@ function calculateLeagueRecords(result){
   const biggestBlowout=[...games].sort((a,b)=>b.margin-a.margin)[0]||null;
   const closestGame=[...games].filter(g=>g.margin>0).sort((a,b)=>a.margin-b.margin)[0]||null;
   const mostPoints=[...ownerStats].sort((a,b)=>b.pointsFor-a.pointsFor)[0]||null;
+  const mostPointsAgainst=[...ownerStats].sort((a,b)=>b.pointsAgainst-a.pointsAgainst)[0]||null;
   const bestPct=[...ownerStats].sort((a,b)=>b.winPct-a.winPct||b.wins-a.wins)[0]||null;
+  const worstPct=[...ownerStats].sort((a,b)=>a.winPct-b.winPct||b.losses-a.losses)[0]||null;
+  const bestAverage=[...ownerStats].sort((a,b)=>b.avgScore-a.avgScore)[0]||null;
   const longestWin=[...ownerStats].sort((a,b)=>b.longestWinStreak-a.longestWinStreak)[0]||null;
-  return {highScore,lowScore,biggestBlowout,closestGame,mostPoints,bestPct,longestWin,ownerName:withOwner};
+  const longestLoss=[...ownerStats].sort((a,b)=>b.longestLossStreak-a.longestLossStreak)[0]||null;
+  const seasonLeaders={};
+  for(const game of games){
+    if(!seasonLeaders[game.season])seasonLeaders[game.season]={season:game.season,owners:{},highScore:null,closestGame:null,biggestBlowout:null};
+    const season=seasonLeaders[game.season];
+    for(const [ownerId,pf,pa] of [[game.ownerA,game.scoreA,game.scoreB],[game.ownerB,game.scoreB,game.scoreA]]){
+      if(!season.owners[ownerId])season.owners[ownerId]={ownerId,games:0,wins:0,losses:0,ties:0,pf:0,pa:0};
+      const s=season.owners[ownerId];s.games++;s.pf+=pf;s.pa+=pa;if(pf>pa)s.wins++;else if(pf<pa)s.losses++;else s.ties++;
+      if(!season.highScore||pf>season.highScore.score)season.highScore={ownerId,score:pf,week:game.week};
+    }
+    if(!season.closestGame||game.margin<season.closestGame.margin)season.closestGame=game;
+    if(!season.biggestBlowout||game.margin>season.biggestBlowout.margin)season.biggestBlowout=game;
+  }
+  for(const season of Object.values(seasonLeaders)){
+    const rows=Object.values(season.owners).map(s=>({...s,winPct:s.games?(s.wins+s.ties*.5)/s.games:0,avg:s.games?s.pf/s.games:0}));
+    season.bestRecord=[...rows].sort((a,b)=>b.winPct-a.winPct||b.wins-a.wins||b.pf-a.pf)[0]||null;
+    season.pointsLeader=[...rows].sort((a,b)=>b.pf-a.pf)[0]||null;
+  }
+  return {highScore,lowScore,biggestBlowout,closestGame,mostPoints,mostPointsAgainst,bestPct,worstPct,bestAverage,longestWin,longestLoss,seasonLeaders:Object.values(seasonLeaders).sort((a,b)=>b.season-a.season),ownerName:withOwner};
 }
 
 function headToHead(games){

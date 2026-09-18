@@ -1,0 +1,23 @@
+const fs=require('fs');const vm=require('vm');
+global.window=global;global.localStorage={getItem:()=>null,setItem:()=>{}};
+for(const file of ['data/league-data.js','js/league-engine.js','sleeper-api-v16.js','js/stats-engine.js'])vm.runInThisContext(fs.readFileSync(file,'utf8'),{filename:file});
+const assert=(condition,message)=>{if(!condition)throw Error(message)};
+(async()=>{
+  const cfg=CTE_LEAGUE_DATA.league.seasons[2026];
+  const snap=await CTE_Sleeper.getLeagueSnapshot(cfg.sleeperLeagueId,{fresh:true,timeoutMs:25000});
+  assert(snap.users.length===12,`Expected 12 users, got ${snap.users.length}`);
+  assert(snap.rosters.length===12,`Expected 12 rosters, got ${snap.rosters.length}`);
+  const lookup=CTE_LeagueEngine.buildRosterLookup(snap.users,snap.rosters,cfg.sleeperUserMap||{},cfg.rosterOwnerMap||{});
+  assert(Object.values(lookup).every(x=>x.ownerId),'Every 2026 roster must map to a permanent owner');
+  const week=Math.max(1,Number(snap.league.settings?.leg||1));
+  const [matchups,transactions]=await Promise.all([CTE_Sleeper.getMatchups(cfg.sleeperLeagueId,week,{fresh:true,timeoutMs:25000}),CTE_Sleeper.getTransactions(cfg.sleeperLeagueId,week,{fresh:true,timeoutMs:25000})]);
+  assert(CTE_LeagueEngine.groupMatchups(matchups).filter(x=>x.length===2).length===6,'Current week must resolve to six matchups');
+  assert(Array.isArray(transactions),'Current-week transactions must be an array');
+  const archives=await CTE_StatsEngine.loadAllSeasons({fresh:true,timeoutMs:25000});
+  const result=CTE_StatsEngine.calculateOwnerStats(archives),records=CTE_StatsEngine.calculateLeagueRecords(result),h2h=CTE_StatsEngine.headToHead(result.games);
+  assert(result.games.length>0,'Historical engine returned no completed games');
+  for(const key of ['highScore','lowScore','biggestBlowout','closestGame','mostPoints','mostPointsAgainst','bestPct','bestAverage','longestWin','longestLoss'])assert(records[key],`Missing record: ${key}`);
+  assert(records.seasonLeaders.length>=2,'Season leader snapshots missing');
+  assert(h2h['brendan|isaiah'],'Father Knows Best head-to-head record missing');
+  console.log(JSON.stringify({users:snap.users.length,rosters:snap.rosters.length,week,matchups:6,transactions:transactions.length,historicalGames:result.games.length,seasons:records.seasonLeaders.map(x=>x.season),status:'PASS'},null,2));
+})().catch(e=>{console.error(e.stack);process.exit(1)});

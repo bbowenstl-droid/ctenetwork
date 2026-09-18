@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 (async () => {
   const browser = await chromium.launch({headless:true});
-  const pages = ['index.html','news.html','article.html?id=2026-preseason-bible','scores.html','standings.html','teams.html','team.html?owner=brendan','records.html','league-history.html','transactions.html','rivalries.html','schedule.html','draft-central.html'];
+  const pages = ['index.html','game-day.html','changes.html','news.html','article.html?id=2026-preseason-bible','scores.html','standings.html','teams.html','team.html?owner=brendan','records.html','league-history.html','transactions.html','rivalries.html','rivalry.html?id=father','schedule.html','draft-central.html'];
   const output = path.join(process.cwd(),'design-review-screenshots');
   fs.mkdirSync(output,{recursive:true});
   const failures=[];
