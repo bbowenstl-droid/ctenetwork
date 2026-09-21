@@ -1,213 +1,30 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover"
-    />
-    <meta name="theme-color" content="#0b0d10" />
-    <title>CTE Network • League Hub</title>
-    <link rel="stylesheet" href="league-v15.css?v=18" />
-    <link rel="stylesheet" href="news-v18.css?v=20" />
-    <script src="data/league-data.js?v=15"></script>
-    <script src="sleeper-api-v16.js?v=16"></script>
-    <script src="js/league-engine.js?v=15"></script>
-    <script src="cte-network-core-v15.js?v=15"></script>
-    <script src="news-data.js?v=25"></script>
-    <script src="news-2026-september.js?v=26"></script>
-    <script src="news-2026-09-17-tnf.js?v=27"></script>
-    <script src="news-2026-09-18-tnf-recap.js?v=28"></script>
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
-    <meta name="apple-mobile-web-app-title" content="CTE Network" />
-    <link rel="apple-touch-icon" href="apple-touch-icon.png?v=22" />
-    <link rel="manifest" href="manifest.webmanifest?v=22" />
-    <link rel="stylesheet" href="mobile-app-v22.css?v=22" />
-    <link rel="stylesheet" href="design-v23.css?v=23" />
-  </head>
-  <body>
-    <div class="league-shell">
-      <header class="league-header">
-        <img src="cte-league-logo.png" alt="CTE League logo" />
-        <div>
-          <div class="league-kicker">OFFICIAL HOME OF THE CTE LEAGUE</div>
-          <h1 class="league-title">CTE NETWORK</h1>
-          <div class="muted">Year 2 • Established 2025</div>
-        </div>
-      </header>
-    </div>
-    <nav class="league-nav">
-      <div class="league-nav-inner">
-        <a href="index.html" class="active">Home</a><a href="news.html">News</a
-        ><a href="scores.html">Scores</a><a href="schedule.html">Schedule</a
-        ><a href="rivalries.html">Rivalries</a
-        ><a href="standings.html">Standings</a><a href="teams.html">Teams</a
-        ><a href="transactions.html">Transactions</a
-        ><a href="records.html">Records</a
-        ><a href="league-history.html">History</a
-        ><a href="draft-central.html">Draft Central</a>
-      </div>
-    </nav>
-    <main class="league-shell cte-home">
-      <noscript class="notice error"
-        >JavaScript is required for live Sleeper data. League news and
-        navigation remain available.</noscript
-      >
-      <header class="cte-home-top">
-        <div>
-          <div class="eyebrow">2026 • Dynasty football</div>
-          <h2>The League Hub.</h2>
-          <p>Scores, stories, and the race for the title.</p>
-        </div>
-        <a class="btn" href="game-day.html">Open Game Day →</a>
-      </header>
-      <section class="home-feature-links" aria-label="Featured league tools">
-        <a class="home-feature-link" href="game-day.html"
-          ><span>Live command center</span><strong>Game Day</strong
-          ><small>Every matchup, league pulse and lineup readiness.</small></a
-        ><a class="home-feature-link" href="changes.html"
-          ><span>One activity feed</span><strong>What changed?</strong
-          ><small>Trades, waivers, lineup monitoring and new stories.</small></a
-        ><a class="home-feature-link" href="news.html"
-          ><span>Organized archive</span><strong>CTE Bot Newsroom</strong
-          ><small>Previews, recaps, rankings and game-day coverage.</small></a
-        >
-      </section>
-      <div class="cte-home-layout">
-        <div class="cte-home-stack">
-          <section
-            class="league-card cte-feature"
-            aria-labelledby="featuredTitle"
-          >
-            <div class="cte-meta">CTE Bot · Thursday Night Aftermath</div>
-            <h3 id="featuredTitle">
-              Buffalo drops 41. Jacob drops 64. Mike drops below zero.
-            </h3>
-            <p>
-              Josh Allen scores five touchdowns, Jacob opens Week 2 with 64.12
-              points, and Mike’s bad-luck run reaches negative territory.
-            </p>
-            <div class="cte-actions">
-              <a
-                class="btn"
-                href="article.html?v=28&amp;id=2026-week-2-thursday-aftermath"
-                >Read the story →</a
-              ><a class="btn" href="news.html">All news</a>
-            </div>
-          </section>
-          <section aria-labelledby="standingsTitle">
-            <div class="section-head">
-              <h2 id="standingsTitle">League standings</h2>
-              <div class="live-controls">
-                <span id="liveStamp" class="live-stamp" role="status"
-                  >Updating…</span
-                ><button
-                  id="refreshLive"
-                  class="refresh-btn"
-                  type="button"
-                  aria-label="Refresh live standings"
-                >
-                  ↻ Refresh</button
-                ><a class="btn" href="standings.html">Full table →</a>
-              </div>
-            </div>
-            <div
-              id="standingsHome"
-              class="league-card cte-home-live loading"
-              aria-live="polite"
-            >
-              Loading live Sleeper standings…
-            </div>
-          </section>
-        </div>
-        <div class="cte-home-stack">
-          <section class="league-card cte-mini" aria-labelledby="previewTitle">
-            <div class="cte-meta">Week 2 · Matchup previews</div>
-            <h3 id="previewTitle">Six games. Zero peace.</h3>
-            <p>Every matchup, with projections captured September 16.</p>
-            <a href="article.html?v=28&amp;id=2026-week-2-matchup-preview"
-              >Read the preview →</a
-            >
-          </section>
-          <section class="league-card cte-mini" aria-labelledby="recapTitle">
-            <div class="cte-meta">Week 1 · Recap</div>
-            <h3 id="recapTitle">Some of you may already be in trouble.</h3>
-            <p>
-              Jacob scores 192.56. Carter survives by 0.72. Jesse has some
-              explaining to do.
-            </p>
-            <a href="article.html?v=28&amp;id=2026-week-1-recap"
-              >Read the recap →</a
-            >
-          </section>
-          <section
-            class="league-card cte-mini cte-home-stat"
-            aria-label="Defending champion"
-          >
-            <div>
-              <div class="cte-meta">Defending champion</div>
-              <strong>BRENDAN</strong>
-              <p>2025 inaugural CTE champion</p>
-              <div class="muted">Defeated Jacob in the title game.</div>
-            </div>
-            <span
-              aria-hidden="true"
-              style="font-size: 32px; color: var(--gold2)"
-              >★</span
-            >
-          </section>
-          <section class="league-card cte-mini" aria-labelledby="exploreTitle">
-            <div class="cte-meta">Explore the league</div>
-            <h3 id="exploreTitle">Every owner has a story.</h3>
-            <p>
-              Follow team rosters, rivalry history, records and the 2026 draft.
-            </p>
-            <div class="cte-actions">
-              <a class="btn" href="teams.html">Teams →</a
-              ><a class="btn" href="records.html">Record book →</a>
-            </div>
-          </section>
-        </div>
-      </div>
-    </main>
-    <footer class="footer">
-      CTE Network • Official Home of the CTE League • Powered by Sleeper
-    </footer>
-    <script>
-      async function loadHome(options = {}) {
-        const el = document.getElementById("standingsHome"),
-          btn = document.getElementById("refreshLive");
-        btn.disabled = true;
-        el.classList.add("loading");
-        try {
-          const s = CTE_LEAGUE_DATA.league.seasons[2026];
-          const snap = await CTE_Sleeper.getLeagueSnapshot(
-            s.sleeperLeagueId,
-            options,
-          );
-          const lookup = CTE_UI.mapForSeason(2026, snap.users, snap.rosters);
-          const rows = CTE_UI.standingsRows(snap.rosters, lookup).slice(0, 6);
-          el.classList.remove("loading");
-          el.innerHTML = `<div class="table-wrap"><table class="league-table"><thead><tr><th scope="col">#</th><th scope="col">Owner / team</th><th scope="col">Record</th><th scope="col">PF</th></tr></thead><tbody>${rows.map((r, i) => `<tr><td>${i + 1}</td><td><a class="profile-cell-link" href="${CTE_UI.profileHref(r.ownerId)}"><div class="owner">${CTE_UI.esc(r.name)}</div><div class="team">${CTE_UI.esc(r.team)}</div></a></td><td>${r.wins}-${r.losses}${r.ties ? "-" + r.ties : ""}</td><td>${CTE_UI.fmt(r.pf)}</td></tr>`).join("")}</tbody></table></div>`;
-          CTE_UI.setLiveStamp();
-        } catch (e) {
-          el.classList.remove("loading");
-          el.innerHTML = `<div class="notice error">Could not reach Sleeper right now. <a href="standings.html">Open standings</a> or try refreshing.</div>`;
-        } finally {
-          btn.disabled = false;
-        }
-      }
-      document.getElementById("refreshLive").onclick = () => {
-        CTE_Sleeper.clearCache();
-        loadHome({ fresh: true });
-      };
-      loadHome({ fresh: true });
-    </script>
-    <script src="app-shell-v22.js?v=22"></script>
-    <script src="design-v23.js?v=23"></script>
-  </body>
-</html>
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/><meta name="theme-color" content="#0b0d10"/><title>CTE Network • League Hub</title>
+<link rel="stylesheet" href="league-v15.css?v=18"/><link rel="stylesheet" href="news-v18.css?v=20"/>
+<script src="data/league-data.js?v=15"></script><script src="sleeper-api-v16.js?v=16"></script><script src="js/league-engine.js?v=15"></script><script src="cte-network-core-v15.js?v=15"></script>
+<script src="news-data.js?v=25"></script><script src="news-2026-september.js?v=26"></script><script src="news-2026-09-17-tnf.js?v=27"></script><script src="news-2026-09-18-tnf-recap.js?v=28"></script><script src="news-2026-09-21-sunday-recap.js?v=29"></script>
+<meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="CTE Network"/><link rel="apple-touch-icon" href="apple-touch-icon.png?v=22"/><link rel="manifest" href="manifest.webmanifest?v=22"/><link rel="stylesheet" href="mobile-app-v22.css?v=22"/><link rel="stylesheet" href="design-v23.css?v=23"/>
+</head><body>
+<div class="league-shell"><header class="league-header"><img src="cte-league-logo.png" alt="CTE League logo"/><div><div class="league-kicker">OFFICIAL HOME OF THE CTE LEAGUE</div><h1 class="league-title">CTE NETWORK</h1><div class="muted">Year 2 • Established 2025</div></div></header></div>
+<nav class="league-nav"><div class="league-nav-inner"><a href="index.html" class="active">Home</a><a href="news.html">News</a><a href="scores.html">Scores</a><a href="schedule.html">Schedule</a><a href="rivalries.html">Rivalries</a><a href="standings.html">Standings</a><a href="teams.html">Teams</a><a href="transactions.html">Transactions</a><a href="records.html">Records</a><a href="league-history.html">History</a><a href="draft-central.html">Draft Central</a></div></nav>
+<main class="league-shell cte-home">
+<noscript class="notice error">JavaScript is required for live Sleeper data. League news and navigation remain available.</noscript>
+<header class="cte-home-top"><div><div class="eyebrow">2026 • Dynasty football</div><h2>The League Hub.</h2><p>Scores, stories, and the race for the title.</p></div><a class="btn" href="game-day.html">Open Game Day →</a></header>
+<section class="home-feature-links" aria-label="Featured league tools"><a class="home-feature-link" href="game-day.html"><span>Live command center</span><strong>Game Day</strong><small>Every matchup, league pulse and lineup readiness.</small></a><a class="home-feature-link" href="changes.html"><span>One activity feed</span><strong>What changed?</strong><small>Trades, waivers, lineup monitoring and new stories.</small></a><a class="home-feature-link" href="news.html"><span>Organized archive</span><strong>CTE Bot Newsroom</strong><small>Previews, recaps, rankings and game-day coverage.</small></a></section>
+<div class="cte-home-layout"><div class="cte-home-stack">
+<section class="league-card cte-feature home-news-lead" aria-labelledby="featuredTitle"><div class="cte-meta">CTE Bot · Sunday Recap</div><h3 id="featuredTitle">Sunday Chaos, Mike's Meltdown &amp; Monday Night Madness</h3><p>Jacob hits 188.52, four matchups head to Monday, and the division races get interesting.</p><div class="cte-actions"><a class="btn" href="article.html?v=29&amp;id=2026-week-2-sunday-recap">Read the story →</a><a class="btn" href="news.html">All news</a></div></section>
+<section aria-labelledby="standingsTitle"><div class="section-head"><h2 id="standingsTitle">League standings</h2><div class="live-controls"><span id="liveStamp" class="live-stamp" role="status">Updating…</span><button id="refreshLive" class="refresh-btn" type="button" aria-label="Refresh live standings">↻ Refresh</button><a class="btn" href="standings.html">Full table →</a></div></div><div id="standingsHome" class="league-card cte-home-live loading" aria-live="polite">Loading live Sleeper standings…</div></section>
+</div><div class="cte-home-stack">
+<section class="league-card cte-mini" aria-labelledby="previewTitle"><div class="cte-meta">Week 2 · Matchup previews</div><h3 id="previewTitle">Six games. Zero peace.</h3><p>Every matchup, with the original pregame projections.</p><a href="article.html?v=29&amp;id=2026-week-2-matchup-preview">Read the preview →</a></section>
+<section class="league-card cte-mini" aria-labelledby="recapTitle"><div class="cte-meta">Week 1 · Recap</div><h3 id="recapTitle">Some of you may already be in trouble.</h3><p>Jacob scores 192.56. Carter survives by 0.72. Jesse has some explaining to do.</p><a href="article.html?v=29&amp;id=2026-week-1-recap">Read the recap →</a></section>
+<section class="league-card cte-mini cte-home-stat" aria-label="Defending champion"><div><div class="cte-meta">Defending champion</div><strong>BRENDAN</strong><p>2025 inaugural CTE champion</p><div class="muted">Defeated Jacob in the title game.</div></div><span aria-hidden="true" style="font-size:32px;color:var(--gold2)">★</span></section>
+<section class="league-card cte-mini" aria-labelledby="exploreTitle"><div class="cte-meta">Explore the league</div><h3 id="exploreTitle">Every owner has a story.</h3><p>Follow team rosters, rivalry history, records and the 2026 draft.</p><div class="cte-actions"><a class="btn" href="teams.html">Teams →</a><a class="btn" href="records.html">Record book →</a></div></section>
+</div></div></main>
+<footer class="footer">CTE Network • Official Home of the CTE League • Powered by Sleeper</footer>
+<script>
+async function loadHome(options={}){const el=document.getElementById('standingsHome'),btn=document.getElementById('refreshLive');btn.disabled=true;el.classList.add('loading');try{const s=CTE_LEAGUE_DATA.league.seasons[2026],snap=await CTE_Sleeper.getLeagueSnapshot(s.sleeperLeagueId,options),lookup=CTE_UI.mapForSeason(2026,snap.users,snap.rosters),rows=CTE_UI.standingsRows(snap.rosters,lookup).slice(0,6);el.classList.remove('loading');el.innerHTML=`<div class="table-wrap"><table class="league-table"><thead><tr><th scope="col">#</th><th scope="col">Owner / team</th><th scope="col">Record</th><th scope="col">PF</th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${i+1}</td><td><a class="profile-cell-link" href="${CTE_UI.profileHref(r.ownerId)}"><div class="owner">${CTE_UI.esc(r.name)}</div><div class="team">${CTE_UI.esc(r.team)}</div></a></td><td>${r.wins}-${r.losses}${r.ties?'-'+r.ties:''}</td><td>${CTE_UI.fmt(r.pf)}</td></tr>`).join('')}</tbody></table></div>`;CTE_UI.setLiveStamp();}catch(e){el.classList.remove('loading');el.innerHTML='<div class="notice error">Could not reach Sleeper right now. <a href="standings.html">Open standings</a> or try refreshing.</div>';}finally{btn.disabled=false;}}
+document.getElementById('refreshLive').onclick=()=>{CTE_Sleeper.clearCache();loadHome({fresh:true});};loadHome({fresh:true});
+</script><script src="app-shell-v22.js?v=22"></script><script src="design-v23.js?v=23"></script>
+</body></html>
