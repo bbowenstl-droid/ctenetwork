@@ -4,16 +4,16 @@
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/><meta name="theme-color" content="#0b0d10"/>
 <title>Newsroom • CTE Network</title>
 <link rel="stylesheet" href="league-v15.css?v=18"/><link rel="stylesheet" href="news-v18.css?v=20"/>
-<script src="news-data.js?v=25"></script><script src="news-2026-september.js?v=26"></script><script src="news-2026-09-17-tnf.js?v=27"></script><script src="news-2026-09-18-tnf-recap.js?v=28"></script><script src="news-2026-09-21-sunday-recap.js?v=29"></script><script src="news-2026-09-23-week2-recap.js?v=30"></script><script src="news-2026-09-25-week3-preview.js?v=31"></script>
+<script src="news-data.js?v=25"></script><script src="news-2026-september.js?v=26"></script><script src="news-2026-09-17-tnf.js?v=27"></script><script src="news-2026-09-18-tnf-recap.js?v=28"></script><script src="news-2026-09-21-sunday-recap.js?v=29"></script><script src="news-2026-09-23-week2-recap.js?v=30"></script><script src="news-2026-09-25-week3-preview.js?v=31"></script><script src="news-2026-09-27-sunday-scaries.js?v=32"></script>
 <meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/><meta name="apple-mobile-web-app-title" content="CTE Network"/><link rel="apple-touch-icon" href="apple-touch-icon.png?v=22"/><link rel="manifest" href="manifest.webmanifest?v=22"/>
-<link rel="stylesheet" href="mobile-app-v22.css?v=22"/><link rel="stylesheet" href="design-v23.css?v=23"/><link rel="stylesheet" href="features-v24.css?v=24"/>
+<link rel="stylesheet" href="mobile-app-v22.css?v=22"/><link rel="stylesheet" href="design-v23.css?v=23"/><link rel="stylesheet" href="features-v24.css?v=24"/><link rel="stylesheet" href="carl-v26.css?v=26"/>
 </head>
 <body>
 <div class="league-shell"><header class="league-header"><img src="cte-league-logo.png" alt="CTE League logo"/><div><div class="league-kicker">OFFICIAL HOME OF THE CTE LEAGUE</div><h1 class="league-title">CTE NETWORK</h1><div class="muted">Year 2 • Established 2025</div></div></header></div>
 <nav class="league-nav"><div class="league-nav-inner"><a href="index.html">Home</a><a href="news.html" class="active">News</a><a href="scores.html">Scores</a><a href="schedule.html">Schedule</a><a href="rivalries.html">Rivalries</a><a href="standings.html">Standings</a><a href="teams.html">Teams</a><a href="transactions.html">Transactions</a><a href="records.html">Records</a><a href="league-history.html">History</a><a href="draft-central.html">Draft Central</a></div></nav>
 <main class="league-shell">
-<section class="feature-hero"><div class="eyebrow">CTE BOT NEWSROOM</div><h2>The league has receipts.</h2><p>Matchup previews, game-day notes, recaps, power rankings and every irresponsible piece of analysis—organized and preserved for future bullying purposes.</p><div class="feature-hero-actions"><a class="btn primary" href="game-day.html">Open Game Day →</a><a class="btn" href="changes.html">What changed?</a></div></section>
-<div id="newsroomStats" class="newsroom-stats"></div><div class="newsroom-toolbar"><input id="newsSearch" class="newsroom-search" type="search" placeholder="Search stories, owners or headlines…" aria-label="Search newsroom"/><div id="newsFilters" class="newsroom-filters" role="group" aria-label="Filter stories"></div></div><div id="newsGrid"></div>
+<section class="feature-hero"><div class="eyebrow">CTE NETWORK NEWSROOM</div><h2>The league has receipts.</h2><p>Matchup previews, game-day notes, recaps, power rankings and every irresponsible piece of analysis—organized and preserved for future bullying purposes.</p><div class="feature-hero-actions"><a class="btn primary" href="game-day.html">Open Game Day →</a><a class="btn" href="changes.html">What changed?</a></div></section>
+<section class="league-card carl-card" style="margin:18px 0"><div class="carl-card-copy"><div class="carl-kicker">NEW COLUMNIST</div><div class="carl-quote">Meet Concussion Carl.</div><p>Senior Fantasy Investigative Analyst. Somehow.</p><a class="btn" href="carl.html">View personnel file →</a></div><img src="concussion-carl.webp" alt="Concussion Carl"></section><div id="newsroomStats" class="newsroom-stats"></div><div class="newsroom-toolbar"><input id="newsSearch" class="newsroom-search" type="search" placeholder="Search stories, owners or headlines…" aria-label="Search newsroom"/><div id="newsFilters" class="newsroom-filters" role="group" aria-label="Filter stories"></div></div><div id="newsGrid"></div>
 </main>
 <script>
 const fmt=d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
@@ -21,7 +21,7 @@ const articleHref=id=>`article.html?v=29&id=${encodeURIComponent(id)}`;
 const stories=window.CTE_NEWS||[],grid=document.getElementById('newsGrid');
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let activeCategory='All';
-const bucket=a=>/preview/i.test(a.category)?'Previews':/recap/i.test(a.category)?'Recaps':/power/i.test(a.category)?'Power Rankings':/draft/i.test(a.category)?'Draft':/game|spotlight/i.test(a.category+' '+a.kicker)?'Game Day':'League News';
+const bucket=a=>/sunday scaries/i.test(a.category)?'Sunday Scaries':/preview/i.test(a.category)?'Previews':/recap/i.test(a.category)?'Recaps':/power/i.test(a.category)?'Power Rankings':/draft/i.test(a.category)?'Draft':/game|spotlight/i.test(a.category+' '+a.kicker)?'Game Day':'League News';
 const cats=['All',...new Set(stories.map(bucket))];
 document.getElementById('newsFilters').innerHTML=cats.map((c,i)=>`<button class="filter-chip ${i===0?'active':''}" data-category="${esc(c)}">${esc(c)}</button>`).join('');
 const counts=Object.fromEntries(cats.slice(1).map(c=>[c,stories.filter(a=>bucket(a)===c).length]));
