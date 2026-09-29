@@ -11,7 +11,7 @@
     <script src="news-2026-september.js?v=26"></script>
     <script src="news-2026-09-17-tnf.js?v=27"></script>
     <script src="news-2026-09-18-tnf-recap.js?v=28"></script>
-    <script src="news-2026-09-21-sunday-recap.js?v=29"></script><script src="news-2026-09-23-week2-recap.js?v=30"></script><script src="news-2026-09-25-week3-preview.js?v=31"></script><script src="news-2026-09-27-sunday-scaries.js?v=32"></script><script src="news-2026-09-28-carls-receipts.js?v=33"></script><script src="news-2026-09-28-holly-sideline.js?v=34"></script>
+    <script src="news-2026-09-21-sunday-recap.js?v=31"></script><script src="news-2026-09-23-week2-recap.js?v=30"></script><script src="news-2026-09-25-week3-preview.js?v=31"></script><script src="news-2026-09-27-sunday-scaries.js?v=32"></script><script src="news-2026-09-28-carls-receipts.js?v=33"></script><script src="news-2026-09-28-holly-sideline.js?v=34"></script>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="CTE Network" />
@@ -19,9 +19,10 @@
     <link rel="manifest" href="manifest.webmanifest?v=22" />
     <link rel="stylesheet" href="mobile-app-v22.css?v=22" />
     <link rel="stylesheet" href="design-v23.css?v=23" /><link rel="stylesheet" href="carl-v26.css?v=26" /><link rel="stylesheet" href="holly-v27.css?v=27"/>
-  </head>
-  <body>
-    <div class="league-shell"><header class="league-header"><img src="cte-league-logo.png" alt="CTE League logo" /><div><div class="league-kicker">OFFICIAL HOME OF THE CTE LEAGUE</div><h1 class="league-title">CTE NETWORK</h1><div class="muted">Year 2 • Established 2025</div></div></header></div>
+  
+<link rel="stylesheet" href="features-v24.css?v=24"><link rel="stylesheet" href="network-v29.css?v=31"></head>
+  <body class="n-legacy">
+    <div class="league-shell"><header class="league-header"><img src="cte-mark.webp" alt="CTE League logo" /><div><div class="league-kicker">OFFICIAL HOME OF THE CTE LEAGUE</div><h1 class="league-title">CTE NETWORK</h1><div class="muted">Year 2 • Established 2025</div></div></header></div>
     <nav class="league-nav"><div class="league-nav-inner"><a href="index.html">Home</a><a href="news.html" class="active">News</a><a href="scores.html">Scores</a><a href="schedule.html">Schedule</a><a href="rivalries.html">Rivalries</a><a href="standings.html">Standings</a><a href="teams.html">Teams</a><a href="transactions.html">Transactions</a><a href="records.html">Records</a><a href="league-history.html">History</a><a href="draft-central.html">Draft Central</a></div></nav>
     <main class="league-shell"><article id="article" class="article-shell"></article><div class="article-back"><a class="btn" href="news.html">← Back to CTE Network News</a></div></main>
     <script>
@@ -32,13 +33,16 @@
         document.title = a.title + " • CTE Network";
         const fmt = (d) => new Date(d + "T12:00:00").toLocaleDateString("en-US", {month:"long",day:"numeric",year:"numeric"});
         el.innerHTML = `<header class="article-header"><span class="news-badge">${a.kicker}</span><h1>${a.title}</h1><p class="article-subtitle">${a.subtitle}</p><div class="news-meta">${fmt(a.date)} • ${a.category}</div>${a.author==="Concussion Carl"?'<div style="margin-top:12px"><a class="btn" href="carl.html">Meet Concussion Carl →</a></div>':''}</header><div class="article-body">${a.body}</div>`;
+        const norm=(t)=>String(t).toLowerCase().replace(/[^a-z0-9]/g,'');
+        el.querySelectorAll('.article-body [class*="-article-hero"] h2').forEach((h)=>{if(norm(h.textContent)&&norm(a.title).includes(norm(h.textContent)))h.remove()});
       } else {
         document.title = "Article Not Found • CTE Network";
         el.innerHTML = '<div class="notice error"><strong>Article not found.</strong> Refresh the page or return to CTE Network News.</div>';
       }
     </script>
     <footer class="footer">CTE Network • CTE Bot</footer>
-    <script src="app-shell-v22.js?v=22"></script>
-    <script src="design-v23.js?v=23"></script>
-  </body>
+    <script src="app-v29.js?v=31"></script>
+    
+  
+</body>
 </html>

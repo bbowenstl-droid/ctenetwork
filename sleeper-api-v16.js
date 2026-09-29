@@ -19,7 +19,7 @@
     const k = path;
 
     if (!fresh && memory.has(k)) return memory.get(k).data;
-    if (!fresh && inflight.has(k)) return inflight.get(k);
+    if (inflight.has(k)) return inflight.get(k);
 
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);

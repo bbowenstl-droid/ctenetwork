@@ -94,10 +94,8 @@ body{overflow:hidden}.tv{height:100vh;display:grid;grid-template-rows:auto 1fr a
 <nav class="site-nav" aria-label="Primary">
   <div class="site-nav-inner">
     <a class="nav-link NAV_HOME" href="index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
-    <a class="nav-link NAV_COUNTDOWN" href="countdown.html"><span class="nav-icon">⏳</span><span>Countdown</span></a>
+    <a class="nav-link" href="draft-central.html"><span class="nav-icon">★</span><span>Draft central</span></a>
     <a class="nav-link NAV_BOARD active" href="tv.html"><span class="nav-icon">📺</span><span>Draft Board</span></a>
-    <a class="nav-link NAV_ADMIN" href="admin.html"><span class="nav-icon">🎙️</span><span>Commissioner</span></a>
-    <a class="nav-link NAV_HISTORY" href="history.html"><span class="nav-icon">🏆</span><span>Champions</span></a>
   </div>
 </nav>
 
@@ -105,7 +103,7 @@ body{overflow:hidden}.tv{height:100vh;display:grid;grid-template-rows:auto 1fr a
 <button id="fullscreenBtn" class="fullscreen-btn" type="button">⛶ FULL SCREEN</button>
 <div class="tv">
 <header class="panel topbar">
-<img src="cte-league-logo.png" class="logo">
+<img src="cte-league-logo.webp" class="logo">
 <div class="brand"><h1>CTE LEAGUE</h1><h2>2026 ROOKIE DRAFT</h2><div class="muted">COMMISSIONER BRENDAN BOWEN • 12 TEAMS • 4 ROUNDS • LINEAR</div></div>
 <div class="badge clock"><div id="clockStatus" class="clock-status">ON THE CLOCK</div><div id="pickNo" class="owner">1.01</div><div id="pickOwner" class="owner">Jesse</div><div id="timer" class="big timer">1:00</div></div>
 </header>
@@ -114,7 +112,7 @@ body{overflow:hidden}.tv{height:100vh;display:grid;grid-template-rows:auto 1fr a
 </div>
 <div id="goodellOverlay" class="goodell-overlay" aria-live="assertive">
   <div class="goodell-stage">
-    <img src="cte-league-logo.png" class="goodell-logo" alt="">
+    <img src="cte-league-logo.webp" class="goodell-logo" alt="">
     <div id="goodellPhase1" class="goodell-phase">
       <div class="goodell-kicker">2026 CTE LEAGUE ROOKIE DRAFT</div>
       <div id="goodellPickLine" class="goodell-main"></div>
@@ -135,14 +133,14 @@ body{overflow:hidden}.tv{height:100vh;display:grid;grid-template-rows:auto 1fr a
 
 <div id="suspenseOverlay" class="suspense-overlay" aria-live="assertive">
   <div class="suspense-card">
-    <img src="cte-league-logo.png" class="announcement-logo" alt="">
+    <img src="cte-league-logo.webp" class="announcement-logo" alt="">
     <div class="suspense-title">THE PICK IS IN</div>
     <div id="suspensePick" class="suspense-pick"></div>
     <div id="suspenseOwner" class="suspense-owner"></div>
     <div class="suspense-note">SELECTION BEING PROCESSED <span class="suspense-dot"></span><span class="suspense-dot"></span><span class="suspense-dot"></span></div>
   </div>
 </div>
-<div id="pickOverlay" class="pick-overlay" aria-live="assertive"><div class="pick-announcement"><img src="cte-league-logo.png" class="announcement-logo" alt=""><div class="pick-is-in">THE PICK IS IN</div><div id="announcePick" class="announcement-pick"></div><div id="announceOwner" class="announcement-owner"></div><div id="announcePlayer" class="announcement-player"></div><div id="announceMeta" class="announcement-meta"></div><div id="announceNFL" class="announcement-nfl"></div><div class="announcement-progress"><span></span></div></div></div>
+<div id="pickOverlay" class="pick-overlay" aria-live="assertive"><div class="pick-announcement"><img src="cte-league-logo.webp" class="announcement-logo" alt=""><div class="pick-is-in">THE PICK IS IN</div><div id="announcePick" class="announcement-pick"></div><div id="announceOwner" class="announcement-owner"></div><div id="announcePlayer" class="announcement-player"></div><div id="announceMeta" class="announcement-meta"></div><div id="announceNFL" class="announcement-nfl"></div><div class="announcement-progress"><span></span></div></div></div>
 <script type="module">
 import {connectCTE} from './firebase-bridge.js';
 const owners=window.CTE_DRAFT_DATA.owners,traded=new Set(window.CTE_DRAFT_DATA.traded),picks=Object.keys(owners);

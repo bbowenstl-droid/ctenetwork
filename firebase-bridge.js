@@ -10,11 +10,11 @@ export async function connectCTE() {
   }
   const app = initializeApp(cfg);
   const auth = getAuth(app);
-  await signInAnonymously(auth);
+  const cred = await signInAnonymously(auth);
   const db = getDatabase(app);
   const room = window.CTE_ROOM_CODE || "cte-2026-rookie-draft";
   return {
-    db, room,
+    db, room, uid: cred.user.uid,
     roomRef: ref(db, `rooms/${room}`),
     picksRef: ref(db, `rooms/${room}/picks`),
     metaRef: ref(db, `rooms/${room}/meta`),

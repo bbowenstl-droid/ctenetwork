@@ -1,5 +1,5 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090c10">
+<html><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090c10">
 <title>CTE Draft Central — Commissioner</title>
 <link rel="stylesheet" href="common.css">
 <style>
@@ -48,14 +48,13 @@ body{min-height:100vh}.admin{max-width:900px;margin:auto}.topbar{grid-template-c
 <nav class="site-nav" aria-label="Primary">
   <div class="site-nav-inner">
     <a class="nav-link NAV_HOME" href="index.html"><span class="nav-icon">🏠</span><span>Home</span></a>
-    <a class="nav-link NAV_COUNTDOWN" href="countdown.html"><span class="nav-icon">⏳</span><span>Countdown</span></a>
+    <a class="nav-link" href="draft-central.html"><span class="nav-icon">★</span><span>Draft central</span></a>
     <a class="nav-link NAV_BOARD" href="tv.html"><span class="nav-icon">📺</span><span>Draft Board</span></a>
     <a class="nav-link NAV_ADMIN active" href="admin.html"><span class="nav-icon">🎙️</span><span>Commissioner</span></a>
-    <a class="nav-link NAV_HISTORY" href="history.html"><span class="nav-icon">🏆</span><span>Champions</span></a>
   </div>
 </nav>
 <div class="shell admin">
-<header class="panel topbar"><img src="cte-league-logo.png" class="logo"><div class="brand"><h1>CTE DRAFT CENTRAL</h1><h2>COMMISSIONER CONTROL</h2></div></header>
+<header class="panel topbar"><img src="cte-league-logo.webp" class="logo"><div class="brand"><h1>CTE DRAFT CENTRAL</h1><h2>COMMISSIONER CONTROL</h2></div></header>
 <div class="cols">
 <section class="panel section">
 <h3>ON THE CLOCK</h3><div id="current" class="current">1.01</div><div id="owner" class="owner">Jesse</div><div id="timer" class="timer">1:00</div>
@@ -95,6 +94,7 @@ body{min-height:100vh}.admin{max-width:900px;margin:auto}.topbar{grid-template-c
 </div>
 
 <div id="status" class="status" style="margin-top:8px">Connecting…</div>
+<details class="status" style="margin-top:8px"><summary>Commissioner device ID (for Firebase rules)</summary><code id="deviceId" style="user-select:all;word-break:break-all">Connecting…</code><p>Paste this into the Firebase rules so only this device can edit the draft. See SECURITY.md.</p></details>
 </section>
 <section class="panel section">
 <h3>SELECT ANY PICK</h3><div id="picklist" class="picklist"></div>
@@ -258,5 +258,5 @@ $('rookieSearch').addEventListener('keydown',e=>{
 document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))$('suggestions').classList.remove('show')});
 $('manualToggle').onclick=()=>{$('manualRow').classList.toggle('show');selectedRookie=null;$('chosen').textContent=$('manualRow').classList.contains('show')?'Manual write-in mode.':'No player selected.'};
 setInterval(()=>render(),250);
-try{c=await connectCTE();makePickButtons();c.onValue(c.roomRef,s=>{const raw=s.val()||{};const normalized={...raw,picks:{}};Object.entries(raw.picks||{}).forEach(([k,v])=>normalized.picks[k.replace('_','.')]=v);state=normalized;render();$('status').innerHTML='<span class="ok">LIVE — phone and TV are synced.</span>'})}catch(e){$('status').innerHTML='<span class="bad">'+e.message+'</span>'}
+try{c=await connectCTE();document.getElementById('deviceId').textContent=c.uid;makePickButtons();c.onValue(c.roomRef,s=>{const raw=s.val()||{};const normalized={...raw,picks:{}};Object.entries(raw.picks||{}).forEach(([k,v])=>normalized.picks[k.replace('_','.')]=v);state=normalized;render();$('status').innerHTML='<span class="ok">LIVE — phone and TV are synced.</span>'})}catch(e){$('status').innerHTML='<span class="bad">'+e.message+'</span>'}
 </script></body></html>
