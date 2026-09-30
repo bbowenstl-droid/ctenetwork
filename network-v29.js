@@ -12,7 +12,7 @@ const error=(message)=>`<div class="n-error"><strong>We couldn't connect to Slee
 if(view==='index'){if(stories[0])$('homeLead').innerHTML=cover(stories[0]);$('homeStories').innerHTML=stories.slice(1,5).map(storyRow).join('')}
 if(view==='news'){
  if(stories[0])$('newsLead').innerHTML=cover(stories[0]);
- const bucket=s=>/holly/i.test(s.author||s.title)?'Holly':/carl|scaries/i.test(s.category+' '+s.title)?'Carl':/recap/i.test(s.category)?'Recaps':/preview/i.test(s.category)?'Previews':'League';
+ const bucket=s=>/sportsbook/i.test(s.category||'')?'Sportsbook':/holly/i.test(s.author||s.title)?'Holly':/carl|scaries/i.test(s.category+' '+s.title)?'Carl':/recap/i.test(s.category)?'Recaps':/preview/i.test(s.category)?'Previews':'League';
  const cats=['All',...new Set(stories.map(bucket))];let selected='All';
  $('newsFilters').innerHTML=cats.map(c=>`<button class="${c==='All'?'selected':''}" data-category="${esc(c)}" aria-pressed="${c==='All'}">${c}</button>`).join('');
  const render=()=>{const query=$('newsSearch').value.trim().toLowerCase();const list=stories.filter(s=>(selected==='All'||bucket(s)===selected)&&[s.title,s.subtitle,s.excerpt,s.author,s.category,(s.featuredOwners||[]).join(' ')].join(' ').toLowerCase().includes(query));$('newsCount').textContent=list.length+' STORIES';$('newsGrid').innerHTML=list.length?list.map((s,i)=>`<a class="n-news-card" href="${href(s)}"><div class="n-news-card-top"><span class="n-label">${esc(s.category)}</span><span>${date(s.date)}</span></div><h2>${esc(shortTitle(s))}</h2><p>${esc(s.excerpt)}</p><div class="n-news-card-bottom"><span>${esc(s.author||'CTE Network')}</span><b>↗</b></div></a>`).join(''):'<p class="n-empty">No stories match. Try another name or category.</p>'};

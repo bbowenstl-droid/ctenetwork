@@ -32,3 +32,7 @@ The TV board and commissioner page share one Firebase Realtime Database. Anyone 
 - The Firebase `apiKey` in `firebase-config.js` is not a secret — Firebase web keys are
   meant to be public. The rules above are what actually protect the data.
 - `admin.html` is not linked from any public page (TV board and Draft Central included) and asks search engines not to index it.
+
+## Sportsbook shared picks
+
+The Sportsbook uses the same database. Use `database.rules.json` (it includes the draft-room rule above) and follow the setup in `SPORTSBOOK.md`.

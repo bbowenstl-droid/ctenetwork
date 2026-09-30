@@ -1,3 +1,19 @@
+# CTE Network v35
+
+- Commissioner panel opens from `sportsbook.html?commissioner` or `#commissioner` and scrolls into view.
+- Sportsbook page files renamed to `sportsbook-app-v35.js` and `sportsbook-v35.css` so phones can't keep an old copy. The old `sportsbook-v32.js` / `sportsbook-v32.css` are no longer used and can be deleted.
+- Sportsbook footer shows the version (SPORTSBOOK v35).
+
+# CTE Network v34 — Shared picks, weekly parlays, weekly awards
+
+- **Picks save to the website.** Owners sign in once per device with a league code from the commissioner; cards and parlays save online, follow them to any device, count on the leaderboard automatically, and stay hidden until kickoff. The board shows who's in.
+- **Weekly parlay:** Board toggle (Weekly card | Parlay). 2–6 legs, one per matchup, CTE$100 flat; pushes drop a leg. New Parlay race on the Leaderboard.
+- **Commissioner panel** at `sportsbook.html#commissioner`: make/reset league codes, set each week's lock time.
+- **Weekly awards** on Home and Game Day: top score, biggest blowout, nail-biter, bad beat, bench points, basement.
+- **This week in CTE history** on Home: the same week in past seasons.
+- Newsroom: new Sportsbook filter.
+- Setup: `SPORTSBOOK.md` and `database.rules.json` (Firebase rules; includes the draft room).
+
 # CTE Network v32 — CTE Sportsbook
 
 - New **Sportsbook** tab (mobile bar and menu). Week 4 board with six markets: spreads, moneylines, opening lines and line movement.
