@@ -1,0 +1,19 @@
+/* CTE Network v36 — Home Screen install card (Sportsbook page) */
+.cte-install{margin:16px 0 0;padding:14px 16px;border-radius:20px;background:var(--bk-s1,#14171d);border:1px solid var(--bk-line,#262a33);color:var(--bk-text,#f2f4f8)}
+.cte-inst-row{display:grid;grid-template-columns:44px minmax(0,1fr) 36px;gap:12px;align-items:center}
+.cte-inst-app{width:44px;height:44px;border-radius:11px;display:block}
+.cte-inst-copy h2{margin:0;font-size:16px;font-weight:800;letter-spacing:-.01em}
+.cte-inst-copy p{margin:2px 0 0;font-size:13px;line-height:1.4;color:var(--bk-mute,#9aa0ac)}
+.cte-inst-x{width:36px;height:36px;border:0;border-radius:50%;background:transparent;color:var(--bk-mute,#9aa0ac);font-size:24px;line-height:1;cursor:pointer}
+.cte-inst-x:active{background:var(--bk-s2,#1c2027)}
+.cte-inst-actions{display:flex;gap:8px;margin-top:12px}
+.cte-inst-btn{min-height:44px;padding:0 16px;border:1px solid var(--bk-line2,#323845);border-radius:12px;background:var(--bk-s2,#1c2027);color:inherit;font:inherit;font-size:14px;font-weight:800;cursor:pointer}
+.cte-inst-btn.is-primary{background:var(--bk-sel,#f4f5f7);color:#0d0f13;border-color:transparent}
+.cte-inst-btn:active{transform:scale(.97)}
+.cte-inst-steps{margin:12px 0 0;padding:0 0 0 22px;display:grid;gap:10px;font-size:14px;line-height:1.45}
+.cte-inst-steps[hidden]{display:none}
+.cte-inst-steps b{color:#fff}
+.cte-inst-ico{display:inline-block;vertical-align:-3px;margin:0 2px;color:var(--bk-move,#ffb224)}
+.cte-inst-note{list-style:none;margin-left:-22px;font-size:12.5px;color:var(--bk-mute,#9aa0ac)}
+@media(min-width:821px){.cte-install{max-width:560px}}
+@media(prefers-reduced-motion:reduce){.cte-inst-btn:active{transform:none}}
