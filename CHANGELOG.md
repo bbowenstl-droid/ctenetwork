@@ -18,13 +18,13 @@
 
 - New **Sportsbook** tab (mobile bar and menu). Week 4 board with six markets: spreads, moneylines, opening lines and line movement.
 - League pick'em: build a card of 3 moneylines + 3 spreads at CTE$100 each, lock before Thursday kickoff, share the receipt.
-- Carl vs Holly bankroll war: both start at CTE$1,000, all-in every week, no refills.
+- Carl vs Anita bankroll war: both start at CTE$1,000, all-in every week, no refills.
 - Leaderboard ranked by CTE$ profit with weekly badges; Results tab grades from Sleeper once games are final.
 - Live, locked and final states; Game Day cards show the line and who's covering; homepage teaser; launch article with reusable embeds.
 - Fixes: mobile nav fits six tabs at 360px.
-- New article: “The CTE Bankroll War” with Carl's and Holly's Week 4 tickets, now live in the Carl vs Holly tab (graded at the odds printed on each ticket).
-- Official locked Week 4 final board applies to the league challenge and Carl/Holly. Bankroll War tickets, tables and max bankrolls regraded at those prices (Carl max CTE$1,513.36, Holly CTE$1,449.76).
-- Fixed low-contrast intro text in Carl and Holly article heroes.
+- New article: “The CTE Bankroll War” with Carl's and Anita's Week 4 tickets, now live in the Carl vs Anita tab (graded at the odds printed on each ticket).
+- Official locked Week 4 final board applies to the league challenge and Carl/Anita. Bankroll War tickets, tables and max bankrolls regraded at those prices (Carl max CTE$1,513.36, Anita CTE$1,449.76).
+- Fixed low-contrast intro text in Carl and Anita article heroes.
 - See SPORTSBOOK.md for the weekly update workflow and backend plan.
 
 # CTE Network v31 — ESPN meets Apple, finished
@@ -37,7 +37,7 @@ Built on the v29 redesign. Not published — deploy through your normal workflow
   Old dark/gold panels, gold labels, dark dropdowns and low-contrast grey text are gone.
 - Page titles on older screens use the same headline style as Home, Standings and News.
 - Articles: darker, more readable body text, cleaner lead paragraph, restyled tables;
-  Holly's headline no longer appears twice.
+  Anita's headline no longer appears twice.
 - Automated contrast check passes on every screen at phone and desktop widths.
 
 ## Draft Central

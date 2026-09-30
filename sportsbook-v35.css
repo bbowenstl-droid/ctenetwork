@@ -244,7 +244,7 @@ body.bk-page .n-menu{color:var(--n-ink)}
 .bk-receipt-actions .bk-cta{flex:1 1 180px;padding:0 16px}
 .bk-storage-note{max-width:460px;margin:12px auto 0;font-size:12px;line-height:1.5;color:var(--bk-mute);text-align:center}
 
-/* ---------- Carl vs Holly ---------- */
+/* ---------- Carl vs Anita ---------- */
 .bk-duel{position:relative;display:grid;grid-template-columns:1fr auto 1fr;border-radius:var(--bk-r3);overflow:hidden;background:var(--bk-s1);border:1px solid var(--bk-line);isolation:isolate}
 .bk-duelist{position:relative;min-height:330px;padding:22px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
 .bk-duelist img{position:absolute;z-index:-1;bottom:0;height:92%;width:auto;max-width:none;object-fit:contain;filter:saturate(.95)}

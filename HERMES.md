@@ -40,7 +40,7 @@ This project serves several purposes:
 
 4\. Create CTE Network articles and league content.
 
-5\. Maintain recurring CTE personalities including Concussion Carl and Holly Woodwork.
+5\. Maintain recurring CTE personalities including Concussion Carl and Anita Headcheck.
 
 6\. Publish approved changes to GitHub Pages.
 
@@ -190,17 +190,17 @@ His predictions are entertainment, not real sportsbook odds.
 
 
 
-\## Holly Woodwork
+\## Anita Headcheck
 
 
 
-Holly Woodwork is a recurring CTE Network sideline reporter.
+Anita Headcheck is a recurring CTE Network sideline reporter.
 
 
 
 Relevant assets/files include:
 
-\- holly-woodwork.webp
+\- anita-headcheck.webp
 
 \- holly-v27.css
 
@@ -246,7 +246,7 @@ When Brendan requests an article:
 
 6\. Identify major players and fantasy implications.
 
-7\. Review Carl/Holly predictions if applicable.
+7\. Review Carl/Anita predictions if applicable.
 
 8\. Build the article using verified information.
 

@@ -24,7 +24,7 @@
 /* ===== v31: finish the secondary screens =====
    Every legacy route now reads as part of the same app: light surfaces, one ink,
    one red, calm grey for secondary text. Dark panels are reserved for the
-   Carl/Holly talent features. */
+   Carl/Anita talent features. */
 .n-legacy{--n-soft:#5f636c;--n-faint:#6c7079;--n-fill:#f2f2f5}
 .n-legacy main :where(p,small,.muted):not(:is(.carl-profile-hero,.carl-article-hero,.holly-article-hero,.champ-pick,.bet-card,.holly-odds-note,.n-cover) *){color:var(--n-soft)}
 .n-legacy :is(.live-stamp,.record-detail,.change-item-meta,.feed-time,.schedule-record,.rival-history,.gotw-sub,.news-meta){color:var(--n-faint)!important}
@@ -145,3 +145,6 @@ a.n-draft-owner:hover{color:var(--n-red)}
 /* v32: six-slot tab bar (Sportsbook) */
 @media(max-width:820px){.n-navigation>a>span,.n-navigation>button>span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-.01em}}
 .article-body .carl-article-copy p,.article-body .holly-article-copy p{color:#e4e6eb!important}
+/* Anita's transparent full-body artwork replaces the old portrait crop. */
+.n-talent-card.n-holly img{top:auto;bottom:0;right:0;width:48%;height:96%;object-fit:contain;object-position:center bottom;mix-blend-mode:normal}
+.n-talent-card.n-holly h3{font-size:clamp(26px,2.3vw,31px)}

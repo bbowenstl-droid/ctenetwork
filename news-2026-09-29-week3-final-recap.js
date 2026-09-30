@@ -2,7 +2,7 @@ window.CTE_NEWS=window.CTE_NEWS||[];window.CTE_NEWS.unshift({
 id:"2026-week-3-final-recap-opening-lines",date:"2026-09-29",category:"Carl's Receipts",kicker:"CONCUSSION CARL • WEEK 3 FINAL",author:"Concussion Carl",
 title:"CARL'S RECEIPTS: THE LOCK SURVIVED. THE SPORTSBOOK DIDN'T.",
 subtitle:"Week 3's final scores, a 4-2 winner card, a 1-5 spread disaster, and Carl's Week 4 opening lines.",
-excerpt:"Carl grades all six final Week 3 results, buries his Upset Special, then opens the Week 4 board ahead of Holly's Wednesday final lines.",
+excerpt:"Carl grades all six final Week 3 results, buries his Upset Special, then opens the Week 4 board ahead of Anita's Wednesday final lines.",
 featuredOwners:["jacob","elijah","brendan","carter","isaiah","brett","mike","jesse","troy","dan","cotton","jerry"],
 body:`<section class="carl-article-hero"><div class="carl-article-copy"><span class="carl-pill">CARL'S RECEIPTS • WEEK 3 FINAL</span><div class="carl-kicker">CTE SPORTSBOOK AUDIT</div><h2>THE LOCK SURVIVED. THE SPORTSBOOK DIDN'T.</h2><p>Four of six winners. One of six spreads. Accounting has questions.</p><a class="btn" href="carl.html">View Carl's personnel file →</a></div><img src="concussion-carl.webp" alt="Concussion Carl"></section>
 <div class="carl-byline"><img src="concussion-carl.webp" alt="Concussion Carl"><div><strong>By Concussion Carl</strong><br><span class="muted">Senior Fantasy Investigative Analyst • Currently avoiding Accounting</span></div></div>
@@ -43,10 +43,10 @@ body:`<section class="carl-article-hero"><div class="carl-article-copy"><span cl
 <p>Gas Station Sushi needs to stop serving Jerry. The health inspector has seen enough.</p>
 <h2>THE FINAL AUDIT</h2>
 <div class="carl-scoreboard"><div class="carl-stat"><span>Straight-up</span><strong>4-2</strong></div><div class="carl-stat"><span>ATS</span><strong>1-5</strong></div><div class="carl-stat"><span>Lock</span><strong>0-1 ATS</strong></div><div class="carl-stat"><span>Upset</span><strong>0-1</strong></div></div>
-<p>Jacob was my only spread cover. The other five tickets belong in a folder labeled “do not show Holly.” She has already seen them, of course. She was standing over my shoulder Monday night with that smile people get when they know they're about to be unbearable.</p>
+<p>Jacob was my only spread cover. The other five tickets belong in a folder labeled “do not show Anita.” She has already seen them, of course. She was standing over my shoulder Monday night with that smile people get when they know they're about to be unbearable.</p>
 <p>My imaginary <strong>CTE$1,000 bankroll remains unsettled</strong>. I posted picks and lines but never assigned stakes before kickoff, so I'm not inventing a balance afterward. Starting with the final Week 4 card, every ticket gets a posted stake.</p>
 <h2>WEEK 4: CARL'S OPENING LINES</h2>
-<p>I have finished grading the damage and reopened the window. These are the <strong>opening lines</strong>, set after the finalized Week 3 scores. <strong>Holly will announce the final Week 4 lines Wednesday, September 30.</strong> Spreads, moneylines and totals can move before then. These are prices, not my official Week 4 picks.</p>
+<p>I have finished grading the damage and reopened the window. These are the <strong>opening lines</strong>, set after the finalized Week 3 scores. <strong>Anita will announce the final Week 4 lines Wednesday, September 30.</strong> Spreads, moneylines and totals can move before then. These are prices, not my official Week 4 picks.</p>
 <div class="table-wrap"><table class="article-table"><thead><tr><th>Week 4 matchup</th><th>Opening spread</th><th>Opening moneyline</th><th>Opening total</th></tr></thead><tbody>
 <tr><td>Brendan vs. Jacob</td><td><strong>Jacob −12.5</strong></td><td>Jacob −200 / Brendan +165</td><td>280.5</td></tr>
 <tr><td>Brett vs. Carter</td><td><strong>Brett −8.5</strong></td><td>Brett −175 / Carter +145</td><td>247.5</td></tr>
@@ -61,6 +61,6 @@ body:`<section class="carl-article-hero"><div class="carl-article-copy"><span cl
 <p><strong>Dan vs. Isaiah — Isaiah −6.5:</strong> Dan nearly beat Troy and put up 127.38. Isaiah just took down Brett. Six and a half gives Dan credit for showing up while acknowledging Isaiah has spent the last two weeks making analysts look stupid. Present company included.</p>
 <p><strong>Cotton vs. Troy — Troy −7.5:</strong> Troy escaped Dan, and Cotton just absorbed 145.22 from Jerry. This spread assumes Gas Station Sushi can put all its ingredients on the field. That assumption will be reviewed Wednesday.</p>
 <p><strong>Jesse vs. Elijah — Elijah −5.5:</strong> Jesse won big while Elijah took his first beating from Jacob. I'm not treating one loss to the league's highest-scoring team as a collapse. I'm also not overlooking Jesse after he turned my Upset Special into evidence against me.</p>
-<div class="carl-take"><strong>CARL'S FINAL WORD:</strong> Those are the opening numbers. Holly gets the final board Wednesday. I'll bring my official picks, spread selections, Lock, Upset Special and posted stakes once those lines are set. Until then, I'm 4-2 at picking winners and 1-5 at predicting margins. If you need me, I'll be studying the difference.</div>
-<p class="carl-disclaimer">CTE Sportsbook and CTE Credits are fictional league entertainment with no monetary value. Week 3 results reflect finalized Sleeper matchup scores. Week 4 opening lines are editorial numbers and may change before Holly's Wednesday final board.</p>`
+<div class="carl-take"><strong>CARL'S FINAL WORD:</strong> Those are the opening numbers. Anita gets the final board Wednesday. I'll bring my official picks, spread selections, Lock, Upset Special and posted stakes once those lines are set. Until then, I'm 4-2 at picking winners and 1-5 at predicting margins. If you need me, I'll be studying the difference.</div>
+<p class="carl-disclaimer">CTE Sportsbook and CTE Credits are fictional league entertainment with no monetary value. Week 3 results reflect finalized Sleeper matchup scores. Week 4 opening lines are editorial numbers and may change before Anita's Wednesday final board.</p>`
 });

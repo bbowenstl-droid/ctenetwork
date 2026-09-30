@@ -78,7 +78,7 @@
       <span class="bk-teaser-cta">Enter the Sportsbook <span aria-hidden="true">\u2197</span></span></div>
       <div class="bk-teaser-side"><div class="bk-teaser-duel">
         <div class="is-carl"><img src="concussion-carl.webp" alt="" loading="lazy"><small>Carl</small><strong class="bk-num">${money(carl.current)}</strong></div>
-        <div class="is-holly"><img src="holly-woodwork.webp" alt="" loading="lazy"><small>Holly</small><strong class="bk-num">${money(holly.current)}</strong></div></div>
+        <div class="is-holly"><img src="anita-headcheck.webp" alt="" loading="lazy"><small>Anita</small><strong class="bk-num">${money(holly.current)}</strong></div></div>
         ${lotw ? `<div class="bk-teaser-lotw"><small>Line of the week</small><strong class="bk-num">${esc(name(lotw.mv.current.fav))} ${E.formatLine(-lotw.mv.open.points)} \u2192 ${E.formatLine(-lotw.mv.current.points)}</strong><p>Moved <b>${lotw.mv.points} pts</b> toward ${esc(name(lotw.mv.toward))}. Moneyline went from ${E.formatOdds(lotw.m.openMoneyline[lotw.mv.current.fav])} to ${E.formatOdds(lotw.m.moneyline[lotw.mv.current.fav])}.</p></div>` : ''}
       </div>`;
   }
@@ -131,7 +131,7 @@
     },
     duel(el, results) {
       const d = id => { const l = E.bankrollLedger(B, id, results); return `<div class="is-${id}"><img src="${esc(l.personality.image)}" alt="" loading="lazy"><div><small>${esc(l.personality.name)}</small><strong class="bk-num">${money(l.current)}</strong><small class="bk-num">${E.recordText(l.records.total)} \u00b7 season ${money(l.seasonPnl, { sign: true })}</small></div></div>`; };
-      return shell(`<div class="bk-embed-duel">${d('carl')}${d('holly')}</div>`, `<span>Bankrolls carry over. No refills.</span><a href="sportsbook.html#carl-vs-holly">Carl vs Holly \u2197</a>`);
+      return shell(`<div class="bk-embed-duel">${d('carl')}${d('holly')}</div>`, `<span>Bankrolls carry over. No refills.</span><a href="sportsbook.html#carl-vs-holly">Carl vs Anita \u2197</a>`);
     },
     card(el, results) {
       const id = el.dataset.who === 'holly' ? 'holly' : 'carl', l = E.bankrollLedger(B, id, results), wk = l.weeks.find(w => w.week === Number(el.dataset.week || B.week));

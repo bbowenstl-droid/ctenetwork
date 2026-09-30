@@ -157,7 +157,7 @@ test('entry line round trip', () => {
   assert.deepStrictEqual(E.parseEntryLine(line), { week: 4, ownerId: 'brendan', ids });
 });
 
-/* Carl / Holly bankroll */
+/* Carl / Anita bankroll */
 function w5Book() {
   const b = clone(BOOK);
   // A fictional Week 5 slate for carry-forward tests (test fixture only)
@@ -174,13 +174,13 @@ test('bankroll starts at CTE$1,000 with no card', () => {
   const L = E.bankrollLedger(b, 'carl', {});
   assert.strictEqual(L.current, 1000); assert.strictEqual(L.thisWeek.status, 'no-card'); assert.strictEqual(L.thisWeek.start, 1000);
 });
-test('board favorites match the tickets Carl and Holly bet', () => {
+test('board favorites match the tickets Carl and Anita bet', () => {
   for (const id of ['carl', 'holly']) for (const w of LIVE.personalities[id].cards[4].wagers) {
     const m = E.market(LIVE, w.market);
     assert.strictEqual(w.type === 'ml' ? m.moneyline[w.side] : m.spread[w.side].odds, w.odds, `${id} ${w.market} ${w.type} ${w.side}`);
   }
 });
-test('Week 4 Carl/Holly tickets use final board prices and match the published max returns', () => {
+test('Week 4 Carl/Anita tickets use final board prices and match the published max returns', () => {
   for (const [id, max] of [['carl', 1513.36], ['holly', 1449.76]]) {
     const w = E.bankrollLedger(LIVE, id, {}).thisWeek;
     assert.strictEqual(w.staked, 1000); assert.deepStrictEqual(w.issues, []);

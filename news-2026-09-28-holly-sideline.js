@@ -1,13 +1,13 @@
 window.CTE_NEWS=window.CTE_NEWS||[];window.CTE_NEWS.unshift({
-id:"2026-week-3-holly-sideline-debut",date:"2026-09-28",category:"Sideline Report",kicker:"HOLLY ON THE SIDELINE • MONDAY NIGHT",
-author:"Holly Woodwork",
-title:"HOLLY ON THE SIDELINE: CARL'S CARD NEEDS MEDICAL ATTENTION",
-subtitle:"Five Week 3 matchups still have players under the Monday-night lights. Holly audits Carl's damage, then opens the first look at Week 4.",
-excerpt:"Holly Woodwork checks the pulse on Carl's Lock and Upset Special, roasts the rest of his Week 3 card and reveals unofficial early Week 4 odds for all six matchups.",
+id:"2026-week-3-holly-sideline-debut",date:"2026-09-28",category:"Sideline Report",kicker:"ANITA ON THE SIDELINE • MONDAY NIGHT",
+author:"Anita Headcheck",
+title:"ANITA ON THE SIDELINE: CARL'S CARD NEEDS MEDICAL ATTENTION",
+subtitle:"Five Week 3 matchups still have players under the Monday-night lights. Anita audits Carl's damage, then opens the first look at Week 4.",
+excerpt:"Anita Headcheck checks the pulse on Carl's Lock and Upset Special, roasts the rest of his Week 3 card and reveals unofficial early Week 4 odds for all six matchups.",
 featuredOwners:["jacob","elijah","brett","isaiah","jesse","mike","troy","dan","jerry","cotton","brendan","carter"],
-body:`<section class="holly-article-hero"><div class="holly-article-copy"><span class="holly-pill">HOLLY ON THE SIDELINE • WEEK 3</span><div class="holly-kicker">CTE NETWORK MONDAY NIGHT REPORT</div><h2>CARL'S CARD NEEDS MEDICAL ATTENTION.</h2><p>Five matchups are still attached to Monday night. Carl brought the picks. I brought the receipts.</p></div><img src="holly-woodwork.webp" alt="Holly Woodwork, CTE Network sideline reporter"></section>
-<div class="holly-byline"><img src="holly-woodwork.webp" alt="Holly Woodwork"><div><strong>By Holly Woodwork</strong><br><span class="muted">CTE Network Sideline Reporter &amp; League Insider</span></div></div>
-<p class="article-deck">Good evening, CTE. Holly Woodwork here. We have one NFL game left, five fantasy matchups still attached to it, and a roomful of managers pretending they are not refreshing Sleeper under the table.</p>
+body:`<section class="holly-article-hero"><div class="holly-article-copy"><span class="holly-pill">ANITA ON THE SIDELINE • WEEK 3</span><div class="holly-kicker">CTE NETWORK MONDAY NIGHT REPORT</div><h2>CARL'S CARD NEEDS MEDICAL ATTENTION.</h2><p>Five matchups are still attached to Monday night. Carl brought the picks. I brought the receipts.</p></div><img src="anita-headcheck.webp" alt="Anita Headcheck, CTE Network sideline reporter"></section>
+<div class="holly-byline"><img src="anita-headcheck.webp" alt="Anita Headcheck"><div><strong>By Anita Headcheck</strong><br><span class="muted">CTE Network Sideline Reporter &amp; League Insider</span></div></div>
+<p class="article-deck">Good evening, CTE. Anita Headcheck here. We have one NFL game left, five fantasy matchups still attached to it, and a roomful of managers pretending they are not refreshing Sleeper under the table.</p>
 <p>Gentlemen, if you are going to panic, at least keep your chin up. It photographs better.</p>
 <p>My sources are everywhere tonight: a fresh 12-roster map, the official injury reports, and Concussion Carl's original Week 3 card sitting on my desk like a bad decision wearing expensive cologne.</p>
 <p>Carl picked all six games before Sunday. His Sunday-night audit had him tracking toward <strong>3–3 straight-up and 1–5 against the spread if the current leaders held</strong>. The Lock and Upset Special were both still alive, although one of them was breathing through a tube.</p>
@@ -58,7 +58,7 @@ body:`<section class="holly-article-hero"><div class="holly-article-copy"><span 
 
 <h2>FIRST LOOK: WEEK 4 OPENING ODDS</h2>
 <p>Now that Carl's card has been examined, sedated and placed under observation, here are the first Week 4 numbers crossing my desk.</p>
-<div class="holly-odds-note"><strong>EARLY-LOOK BOARD</strong><br>These are unofficial CTE Network odds—not Holly's picks and not Carl's official Week 4 Sunday Scaries card. The market can move after Monday scoring, stat corrections, injuries, roster moves and lineup decisions.<br><em>Admire the board, boys, but keep your hands where I can see them.</em></div>
+<div class="holly-odds-note"><strong>EARLY-LOOK BOARD</strong><br>These are unofficial CTE Network odds—not Anita's picks and not Carl's official Week 4 Sunday Scaries card. The market can move after Monday scoring, stat corrections, injuries, roster moves and lineup decisions.<br><em>Admire the board, boys, but keep your hands where I can see them.</em></div>
 <div class="table-wrap"><table class="article-table early-odds"><thead><tr><th>Week 4 matchup</th><th>Early spread</th><th>Early moneyline</th><th>Early total</th></tr></thead><tbody>
 <tr><td>Brendan vs. Jacob</td><td><strong>Jacob -12.5</strong></td><td>Jacob -200 / Brendan +165</td><td>280.5</td></tr>
 <tr><td>Brett vs. Carter</td><td><strong>Brett -8.5</strong></td><td>Brett -175 / Carter +145</td><td>247.5</td></tr>
@@ -74,8 +74,8 @@ body:`<section class="holly-article-hero"><div class="holly-article-copy"><span 
 <p><strong>Cotton vs. Troy:</strong> Gas Station Sushi gets Troy, who may arrive with fresh Hurts momentum and entirely too much confidence. Cotton, I recommend something stronger than gas-station wasabi.</p>
 <p><strong>Jesse vs. Elijah:</strong> Jesse may escape Week 3 with a win; Elijah still carries early-season contender heat even with Jacob currently working him over. Five and a half keeps this one close enough to flirt with and dangerous enough to regret.</p>
 <p>No Week 4 player projections were returned with the matchup pull, so the opening board is editorial and fictional, shaped by verified recent scoring and the confirmed Week 4 schedule. It is not a promise, a wager or Carl's finalized card.</p>
-<div class="holly-take"><strong>HOLLY'S FINAL WORD:</strong> Carl brought six lines, a Lock, an Upset Special and CTE$1,000 in fictional confidence. I brought the receipts, better lighting and the number for whoever handles sportsbook emergencies.</div>
+<div class="holly-take"><strong>ANITA'S FINAL WORD:</strong> Carl brought six lines, a Lock, an Upset Special and CTE$1,000 in fictional confidence. I brought the receipts, better lighting and the number for whoever handles sportsbook emergencies.</div>
 <p>Keep your eyes on the board, boys. Monday night is almost here—and some of you are about to find out whether your lineup can finish as well as you claimed it could.</p>
-<p class="holly-disclaimer">CTE Week 3 scores are a refreshed Sleeper snapshot from before Eagles–Bears and remain provisional. Carl's lines and CTE credits are fictional, preserved from his original published card and have no monetary value. Week 4 odds are unofficial editorial opening numbers, not Holly's picks or Carl's official Week 4 card, and are subject to change. NFL availability reflects official reports checked September 28.</p>
+<p class="holly-disclaimer">CTE Week 3 scores are a refreshed Sleeper snapshot from before Eagles–Bears and remain provisional. Carl's lines and CTE credits are fictional, preserved from his original published card and have no monetary value. Week 4 odds are unofficial editorial opening numbers, not Anita's picks or Carl's official Week 4 card, and are subject to change. NFL availability reflects official reports checked September 28.</p>
 <p class="article-sources"><a href="https://www.chicagobears.com/schedule/" target="_blank" rel="noopener">Game time and broadcast</a> • <a href="https://www.chicagobears.com/news/injury-update-bears-rule-out-caleb-williams-will-start-tyson-bagent-or-case-keenum-vs-eagles" target="_blank" rel="noopener">Bears injury update</a> • <a href="https://www.philadelphiaeagles.com/news/eagles-at-bears-injury-report-2026-nfl-week-3-monday-night-football-caleb-williams-saquon-barkley" target="_blank" rel="noopener">Eagles–Bears injury report</a></p>`
 });

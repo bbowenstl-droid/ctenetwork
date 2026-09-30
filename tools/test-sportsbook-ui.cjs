@@ -82,8 +82,8 @@ const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:
     await p.reload(); await p.waitForTimeout(150);
     check(await p.locator('#bkWalletCard').innerText() === 'Locked \u2713', `${width}: locked card persists on this device`);
     await p.goto('http://127.0.0.1:8766/sportsbook.html#carl-vs-holly'); await p.waitForTimeout(150);
-    check((await p.locator('#panel-duel').innerText()).includes('CTE$1,000'), `${width}: Carl/Holly start at CTE$1,000`);
-    check(!await overflow(p), `${width}: no overflow on Carl vs Holly`);
+    check((await p.locator('#panel-duel').innerText()).includes('CTE$1,000'), `${width}: Carl/Anita start at CTE$1,000`);
+    check(!await overflow(p), `${width}: no overflow on Carl vs Anita`);
     if (width === 390) await p.screenshot({ path: `${out}/m-duel.png`, fullPage: true });
     for (const tab of ['leaderboard', 'results']) { await p.goto('http://127.0.0.1:8766/sportsbook.html#' + tab); await p.waitForTimeout(120); check(!await overflow(p), `${width}: no overflow on ${tab}`); }
     check(errors.length === 0, `${width}: no console errors (${errors.join(' | ')})`);
@@ -109,7 +109,7 @@ const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:
     check(detail.includes('Tale of the tape') && /#\d+/.test(detail), '1440: tape with PF rank');
     check(/W1|W2|W3/.test(detail), '1440: last-three scoring from Sleeper');
     check(detail.includes('Head to head'), '1440: head to head block');
-    check(detail.includes("hosting is charming"), '1440: Holly take shown');
+    check(detail.includes("hosting is charming"), '1440: Anita take shown');
     check(detail.includes('Jacob wins. Brendan covers.'), '1440: Carl take shown');
     await p.click('[data-expand="w4-brett-carter"]'); await p.waitForTimeout(600);
     check((await p.locator('#d-w4-brett-carter').innerText()).includes("Carl hasn't filed"), '1440: Carl take unavailable state');

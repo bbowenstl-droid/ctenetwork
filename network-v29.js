@@ -4,15 +4,15 @@ const $=id=>document.getElementById(id),esc=CTE_UI.esc,fmt=CTE_UI.fmt;
 const stories=[...(window.CTE_NEWS||[])].sort((a,b)=>b.date.localeCompare(a.date));
 const date=d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
 const href=s=>'article.html?id='+encodeURIComponent(s.id);
-const picture=s=>/holly/i.test(s.author||s.title)?'holly-woodwork.webp':/carl|scaries/i.test((s.author||'')+' '+s.title)?'concussion-carl.webp':null;
-const shortTitle=s=>s.title.replace(/^HOLLY ON THE SIDELINE:\s*/i,'').replace(/^CARL'S RECEIPTS:\s*/i,'');
+const picture=s=>/anita|holly/i.test(s.author||s.title)?'anita-headcheck.webp':/carl|scaries/i.test((s.author||'')+' '+s.title)?'concussion-carl.webp':null;
+const shortTitle=s=>s.title.replace(/^ANITA ON THE SIDELINE:\s*/i,'').replace(/^CARL'S RECEIPTS:\s*/i,'');
 const cover=s=>`<a href="${href(s)}" class="n-cover-link ${picture(s)?'':'n-cover-text'}"><div class="n-cover-art ${picture(s)?.includes('carl')?'is-carl':''}"><span class="n-cover-watermark" aria-hidden="true">CTE</span>${picture(s)?`<img src="${picture(s)}" alt="${esc(s.author||'CTE Network analyst')}" fetchpriority="high">`:''}</div><div class="n-cover-copy"><span class="n-cover-category">${esc(s.category)} <i></i> ${date(s.date)}</span><h2>${esc(shortTitle(s))}</h2><p>${esc(s.excerpt)}</p><div class="n-cover-bottom"><span>${esc(s.author||'CTE Network')}</span><span class="n-cover-cta">Read story <b>↗</b></span></div></div></a>`;
 const storyRow=(s,i)=>`<a class="n-story-row" href="${href(s)}"><span class="n-story-number">${String(i+1).padStart(2,'0')}</span><div><span class="n-label">${esc(s.category)} / ${date(s.date)}</span><h3>${esc(shortTitle(s))}</h3></div><span class="n-story-arrow">↗</span></a>`;
 const error=(message)=>`<div class="n-error"><strong>We couldn't connect to Sleeper.</strong><p>${esc(message||'Scores will return when the connection is available.')}</p><button class="n-button" data-refresh>Try again ↻</button></div>`;
 if(view==='index'){if(stories[0])$('homeLead').innerHTML=cover(stories[0]);$('homeStories').innerHTML=stories.slice(1,5).map(storyRow).join('')}
 if(view==='news'){
  if(stories[0])$('newsLead').innerHTML=cover(stories[0]);
- const bucket=s=>/sportsbook/i.test(s.category||'')?'Sportsbook':/holly/i.test(s.author||s.title)?'Holly':/carl|scaries/i.test(s.category+' '+s.title)?'Carl':/recap/i.test(s.category)?'Recaps':/preview/i.test(s.category)?'Previews':'League';
+ const bucket=s=>/sportsbook/i.test(s.category||'')?'Sportsbook':/anita|holly/i.test(s.author||s.title)?'Anita':/carl|scaries/i.test(s.category+' '+s.title)?'Carl':/recap/i.test(s.category)?'Recaps':/preview/i.test(s.category)?'Previews':'League';
  const cats=['All',...new Set(stories.map(bucket))];let selected='All';
  $('newsFilters').innerHTML=cats.map(c=>`<button class="${c==='All'?'selected':''}" data-category="${esc(c)}" aria-pressed="${c==='All'}">${c}</button>`).join('');
  const render=()=>{const query=$('newsSearch').value.trim().toLowerCase();const list=stories.filter(s=>(selected==='All'||bucket(s)===selected)&&[s.title,s.subtitle,s.excerpt,s.author,s.category,(s.featuredOwners||[]).join(' ')].join(' ').toLowerCase().includes(query));$('newsCount').textContent=list.length+' STORIES';$('newsGrid').innerHTML=list.length?list.map((s,i)=>`<a class="n-news-card" href="${href(s)}"><div class="n-news-card-top"><span class="n-label">${esc(s.category)}</span><span>${date(s.date)}</span></div><h2>${esc(shortTitle(s))}</h2><p>${esc(s.excerpt)}</p><div class="n-news-card-bottom"><span>${esc(s.author||'CTE Network')}</span><b>↗</b></div></a>`).join(''):'<p class="n-empty">No stories match. Try another name or category.</p>'};

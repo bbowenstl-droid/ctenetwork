@@ -10,7 +10,7 @@
  *    Fantasy has no home field, so sides are listed in board order, not home/away.
  * 2. Line moves: append to `market.lineHistory` ({label, at, fav, points}).
  *    The last entry is the current line. Any number of updates is supported.
- * 3. Carl / Holly: add a card under personalities.<id>.cards[<week>]. Stakes must
+ * 3. Carl / Anita: add a card under personalities.<id>.cards[<week>]. Stakes must
  *    total that week's starting bankroll exactly (the engine checks and flags it).
  * 4. League challenge: paste each owner's shared entry line into
  *    leagueChallenge.cards[<week>][<ownerId>].
@@ -27,7 +27,7 @@ window.CTE_SPORTSBOOK = {
   currency: "CTE$",
 
   /* Official locked Week 4 final board (commissioner, 2026-09-30).
-   * These prices apply to the league challenge and to Carl/Holly tickets. */
+   * These prices apply to the league challenge and to Carl/Anita tickets. */
   markets: [
     {
       id: "w4-brendan-jacob", week: 4, sides: ["brendan", "jacob"],
@@ -115,9 +115,9 @@ window.CTE_SPORTSBOOK = {
     }
   ],
 
-  // Where the opening numbers and Holly's takes were first published.
+  // Where the opening numbers and Anita's takes were first published.
   sources: {
-    open: { articleId: "2026-week-3-holly-sideline-debut", label: "Holly Woodwork's early-look board, Sept 28" }
+    open: { articleId: "2026-week-3-holly-sideline-debut", label: "Anita Headcheck's early-look board, Sept 28" }
   },
 
   personalities: {
@@ -137,7 +137,7 @@ window.CTE_SPORTSBOOK = {
       }
     },
     holly: {
-      id: "holly", name: "Holly Woodwork", shortName: "Holly", image: "holly-woodwork.webp",
+      id: "holly", name: "Anita Headcheck", shortName: "Anita", image: "anita-headcheck.webp",
       role: "Sideline Reporter & League Insider", startWeek: 4, startingBankroll: 1000,
       cards: {
         4: { postedAt: "2026-09-30", source: "2026-week-4-bankroll-war", wagers: [

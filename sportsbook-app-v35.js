@@ -178,7 +178,7 @@ function renderBoard() {
     ${modeSwitch}${submissionsHTML()}
     ${state.ctxError ? `<p class="bk-note" style="margin-bottom:12px">Sleeper is unreachable, so records and scores are hidden. Lines and your card still work. <button type="button" class="bk-link-btn" data-retry>Retry</button></p>` : ''}
     <div class="bk-board">${markets.map(marketCard).join('')}</div>
-    <p class="bk-note" style="margin-top:14px">Opening numbers and Holly's takes first appeared in <a href="article.html?id=${esc(B.sources.open.articleId)}">${esc(B.sources.open.label)}</a>. Records and points come from Sleeper.</p>`;
+    <p class="bk-note" style="margin-top:14px">Opening numbers and Anita's takes first appeared in <a href="article.html?id=${esc(B.sources.open.articleId)}">${esc(B.sources.open.label)}</a>. Records and points come from Sleeper.</p>`;
 }
 function submissionsHTML() {
   if (!cloudOn() || !state.cloud.status) return '';
@@ -236,9 +236,9 @@ function probHTML(m) {
 function takesHTML(m) {
   const t = m.takes || {};
   const carl = t.carl ? `<p>${esc(t.carl)}</p>` : `<p class="bk-muted">Carl hasn't filed a Week ${B.week} take yet.</p>`;
-  const holly = t.holly ? `<p>${esc(t.holly)}</p><cite>From <a href="article.html?id=${esc(B.sources.open.articleId)}">the early-look board</a></cite>` : `<p class="bk-muted">Holly hasn't filed yet.</p>`;
+  const holly = t.holly ? `<p>${esc(t.holly)}</p><cite>From <a href="article.html?id=${esc(B.sources.open.articleId)}">the early-look board</a></cite>` : `<p class="bk-muted">Anita hasn't filed yet.</p>`;
   return `<div class="bk-takes"><div class="bk-take is-carl"><img src="concussion-carl.webp" alt="" loading="lazy"><div><strong>Carl's take</strong>${carl}</div></div>
-    <div class="bk-take is-holly"><img src="holly-woodwork.webp" alt="" loading="lazy"><div><strong>Holly's take</strong>${holly}</div></div></div>`;
+    <div class="bk-take is-holly"><img src="anita-headcheck.webp" alt="" loading="lazy"><div><strong>Anita's take</strong>${holly}</div></div></div>`;
 }
 function lineupHTML(m) {
   if (!state.lineupsFor.has(m.id)) return `<div class="bk-block"><h3>Starting lineups</h3><button type="button" class="bk-cta is-quiet" style="width:100%;min-height:44px;font-size:13px" data-lineups="${esc(m.id)}">Load lineups and key players</button><p class="bk-block-note">Downloads Sleeper's player list once (about 5 MB), then it's saved for a day.</p></div>`;
@@ -557,7 +557,7 @@ async function share() {
   }
 }
 
-/* ---------------- Carl vs Holly ---------------- */
+/* ---------------- Carl vs Anita ---------------- */
 function wagerRow(wg) {
   if (wg.invalid) return `<div class="bk-wager"><span>?</span><b>Unknown market</b><small>${esc(wg.market)}</small></div>`;
   const s = wg.sel;
@@ -583,9 +583,9 @@ function sparkline(carl, holly) {
   if (n < 2) return '<p class="bk-note" style="margin-top:8px">The bankroll chart draws itself once Week ' + B.week + ' settles.</p>';
   const all = [...a, ...b], lo = Math.min(...all) * 0.95, hi = Math.max(...all) * 1.05, x = i => (i / (n - 1) * 300).toFixed(1), y = v => (64 - (v - lo) / (hi - lo || 1) * 58).toFixed(1);
   const path = arr => arr.map((v, i) => `${i ? 'L' : 'M'}${x(i)},${y(v)}`).join('');
-  return `<svg class="bk-spark" viewBox="0 0 300 70" preserveAspectRatio="none" role="img" aria-label="Bankroll by week: Carl ${money(a[a.length - 1])}, Holly ${money(b[b.length - 1])}">
+  return `<svg class="bk-spark" viewBox="0 0 300 70" preserveAspectRatio="none" role="img" aria-label="Bankroll by week: Carl ${money(a[a.length - 1])}, Anita ${money(b[b.length - 1])}">
     <path d="${path(a)}" fill="none" stroke="var(--bk-red)" stroke-width="2.5" vector-effect="non-scaling-stroke"/><path d="${path(b)}" fill="none" stroke="var(--bk-holly)" stroke-width="2.5" stroke-dasharray="6 4" vector-effect="non-scaling-stroke"/></svg>
-    <div class="bk-tug-legend"><span>\u2014 Carl</span><span>Week ${B.personalities.carl.startWeek}\u2013${B.personalities.carl.startWeek + n - 2}</span><span>- - Holly</span></div>`;
+    <div class="bk-tug-legend"><span>\u2014 Carl</span><span>Week ${B.personalities.carl.startWeek}\u2013${B.personalities.carl.startWeek + n - 2}</span><span>- - Anita</span></div>`;
 }
 function renderDuel() {
   const carl = E.bankrollLedger(B, 'carl', state.results), holly = E.bankrollLedger(B, 'holly', state.results);
@@ -598,11 +598,11 @@ function renderDuel() {
   const r = (led, k) => E.recordText(led.records[k]), pct = rec => rec.w + rec.l ? rec.w / (rec.w + rec.l) : null;
   const hit = t => t ? `${esc(selLabel(t.sel))} ${money(t.profit, { sign: true })}` : '\u2014';
   const total = carl.current + holly.current || 1;
-  $('#panel-duel').innerHTML = `<div class="bk-head"><h2>Carl vs Holly</h2><p>All-in every week. No refills.</p></div>
+  $('#panel-duel').innerHTML = `<div class="bk-head"><h2>Carl vs Anita</h2><p>All-in every week. No refills.</p></div>
     <section class="bk-duel" aria-label="Bankrolls">${duelist(carl, 'is-carl')}<span class="bk-vs" aria-hidden="true">VS</span>${duelist(holly, 'is-holly')}</section>
     <div class="bk-tug"><div class="bk-tug-legend"><span>Share of the combined ${money(carl.current + holly.current)}</span><span class="bk-num">${E.formatPct(carl.current / total, 0)} / ${E.formatPct(holly.current / total, 0)}</span></div>
       <div class="bk-tug-bar" aria-hidden="true"><i style="flex-grow:${carl.current}"></i><i style="flex-grow:${holly.current}"></i></div>${sparkline(carl, holly)}</div>
-    <div class="bk-duel-stats" role="table" aria-label="Carl and Holly compared">
+    <div class="bk-duel-stats" role="table" aria-label="Carl and Anita compared">
       ${cmp('Bankroll', money(carl.current), money(holly.current), carl.current, holly.current)}
       ${cmp('Started with', money(carl.startingBankroll), money(holly.startingBankroll))}
       ${cmp('Season P/L', money(carl.seasonPnl, { sign: true }), money(holly.seasonPnl, { sign: true }), carl.seasonPnl, holly.seasonPnl)}
@@ -624,7 +624,7 @@ function ledgerTable(carl, holly) {
   const weeks = carl.weeks.filter(w => w.status !== 'no-card' || holly.weeks.find(h => h.week === w.week && h.status !== 'no-card'));
   if (!weeks.length) return '';
   const cell = w => !w || w.status === 'no-card' ? 'No card' : w.status === 'pending' ? `${w.start != null ? money(w.start) : '\u2014'} \u2192 pending` : `${money(w.start)} \u2192 ${money(w.end)}`;
-  return `<div class="bk-ledger bk-results">${weeks.map(w => { const h = holly.weeks.find(x => x.week === w.week); return `<div class="bk-result"><div class="bk-result-score">Week ${w.week}</div><div class="bk-result-meta"><span class="bk-chip">Carl ${cell(w)}</span><span class="bk-chip">Holly ${cell(h)}</span></div></div>`; }).join('')}</div>`;
+  return `<div class="bk-ledger bk-results">${weeks.map(w => { const h = holly.weeks.find(x => x.week === w.week); return `<div class="bk-result"><div class="bk-result-score">Week ${w.week}</div><div class="bk-result-meta"><span class="bk-chip">Carl ${cell(w)}</span><span class="bk-chip">Anita ${cell(h)}</span></div></div>`; }).join('')}</div>`;
 }
 
 /* ---------------- Leaderboard ---------------- */

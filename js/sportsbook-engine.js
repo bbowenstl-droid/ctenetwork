@@ -1,6 +1,6 @@
 /**
  * CTE SPORTSBOOK engine — pure functions, no DOM, no network.
- * Odds math, grading, card rules, Carl/Holly bankroll ledgers and the league
+ * Odds math, grading, card rules, Carl/Anita bankroll ledgers and the league
  * leaderboard. Runs in the browser (window.CTE_BookEngine) and in Node for tests.
  * Fictional CTE$ only.
  */
@@ -188,7 +188,7 @@
     return { type, count, text: type ? type + count : '\u2014' };
   }
 
-  /* ---------- Carl / Holly bankroll ledger ---------- */
+  /* ---------- Carl / Anita bankroll ledger ---------- */
   /**
    * Bankroll never resets. Week N's required stake is exactly what the
    * personality finished Week N−1 with. A week that is not yet settled leaves
