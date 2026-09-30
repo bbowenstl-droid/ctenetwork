@@ -152,11 +152,16 @@ window.CTE_SPORTSBOOK = {
     }
   },
 
+  // Weekly parlay: separate from the 6-pick card. One per owner per week.
+  parlay: { stake: 100, minLegs: 2, maxLegs: 6 },
+
   leagueChallenge: {
     stake: 100,
     required: { ml: 3, ats: 3 },
     // cards: { 4: { brendan: ["w4-brendan-jacob:ats:brendan", ...six selection ids] } }
-    cards: {}
+    cards: {},
+    // parlays: { 4: { brendan: ["w4-...:ml:jacob", "w4-...:ats:troy"] } }  (cloud submissions merge on top)
+    parlays: {}
   },
 
   // Commissioner-confirmed finals. Overrides Sleeper. { "<marketId>": { scores: { ownerId: pts, ownerId: pts } } }

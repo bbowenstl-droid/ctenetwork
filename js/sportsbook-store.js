@@ -34,11 +34,20 @@
     async saveDraft(week, draft) { write(`${PREFIX}:draft:${week}`, { ownerId: draft.ownerId || null, ids: draft.ids || [] }); },
     async getCard(week) { return read(`${PREFIX}:card:${week}`); },
     async lockCard(week, card) {
-      const saved = { ownerId: card.ownerId, ids: card.ids.slice(), lockedAt: new Date().toISOString(), storage: 'device' };
+      const saved = { ownerId: card.ownerId, ids: card.ids.slice(), lockedAt: card.lockedAt || new Date().toISOString(), storage: card.storage || 'device' };
       if (!write(`${PREFIX}:card:${week}`, saved)) throw new Error('This browser blocked saving. Share the card before leaving the page.');
       return saved;
     },
-    async unlockCard(week) { remove(`${PREFIX}:card:${week}`); }
+    async unlockCard(week) { remove(`${PREFIX}:card:${week}`); },
+    async getParlayDraft(week) { return read(`${PREFIX}:pdraft:${week}`); },
+    async saveParlayDraft(week, draft) { write(`${PREFIX}:pdraft:${week}`, { ids: draft.ids || [] }); },
+    async getParlay(week) { return read(`${PREFIX}:parlay:${week}`); },
+    async lockParlay(week, p) {
+      const saved = { ownerId: p.ownerId, ids: p.ids.slice(), lockedAt: p.lockedAt || new Date().toISOString(), storage: p.storage || 'device' };
+      if (!write(`${PREFIX}:parlay:${week}`, saved)) throw new Error('This browser blocked saving. Share the parlay before leaving the page.');
+      return saved;
+    },
+    async unlockParlay(week) { remove(`${PREFIX}:parlay:${week}`); }
   };
 
   let adapter = deviceAdapter;
@@ -50,6 +59,11 @@
     getCard: w => adapter.getCard(w),
     lockCard: (w, c) => adapter.lockCard(w, c),
     unlockCard: w => adapter.unlockCard(w),
+    getParlayDraft: w => adapter.getParlayDraft(w),
+    saveParlayDraft: (w, d) => adapter.saveParlayDraft(w, d),
+    getParlay: w => adapter.getParlay(w),
+    lockParlay: (w, p) => adapter.lockParlay(w, p),
+    unlockParlay: w => adapter.unlockParlay(w),
     // Viewer preference only (whose card this device builds). Not identity.
     getOwner() { return read(`${PREFIX}:owner`); },
     setOwner(id) { write(`${PREFIX}:owner`, id); }

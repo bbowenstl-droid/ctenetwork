@@ -301,6 +301,87 @@
     return { rows, latestWeek: done[done.length - 1] || null };
   }
 
+
+  /* ---------- Parlays ----------
+   * One parlay per owner per week. Legs come from the same board. One leg per matchup
+   * (no same-game parlays). A push drops that leg and the parlay pays on the rest;
+   * any losing leg loses the parlay; all legs pushing returns the stake. */
+  function parlayRules(book) {
+    const p = (book && book.parlay) || {};
+    return { stake: Number(p.stake || 100), minLegs: Number(p.minLegs || 2), maxLegs: Number(p.maxLegs || 6) };
+  }
+  function decimalOdds(odds) { const o = Number(odds); return o > 0 ? 1 + o / 100 : 1 + 100 / Math.abs(o); }
+  function americanFromDecimal(d) {
+    if (!(d > 1)) return 0;
+    return d >= 2 ? Math.round((d - 1) * 100) : -Math.round(100 / (d - 1));
+  }
+  function parlayPrice(sels) {
+    const d = sels.reduce((acc, s) => acc * decimalOdds(s.odds), 1);
+    return { decimal: d, american: americanFromDecimal(d) };
+  }
+  function parlayPayout(stake, sels) {
+    const d = parlayPrice(sels).decimal;
+    return { profit: round2(stake * (d - 1)), returned: round2(stake * d) };
+  }
+  function validateParlay(ids, book, week) {
+    const rules = parlayRules(book), errors = [], seen = new Set();
+    const wk = Number(week != null ? week : book.week);
+    const sels = (ids || []).map(id => selection(book, id));
+    if (sels.some(s => !s)) errors.push('A leg is not on the board');
+    for (const s of sels.filter(Boolean)) {
+      if (Number(s.week) !== wk) errors.push(`${s.id} is not a Week ${wk} market`);
+      if (seen.has(s.marketId)) errors.push('Only one leg per matchup');
+      seen.add(s.marketId);
+    }
+    if (sels.length < rules.minLegs) errors.push(`Parlays need at least ${rules.minLegs} legs`);
+    if (sels.length > rules.maxLegs) errors.push(`Parlays max out at ${rules.maxLegs} legs`);
+    return { valid: !errors.length, errors: [...new Set(errors)], legs: sels.length, rules };
+  }
+  function toggleParlayLeg(ids, id, book) {
+    const sel = selection(book, id);
+    if (!sel) return { ids, action: 'blocked', reason: 'That line is not on the board.' };
+    if (ids.includes(id)) return { ids: ids.filter(x => x !== id), action: 'removed' };
+    const rules = parlayRules(book);
+    const same = ids.find(x => { const o = selection(book, x); return o && o.marketId === sel.marketId; });
+    if (same) return { ids: ids.map(x => (x === same ? id : x)), action: 'swapped', replaced: same };
+    if (ids.length >= rules.maxLegs) return { ids, action: 'blocked', reason: `Parlays max out at ${rules.maxLegs} legs.` };
+    return { ids: [...ids, id], action: 'added' };
+  }
+  function settleParlay(ids, book, stake, results) {
+    const legs = ids.map(id => selection(book, id)).filter(Boolean).map(s => ({ sel: s, ...settle(s, stake, results) }));
+    if (legs.some(l => l.status === 'lost')) return { status: 'lost', legs, profit: -round2(stake), returned: 0 };
+    if (legs.some(l => l.status === 'pending')) return { status: 'pending', legs, profit: 0, returned: null };
+    const live = legs.filter(l => l.status === 'won').map(l => l.sel);
+    if (!live.length) return { status: 'push', legs, profit: 0, returned: round2(stake) };
+    const pay = parlayPayout(stake, live);
+    return { status: 'won', legs, profit: pay.profit, returned: pay.returned, legsPaid: live.length };
+  }
+  /** Season parlay standings from book.leagueChallenge.parlays[week][owner] = [ids]. */
+  function parlayLeaderboard(book, results) {
+    const rules = parlayRules(book), byWeek = (book.leagueChallenge && book.leagueChallenge.parlays) || {}, rows = {};
+    for (const [week, owners] of Object.entries(byWeek)) for (const [ownerId, ids] of Object.entries(owners || {})) {
+      if (!Array.isArray(ids) || !validateParlay(ids, book, Number(week)).valid) continue;
+      const r = rows[ownerId] || (rows[ownerId] = { ownerId, entered: 0, hits: 0, misses: 0, pushes: 0, pending: 0, profit: 0, best: null, parlays: [] });
+      const st = settleParlay(ids, book, rules.stake, results);
+      r.entered++; r.parlays.push({ week: Number(week), ids, ...st, price: parlayPrice(ids.map(id => selection(book, id))) });
+      if (st.status === 'won') { r.hits++; r.profit = round2(r.profit + st.profit); if (!r.best || st.profit > r.best.profit) r.best = { week: Number(week), profit: st.profit, legs: ids.length }; }
+      else if (st.status === 'lost') { r.misses++; r.profit = round2(r.profit + st.profit); }
+      else if (st.status === 'push') r.pushes++; else r.pending++;
+    }
+    const out = Object.values(rows).sort((a, b) => b.profit - a.profit || b.hits - a.hits || a.ownerId.localeCompare(b.ownerId));
+    out.forEach((r, i) => { r.rank = i + 1; });
+    return out;
+  }
+  /** Book copy with cloud-submitted cards/parlays merged over commissioner-pasted ones. */
+  function withSubmissions(book, week, cards, parlays) {
+    const b = JSON.parse(JSON.stringify(book)), lc = b.leagueChallenge || (b.leagueChallenge = {});
+    lc.cards = lc.cards || {}; lc.parlays = lc.parlays || {};
+    const clean = x => (x && Array.isArray(x.ids) ? x.ids : Array.isArray(x) ? x : null);
+    for (const [o, c] of Object.entries(cards || {})) { const ids = clean(c); if (ids) (lc.cards[week] = lc.cards[week] || {})[o] = ids; }
+    for (const [o, c] of Object.entries(parlays || {})) { const ids = clean(c); if (ids) (lc.parlays[week] = lc.parlays[week] || {})[o] = ids; }
+    return b;
+  }
+
   /* ---------- Entry line (share → commissioner) ---------- */
   function entryLine(ownerId, week, ids) { return `CTE-BOOK W${week} ${ownerId} ${ids.join(' ')}`; }
   function parseEntryLine(text) {
@@ -316,7 +397,8 @@
     lockTime, marketPhase, bookPhase,
     cardCounts, validateCard, toggleSelection,
     bankrollLedger, leaderboard, leaderboardWithMovement, settledWeeks, recordText,
-    entryLine, parseEntryLine
+    entryLine, parseEntryLine,
+    parlayRules, decimalOdds, americanFromDecimal, parlayPrice, parlayPayout, validateParlay, toggleParlayLeg, settleParlay, parlayLeaderboard, withSubmissions
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   if (root) root.CTE_BookEngine = api;

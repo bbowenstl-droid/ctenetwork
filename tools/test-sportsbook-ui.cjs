@@ -18,7 +18,7 @@ function fixture(context, { leg = 3, live = null } = {}) {
     else if (p.includes('/transactions/')) data = []; else if (p.includes('/players/')) data = { 4046: { full_name: 'Test QB', position: 'QB' }, 6794: { full_name: 'Test WR', position: 'WR' } };
     else if (p.endsWith('/drafts')) data = []; else data = { settings: { leg, playoff_week_start: 15 }, roster_positions: ['QB', 'RB', 'WR'], season: '2026', status: 'in_season' };
     return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(data) });
-  }).then(() => context.route('https://sleepercdn.com/**', r => r.abort()));
+  }).then(() => context.route('https://sleepercdn.com/**', r => r.abort())).then(() => context.route('https://www.gstatic.com/**', r => r.abort()));
 }
 const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:00-05:00';
 
@@ -30,7 +30,7 @@ const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:
   async function page(width, opts = {}) {
     const c = await browser.newContext({ viewport: { width, height: opts.height || 900 }, deviceScaleFactor: opts.dpr || 1, serviceWorkers: 'block', reducedMotion: opts.motion || 'reduce', hasTouch: width < 821 });
     await fixture(c, opts); await c.addInitScript(t => { window.CTE_BOOK_NOW = t; }, opts.now || BEFORE_LOCK);
-    const p = await c.newPage(); const errors = []; p.on('pageerror', e => errors.push(e.message)); p.on('console', m => { if (m.type() === 'error' && !/sleepercdn|ERR_FAILED|net::/.test(m.text())) errors.push(m.text()); });
+    const p = await c.newPage(); const errors = []; p.on('pageerror', e => errors.push(e.message)); p.on('console', m => { if (m.type() === 'error' && !/sleepercdn|gstatic|ERR_FAILED|net::/.test(m.text())) errors.push(m.text()); });
     return { c, p, errors };
   }
   const overflow = p => p.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
@@ -175,7 +175,13 @@ const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:
     const t = await p.locator('.bk-teaser').innerText();
     check(t.includes('JACOB') || t.includes('Jacob'), `${width} home: teaser lists lines`);
     check(/6 markets open/i.test(t), `${width} home: markets open count`);
+    await p.waitForSelector('.n-score-tile', { timeout: 5000 }).catch(() => {});
     check(await p.locator('.n-score-tile').count() === 6, `${width} home: scores still render`);
+    await p.waitForSelector('.x-awards', { timeout: 6000 }).catch(() => {});
+    const aw = await p.locator('.x-awards').innerText().catch(() => '');
+    check(/Week 2 awards/i.test(aw) && (await p.locator('.x-award').count()) >= 5, `${width} home: last finished week (2) awards render`);
+    check(/top score[\s\S]*Troy[\s\S]*131\.00/i.test(aw), `${width} home: top score is Troy 131.00 (` + aw.replace(/\n/g, ' ').slice(0, 120) + ')');
+    if (width === 390) await p.locator('.x-awards').screenshot({ path: `${out}/m-awards.png` }).catch(() => {});
     check(await p.locator('.n-navigation a[href="sportsbook.html"]').isVisible(), `${width} nav: Sportsbook link visible`);
     check(!await overflow(p), `${width} home: no overflow`);
     await p.locator('.bk-teaser').scrollIntoViewIfNeeded(); await p.screenshot({ path: `${out}/${width < 800 ? 'm' : 'd'}-home-teaser.png` });

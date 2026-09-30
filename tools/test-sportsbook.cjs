@@ -259,6 +259,43 @@ test('leaderboard ranks by profit, not win %', () => {
   assert.strictEqual(by.brendan.profit, E.round2(-100 + 21.05 + 16 + 95.24 + 80 - 100));
   assert.strictEqual(by.jacob.roi.toFixed(4), (by.jacob.profit / 600).toFixed(4));
 });
+
+/* Parlays */
+test('parlay price multiplies decimal odds', () => {
+  const legs = [E.selection(BOOK, 'w4-brendan-jacob:ml:jacob'), E.selection(BOOK, 'w4-cotton-troy:ats:troy')]; // -750, -125
+  const p = E.parlayPrice(legs);
+  assert.strictEqual(p.decimal.toFixed(4), ((1 + 100 / 750) * (1 + 100 / 125)).toFixed(4));
+  assert.deepStrictEqual(E.parlayPayout(100, legs), { profit: 104, returned: 204 });
+  assert.strictEqual(E.americanFromDecimal(2.04), 104); assert.strictEqual(E.americanFromDecimal(1.5), -200);
+});
+test('parlay validation: 2–6 legs, one per matchup, this week only', () => {
+  assert.ok(!E.validateParlay(['w4-brendan-jacob:ml:jacob'], BOOK).valid);
+  assert.ok(E.validateParlay(['w4-brendan-jacob:ml:jacob', 'w4-mike-jerry:ats:mike'], BOOK).valid);
+  assert.ok(!E.validateParlay(['w4-brendan-jacob:ml:jacob', 'w4-brendan-jacob:ats:brendan'], BOOK).valid, 'same game blocked');
+  let ids = []; for (const m of W4) ids = E.toggleParlayLeg(ids, m + ':ml:' + E.market(BOOK, m).sides[0], BOOK).ids;
+  assert.strictEqual(ids.length, 6); assert.ok(E.validateParlay(ids, BOOK).valid);
+  const swap = E.toggleParlayLeg(ids, 'w4-brendan-jacob:ats:jacob', BOOK);
+  assert.strictEqual(swap.action, 'swapped'); assert.strictEqual(swap.ids.length, 6);
+});
+test('parlay settlement: loss kills it, push drops a leg, pending waits', () => {
+  const ids = ['w4-brendan-jacob:ml:jacob', 'w4-cotton-troy:ats:troy', 'w4-dan-isaiah:ats:dan'];
+  const base = { 'w4-brendan-jacob': { final: true, scores: { brendan: 90, jacob: 120 } }, 'w4-cotton-troy': { final: true, scores: { cotton: 80, troy: 100 } } };
+  assert.strictEqual(E.settleParlay(ids, BOOK, 100, base).status, 'pending');
+  const push = E.settleParlay(ids, BOOK, 100, { ...base, 'w4-dan-isaiah': { final: true, scores: { dan: 100, isaiah: 104.5 } } });
+  assert.strictEqual(push.status, 'won'); assert.strictEqual(push.legsPaid, 2); assert.strictEqual(push.profit, 104);
+  const lost = E.settleParlay(ids, BOOK, 100, { ...base, 'w4-dan-isaiah': { final: true, scores: { dan: 90, isaiah: 110 } } });
+  assert.deepStrictEqual([lost.status, lost.profit], ['lost', -100]);
+});
+test('cloud submissions merge over the ledger and feed both leaderboards', () => {
+  const card = ['w4-brendan-jacob:ml:jacob', 'w4-brett-carter:ml:brett', 'w4-mike-jerry:ml:jerry', 'w4-dan-isaiah:ats:isaiah', 'w4-cotton-troy:ats:troy', 'w4-jesse-elijah:ats:elijah'];
+  const b = E.withSubmissions(BOOK, 4, { mike: { ids: card, lockedAt: 'x' } }, { mike: { ids: ['w4-brendan-jacob:ml:jacob', 'w4-cotton-troy:ats:troy'] } });
+  assert.deepStrictEqual(b.leagueChallenge.cards[4].mike, card);
+  assert.ok(!BOOK.leagueChallenge.cards[4], 'original book untouched');
+  const results = allFinal([{ brendan: 90, jacob: 120 }, { brett: 120, carter: 100 }, { mike: 90, jerry: 120 }, { dan: 90, isaiah: 110 }, { cotton: 80, troy: 100 }, { jesse: 90, elijah: 110 }]);
+  const pl = E.parlayLeaderboard(b, results);
+  assert.strictEqual(pl[0].ownerId, 'mike'); assert.strictEqual(pl[0].hits, 1); assert.strictEqual(pl[0].profit, 104);
+  assert.strictEqual(E.leaderboard(b, results).find(r => r.ownerId === 'mike').total.w, 6);
+});
 test('book phases: open → live at lock → final only when results are final', () => {
   const lock = E.lockTime(BOOK);
   assert.strictEqual(E.bookPhase(BOOK, lock - 1, {}), 'open');
