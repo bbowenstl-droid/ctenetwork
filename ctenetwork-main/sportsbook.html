@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0d0f13"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="description" content="CTE Sportsbook: fictional lines, pick'em cards and Carl vs Holly for the CTE fantasy league. No real money."><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest?v=32"><script>window.__bkErrs=[];addEventListener("error",function(e){if(e&&e.message)window.__bkErrs.push(e.message+(e.filename?" ("+e.filename.split("/").pop().split("?")[0]+":"+e.lineno+")":""))});addEventListener("unhandledrejection",function(e){window.__bkErrs.push(String(e&&e.reason&&(e.reason.message||e.reason)))});</script><link rel="stylesheet" href="network-v29.css?v=32"><link rel="stylesheet" href="sportsbook-v32.css?v=35"><script src="data/league-data.js"></script><script src="sleeper-api-v16.js?v=31"></script><script src="js/league-engine.js"></script><script src="cte-network-core-v15.js?v=31"></script><script src="data/sportsbook-data.js?v=35"></script><script src="js/sportsbook-engine.js?v=33"></script><script src="js/sportsbook-store.js?v=33"></script><script src="js/sportsbook-live.js?v=32"></script><script src="firebase-config.js"></script><script src="js/sportsbook-cloud.js?v=33"></script><title>CTE Sportsbook · CTE Network</title></head><body class="n-app bk-page" data-view="sportsbook"><main id="main" class="n-main bk-main"><noscript><p class="n-error">The Sportsbook needs JavaScript. <a href="index.html">Home</a> · <a href="game-day.html">Game Day</a></p></noscript>
+<header class="bk-mast" aria-labelledby="bkTitle"><div><div class="bk-mast-meta"><span class="bk-status" id="bkStatus" data-phase="open" role="status"><i aria-hidden="true"></i>Loading markets…</span><span>2026 season · Week 4</span></div><h1 class="bk-wordmark" id="bkTitle"><span>CTE</span>Sportsbook</h1><p class="bk-tagline">BET FAKE. TALK REAL SHIT.</p></div>
+<div class="bk-wallet" aria-label="Your card and personality bankrolls"><div class="bk-wallet-cell"><small>Your card</small><strong class="bk-num" id="bkWalletCard">0 / 6</strong></div><div class="bk-wallet-cell"><small>Carl</small><strong class="bk-num" id="bkWalletCarl">CTE$1,000</strong></div><div class="bk-wallet-cell"><small>Holly</small><strong class="bk-num" id="bkWalletHolly" style="color:var(--bk-holly)">CTE$1,000</strong></div></div></header>
+<div class="bk-tabs" role="tablist" aria-label="Sportsbook sections"><a href="#board" class="bk-tab" role="tab" id="tab-board" data-tab="board" aria-controls="panel-board" aria-selected="true">Board</a><a href="#my-card" class="bk-tab" role="tab" id="tab-card" data-tab="my-card" aria-controls="panel-card" aria-selected="false" tabindex="-1">My card</a><a href="#carl-vs-holly" class="bk-tab" role="tab" id="tab-duel" data-tab="carl-vs-holly" aria-controls="panel-duel" aria-selected="false" tabindex="-1">Carl vs Holly</a><a href="#leaderboard" class="bk-tab" role="tab" id="tab-leaders" data-tab="leaderboard" aria-controls="panel-leaders" aria-selected="false" tabindex="-1">Leaderboard</a><a href="#results" class="bk-tab" role="tab" id="tab-results" data-tab="results" aria-controls="panel-results" aria-selected="false" tabindex="-1">Results</a></div>
+<div class="bk-layout" id="bkLayout"><div class="bk-panels"><section class="bk-panel" id="panel-board" role="tabpanel" aria-labelledby="tab-board" tabindex="-1"><div class="bk-board" aria-busy="true"><div class="bk-market" style="height:210px"></div><div class="bk-market" style="height:210px"></div></div></section><section class="bk-panel" id="panel-card" role="tabpanel" aria-labelledby="tab-card" tabindex="-1" hidden></section><section class="bk-panel" id="panel-duel" role="tabpanel" aria-labelledby="tab-duel" tabindex="-1" hidden></section><section class="bk-panel" id="panel-leaders" role="tabpanel" aria-labelledby="tab-leaders" tabindex="-1" hidden></section><section class="bk-panel" id="panel-results" role="tabpanel" aria-labelledby="tab-results" tabindex="-1" hidden></section><section class="bk-panel" id="panel-commish" role="region" aria-label="Commissioner" tabindex="-1" hidden></section></div>
+<aside class="bk-slip-aside" aria-label="Bet slip" data-slip-host></aside></div>
+<p class="bk-disclaimer">CTE Sportsbook, CTE$, odds and wagers are fictional entertainment for the CTE fantasy football league. No real currency or real-money wagering is involved.</p>
+</main><footer class="n-footer"><span>CTE NETWORK © 2026</span><span>CTE$ HAS NO CASH VALUE.</span><span>SPORTSBOOK v35</span></footer>
+<button type="button" class="bk-pill" id="bkPill" hidden aria-haspopup="dialog" aria-controls="bkSheet"><span id="bkPillText">Bet slip</span><span class="bk-pill-count bk-num" id="bkPillCount">0/6</span></button>
+<dialog class="bk-sheet" id="bkSheet" aria-label="Bet slip"><button type="button" class="bk-grab" aria-label="Close bet slip"></button><div class="bk-sheet-body" data-slip-host></div></dialog>
+<div class="bk-toast" id="bkToast" role="status" aria-live="polite"></div>
+<script>
+/* Boot watchdog: if a Sportsbook file failed to load (often a file uploaded to the wrong folder),
+   retry it from the site root, restart the page, and otherwise explain what is missing. */
+(function(){
+  var need=[["CTE_LEAGUE_DATA","data/league-data.js"],["CTE_Sleeper","sleeper-api-v16.js"],["CTE_LeagueEngine","js/league-engine.js"],["CTE_UI","cte-network-core-v15.js"],["CTE_SPORTSBOOK","data/sportsbook-data.js"],["CTE_BookEngine","js/sportsbook-engine.js"],["CTE_BookStore","js/sportsbook-store.js"],["CTE_BookLive","js/sportsbook-live.js"]];
+  var status=document.getElementById("bkStatus");
+  function booted(){return status&&!/Loading markets/.test(status.textContent)}
+  function missing(){return need.filter(function(n){return !window[n[0]]})}
+  function load(src){return new Promise(function(ok){var t=document.createElement("script");t.src=src+"?v=fallback";t.onload=t.onerror=function(){ok()};document.body.appendChild(t)})}
+  function explain(){
+    if(booted())return;
+    var m=missing(),errs=(window.__bkErrs||[]).slice(0,4),board=document.querySelector("#panel-board .bk-board");if(!board)return;
+    var esc=function(x){return String(x).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+    board.removeAttribute("aria-busy");
+    board.innerHTML='<div class="bk-market" style="padding:20px 20px 22px"><h3 style="margin:0 0 8px;font-size:18px">The Sportsbook couldn\u2019t start.</h3>'+
+      (m.length?'<p class="bk-note" style="margin:0 0 10px">These files didn\u2019t load. Check they\u2019re uploaded, with these exact names and folders:</p><ul style="margin:0 0 12px;padding-left:18px;line-height:1.7">'+m.map(function(n){return"<li><code>"+esc(n[1])+"</code></li>"}).join("")+"</ul>":'<p class="bk-note" style="margin:0 0 10px">All files loaded, but the page hit an error.</p>')+
+      (errs.length?'<p class="bk-note" style="margin:0 0 6px">Error details:</p><pre style="white-space:pre-wrap;font-size:12px;margin:0 0 12px;opacity:.8">'+errs.map(esc).join("\n")+"</pre>":"")+
+      '<button type="button" class="bk-btn" onclick="location.reload()" style="min-height:44px;padding:0 18px;border-radius:12px;border:0;font-weight:800">Reload</button></div>';
+    if(status){status.lastChild.textContent=" Sportsbook unavailable";var dot=status.querySelector("i");if(dot)dot.style.background="#ff4d5e"}
+  }
+  addEventListener("load",function(){
+    setTimeout(function(){
+      if(booted())return;
+      var m=missing();
+      if(!m.length)return setTimeout(explain,2500);
+      m.reduce(function(p,n){return p.then(function(){return load(n[1].split("/").pop())})},Promise.resolve()).then(function(){
+        if(!missing().length&&!booted()){window.__bkErrs=[];return load("sportsbook-v32.js").then(function(){setTimeout(explain,3000)})}
+        explain();
+      });
+    },1500);
+  });
+})();
+</script><script src="sportsbook-embeds-v32.js?v=32"></script><script src="app-v29.js?v=32"></script><script src="sportsbook-v32.js?v=35"></script></body></html>

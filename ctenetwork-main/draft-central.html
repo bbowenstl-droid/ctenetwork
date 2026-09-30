@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101211"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest?v=31"><link rel="stylesheet" href="network-v29.css?v=32"><script src="data/league-data.js"></script><script src="sleeper-api-v16.js?v=31"></script><script src="cte-network-core-v15.js?v=31"></script><title>Draft central · CTE Network</title></head><body class="n-app" data-view="draft"><main id="main" class="n-main"><noscript><p class="n-error">Enable JavaScript to load the draft board from Sleeper. <a href="index.html">Home</a> · <a href="news.html">News</a></p></noscript>
+<div class="n-edition"><span>2026 ROOKIE DRAFT</span><span>4 ROUNDS / 48 PICKS</span></div>
+<header class="n-page-head"><div><h1>Draft central.</h1><p>Every pick from the 2026 rookie draft, live from Sleeper.</p></div><button class="n-button" data-refresh>↻ Refresh</button></header>
+<div class="n-live-line"><span id="liveStamp">Connecting to Sleeper…</span><a href="article.html?id=2026-rookie-draft-autopsy">Read the draft autopsy ↗</a></div>
+<div id="draftSummary" aria-live="polite"><div class="n-skeleton">Loading the draft board…</div></div>
+<div class="n-filter-rail" id="draftFilters" role="group" aria-label="Filter by position" hidden></div>
+<div id="draftBoard" class="n-draft-board"></div>
+<a class="n-rival-banner n-draft-tv" href="tv.html"><span class="n-label">DRAFT NIGHT</span><strong>The TV board.</strong><span>Open the full-screen board ↗</span></a>
+</main><footer class="n-footer"><span>CTE NETWORK © 2026</span><span>DRAFT DATA POWERED BY SLEEPER</span></footer>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),esc=CTE_UI.esc,cfg=CTE_LEAGUE_DATA.league.seasons[2026],rosterMap=cfg.rosterOwnerMap||{};
+let picks=[],position='All';
+const POS=['QB','RB','WR','TE'];
+const label=(p,teams)=>`${p.round}.${String(((p.pick_no-1)%teams)+1).padStart(2,'0')}`;
+const name=p=>[p.metadata?.first_name,p.metadata?.last_name].filter(Boolean).join(' ')||'Unknown player';
+const ownerCell=p=>{const id=rosterMap[p.roster_id];return id?CTE_UI.ownerLink(id,CTE_UI.owner(id).name,'n-draft-owner'):'<span class="n-draft-owner">Roster '+esc(p.roster_id)+'</span>'};
+const error=m=>`<div class="n-error"><strong>We couldn't load the draft from Sleeper.</strong><p>${esc(m)}</p><button class="n-button" data-refresh>Try again ↻</button></div>`;
+function summary(teams){
+ const counts={};picks.forEach(p=>{const id=rosterMap[p.roster_id];if(id)counts[id]=(counts[id]||0)+1});
+ const [topOwner,topCount]=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]||['',0];
+ const first=picks.find(p=>p.pick_no===1);
+ return `<div class="n-stat-band"><div><span class="n-label">Picks made</span><strong>${picks.length}</strong><small>${teams} teams, ${Math.max(...picks.map(p=>p.round))} rounds</small></div><div><span class="n-label">First overall</span><strong class="n-stat-name">${first?esc(name(first)):'—'}</strong><small>${first?esc((first.metadata?.position||'')+' · '+CTE_UI.owner(rosterMap[first.roster_id]).name):''}</small></div><div><span class="n-label">Biggest class</span><strong class="n-stat-name">${topOwner?esc(CTE_UI.owner(topOwner).name):'—'}</strong><small>${topCount?topCount+' rookies':''}</small></div></div>`;
+}
+function board(teams){
+ const list=picks.filter(p=>position==='All'||p.metadata?.position===position);
+ if(!list.length)return '<p class="n-empty">No picks at that position. Try another filter.</p>';
+ const rounds=[...new Set(list.map(p=>p.round))].sort((a,b)=>a-b);
+ return rounds.map(r=>`<section class="n-draft-round" aria-labelledby="round${r}"><div class="n-section-head"><h2 id="round${r}">Round ${r}</h2><span class="n-label">${list.filter(p=>p.round===r).length} picks</span></div><ol class="n-draft-list">${list.filter(p=>p.round===r).map(p=>{const pos=p.metadata?.position||'—';return `<li class="n-pick"><span class="n-pick-no">${label(p,teams)}</span><span class="n-pick-player"><strong>${esc(name(p))}</strong><small><b class="n-pos n-pos-${esc(pos.toLowerCase())}">${esc(pos)}</b>${esc(p.metadata?.team||'FA')}</small></span>${ownerCell(p)}</li>`}).join('')}</ol></section>`).join('');
+}
+async function load(options={}){
+ $('liveStamp').textContent='Connecting to Sleeper…';
+ try{
+  const drafts=await CTE_Sleeper.getDrafts(cfg.sleeperLeagueId,options);
+  const draft=[...(drafts||[])].filter(d=>String(d.season)==='2026').sort((a,b)=>(b.start_time||0)-(a.start_time||0))[0]||drafts?.[0];
+  if(!draft)throw new Error('Sleeper has no draft on file for this league yet.');
+  picks=(await CTE_Sleeper.getDraftPicks(draft.draft_id,options)||[]).sort((a,b)=>a.pick_no-b.pick_no);
+  if(!picks.length)throw new Error('The draft exists, but no picks have been made yet.');
+  const teams=Number(draft.settings?.teams)||12;
+  $('draftSummary').innerHTML=summary(teams);
+  const present=POS.filter(p=>picks.some(x=>x.metadata?.position===p));
+  $('draftFilters').innerHTML=['All',...present].map(p=>`<button class="${p===position?'selected':''}" data-pos="${p}" aria-pressed="${p===position}">${p==='All'?'All picks':p}</button>`).join('');
+  $('draftFilters').hidden=false;
+  const draw=()=>$('draftBoard').innerHTML=board(teams);draw();
+  $('draftFilters').onclick=e=>{const b=e.target.closest('button');if(!b)return;position=b.dataset.pos;[...$('draftFilters').children].forEach(x=>{x.classList.toggle('selected',x===b);x.setAttribute('aria-pressed',String(x===b))});draw()};
+  CTE_UI.setLiveStamp('liveStamp','Updated');
+ }catch(e){$('draftSummary').innerHTML=error(e.message);$('draftBoard').innerHTML='';$('draftFilters').hidden=true;$('liveStamp').textContent='Connection unavailable'}
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-refresh]');if(!b)return;b.disabled=true;CTE_Sleeper.clearCache();load({fresh:true}).finally(()=>b.disabled=false)});
+load();
+})();
+</script><script src="app-v29.js?v=32"></script></body></html>
