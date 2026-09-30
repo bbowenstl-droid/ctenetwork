@@ -11,7 +11,7 @@ Fictional entertainment only. CTE$ has no cash value; no real-money wagering.
 | `js/sportsbook-live.js` | Pulls records, scores and head-to-head from Sleeper. |
 | `js/sportsbook-cloud.js` | Shared picks: league codes, saving cards/parlays to Firebase. |
 | `database.rules.json` | Firebase Realtime Database rules (draft room + Sportsbook). |
-| `sportsbook.html`, `sportsbook-v32.js`, `sportsbook-v32.css` | The page. |
+| `sportsbook.html`, `sportsbook-app-v35.js`, `sportsbook-v35.css` | The page. |
 | `sportsbook-embeds-v32.js` | Homepage teaser, Game Day line strips, article embeds. |
 | `tools/test-sportsbook*.cjs` | Engine, browser and shared-picks tests. |
 

@@ -1,3 +1,9 @@
+# CTE Network v35
+
+- Commissioner panel opens from `sportsbook.html?commissioner` or `#commissioner` and scrolls into view.
+- Sportsbook page files renamed to `sportsbook-app-v35.js` and `sportsbook-v35.css` so phones can't keep an old copy. The old `sportsbook-v32.js` / `sportsbook-v32.css` are no longer used and can be deleted.
+- Sportsbook footer shows the version (SPORTSBOOK v35).
+
 # CTE Network v34 — Shared picks, weekly parlays, weekly awards
 
 - **Picks save to the website.** Owners sign in once per device with a league code from the commissioner; cards and parlays save online, follow them to any device, count on the leaderboard automatically, and stay hidden until kickoff. The board shows who's in.
