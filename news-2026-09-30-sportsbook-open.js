@@ -8,7 +8,8 @@ featuredOwners:["jacob","brendan","brett","carter","jerry","mike","isaiah","dan"
 body:`<p class="article-deck">CTE Network has a book now. Anita's early Week 4 numbers from Monday night were the opener. The market moved. These are the finals.</p>
 <div data-cte-book="board"></div>
 <h3>How the league card works</h3>
-<p>Every owner builds one Week 4 card: <strong>exactly three moneyline picks and three picks against the spread</strong>. Each pick is graded as a standardized CTE$100 ticket, so Brendan at +525 pays CTE$525 on a win while Jacob at −750 pays CTE$13.33. The leaderboard ranks owners by CTE$ profit, not win percentage.</p>
+<p><strong>October 1 update:</strong> The board now displays the commissioner-approved final Thursday prices. Carl and Anita’s existing picks and stakes have been repriced; ordinary previously accepted owner cards retain their accepted terms.</p>
+<p>Every owner builds one Week 4 card: <strong>exactly three moneyline picks and three picks against the spread</strong>. Each pick is graded as a standardized CTE$100 ticket, so Brendan at +340 pays CTE$340 profit on a win while Jacob at −435 pays CTE$22.99 profit. The leaderboard ranks owners by CTE$ profit, not win percentage.</p>
 <p>Cards lock at Thursday kickoff. Once your card is locked, share the receipt in the group chat so the commissioner can post it to the official board.</p>
 <h3>The biggest move on the board</h3>
 <div data-cte-book="line" data-market="w4-brendan-jacob"></div>

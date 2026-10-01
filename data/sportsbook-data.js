@@ -25,18 +25,22 @@ window.CTE_SPORTSBOOK = {
   lockAt: "2026-10-01T19:15:00-05:00", // Week 4 Thursday kickoff, Central time
   lockLabel: "Thursday kickoff",
   currency: "CTE$",
+  updatedAt: "2026-10-01T08:32:01-05:00",
+  quoteNote: "Thursday final update. All spreads are -110 both ways. Carl and Anita tickets repriced by commissioner approval; picks and stakes unchanged. Troy assumes Kamara for Etienne and Puka for Deebo; Puka must play.",
 
-  /* Official locked Week 4 final board (commissioner, 2026-09-30).
-   * These prices apply to the league challenge and to Carl/Anita tickets. */
+  /* Approved Thursday Week 4 board. Prices are fictional estimates, not
+   * provider projections. previousQuote preserves pre-update submissions. */
   markets: [
     {
       id: "w4-brendan-jacob", week: 4, sides: ["brendan", "jacob"],
-      spread: { brendan: { line: 16.5, odds: -105 }, jacob: { line: -16.5, odds: -115 } },
-      moneyline: { brendan: 525, jacob: -750 },
+      spread: { brendan: { line: 28.5, odds: -110 }, jacob: { line: -28.5, odds: -110 } },
+      moneyline: { brendan: 340, jacob: -435 },
+      previousQuote: { before: "2026-10-01T08:32:01-05:00", spread: { brendan: { line: 16.5, odds: -105 }, jacob: { line: -16.5, odds: -115 } }, moneyline: { brendan: 525, jacob: -750 } },
       openMoneyline: { brendan: 165, jacob: -200 },
       lineHistory: [
         { label: "Open", at: "2026-09-28", fav: "jacob", points: 12.5 },
-        { label: "Final", at: "2026-09-30", fav: "jacob", points: 16.5 }
+        { label: "Wednesday", at: "2026-09-30", fav: "jacob", points: 16.5 },
+        { label: "Thursday update", at: "2026-10-01", fav: "jacob", points: 28.5 }
       ],
       takes: {
         holly: "The commissioner gets the league's loudest scoring machine fresh off another avalanche. Brendan, hosting is charming. Letting Jacob redecorate the scoreboard is not.",
@@ -45,12 +49,14 @@ window.CTE_SPORTSBOOK = {
     },
     {
       id: "w4-brett-carter", week: 4, sides: ["brett", "carter"],
-      spread: { brett: { line: -12.5, odds: -120 }, carter: { line: 12.5, odds: 100 } },
-      moneyline: { brett: -475, carter: 350 },
+      spread: { brett: { line: -11.5, odds: -110 }, carter: { line: 11.5, odds: -110 } },
+      moneyline: { brett: -185, carter: 155 },
+      previousQuote: { before: "2026-10-01T08:32:01-05:00", spread: { brett: { line: -12.5, odds: -120 }, carter: { line: 12.5, odds: 100 } }, moneyline: { brett: -475, carter: 350 } },
       openMoneyline: { brett: -175, carter: 145 },
       lineHistory: [
         { label: "Open", at: "2026-09-28", fav: "brett", points: 8.5 },
-        { label: "Final", at: "2026-09-30", fav: "brett", points: 12.5 }
+        { label: "Wednesday", at: "2026-09-30", fav: "brett", points: 12.5 },
+        { label: "Thursday update", at: "2026-10-01", fav: "brett", points: 11.5 }
       ],
       takes: {
         holly: "Brett has the loaded roster; Carter has developed a disturbing habit of keeping emergency points on the bench. Carl made Brett a favorite this week and got burned. The early desk is giving him another chance to touch the stove.",
@@ -59,12 +65,14 @@ window.CTE_SPORTSBOOK = {
     },
     {
       id: "w4-mike-jerry", week: 4, sides: ["mike", "jerry"],
-      spread: { mike: { line: 14.5, odds: -105 }, jerry: { line: -14.5, odds: -115 } },
-      moneyline: { mike: 450, jerry: -625 },
+      spread: { mike: { line: 31.5, odds: -110 }, jerry: { line: -31.5, odds: -110 } },
+      moneyline: { mike: 390, jerry: -510 },
+      previousQuote: { before: "2026-10-01T08:32:01-05:00", spread: { mike: { line: 14.5, odds: -105 }, jerry: { line: -14.5, odds: -115 } }, moneyline: { mike: 450, jerry: -625 } },
       openMoneyline: { mike: 155, jerry: -190 },
       lineHistory: [
         { label: "Open", at: "2026-09-28", fav: "jerry", points: 10.5 },
-        { label: "Final", at: "2026-09-30", fav: "jerry", points: 14.5 }
+        { label: "Wednesday", at: "2026-09-30", fav: "jerry", points: 14.5 },
+        { label: "Thursday update", at: "2026-10-01", fav: "jerry", points: 31.5 }
       ],
       takes: {
         holly: "The league's bad-luck patient meets its quiet record collector. Mike has spent three weeks looking like a man who brought flowers to a funeral and discovered they were for him.",
@@ -73,43 +81,50 @@ window.CTE_SPORTSBOOK = {
     },
     {
       id: "w4-dan-isaiah", week: 4, sides: ["dan", "isaiah"],
-      spread: { dan: { line: 4.5, odds: -115 }, isaiah: { line: -4.5, odds: -105 } },
-      moneyline: { dan: 170, isaiah: -210 },
+      spread: { dan: { line: 8.5, odds: -110 }, isaiah: { line: -8.5, odds: -110 } },
+      moneyline: { dan: 135, isaiah: -160 },
+      previousQuote: { before: "2026-10-01T08:32:01-05:00", spread: { dan: { line: 4.5, odds: -115 }, isaiah: { line: -4.5, odds: -105 } }, moneyline: { dan: 170, isaiah: -210 } },
       openMoneyline: { dan: 130, isaiah: -155 },
       lineHistory: [
         { label: "Open", at: "2026-09-28", fav: "isaiah", points: 6.5 },
-        { label: "Final", at: "2026-09-30", fav: "isaiah", points: 4.5 }
+        { label: "Wednesday", at: "2026-09-30", fav: "isaiah", points: 4.5 },
+        { label: "Thursday update", at: "2026-10-01", fav: "isaiah", points: 8.5 }
       ],
       takes: {
-        holly: "Dan's lineup-management probation meets Isaiah's increasingly annoying competence. Six and a half says the market noticed. Dan will say it is disrespect. The board says it has eyes.",
+        holly: "Isaiah averages 122.89 to Dan's 107.91. Eight and a half is the final quote, and my Dan ticket gets the new cushion. Read the receipt, darling.",
         carl: "Isaiah by ten."
       }
     },
     {
       id: "w4-cotton-troy", week: 4, sides: ["cotton", "troy"],
-      spread: { cotton: { line: 9.5, odds: 105 }, troy: { line: -9.5, odds: -125 } },
-      moneyline: { cotton: 310, troy: -400 },
+      spread: { cotton: { line: 17.5, odds: -110 }, troy: { line: -17.5, odds: -110 } },
+      moneyline: { cotton: 205, troy: -245 },
+      assumptions: "Kamara replaces Etienne; Puka replaces Deebo. Assumed changes, not a verified lineup; conditional on Puka playing.",
+      previousQuote: { before: "2026-10-01T08:32:01-05:00", spread: { cotton: { line: 9.5, odds: 105 }, troy: { line: -9.5, odds: -125 } }, moneyline: { cotton: 310, troy: -400 } },
       openMoneyline: { cotton: 135, troy: -165 },
       lineHistory: [
         { label: "Open", at: "2026-09-28", fav: "troy", points: 7.5 },
-        { label: "Final", at: "2026-09-30", fav: "troy", points: 9.5 }
+        { label: "Wednesday", at: "2026-09-30", fav: "troy", points: 9.5 },
+        { label: "Thursday update", at: "2026-10-01", fav: "troy", points: 17.5 }
       ],
       takes: {
         holly: "Gas Station Sushi gets Troy, who may arrive with fresh Hurts momentum and entirely too much confidence. Cotton, I recommend something stronger than gas-station wasabi.",
-        carl: "I'm betting on 9.5."
+        carl: "I'm betting on 17.5."
       }
     },
     {
       id: "w4-jesse-elijah", week: 4, sides: ["jesse", "elijah"],
-      spread: { jesse: { line: 7.5, odds: -110 }, elijah: { line: -7.5, odds: -110 } },
-      moneyline: { jesse: 260, elijah: -325 },
+      spread: { jesse: { line: 17.5, odds: -110 }, elijah: { line: -17.5, odds: -110 } },
+      moneyline: { jesse: 205, elijah: -245 },
+      previousQuote: { before: "2026-10-01T08:32:01-05:00", spread: { jesse: { line: 7.5, odds: -110 }, elijah: { line: -7.5, odds: -110 } }, moneyline: { jesse: 260, elijah: -325 } },
       openMoneyline: { jesse: 120, elijah: -145 },
       lineHistory: [
         { label: "Open", at: "2026-09-28", fav: "elijah", points: 5.5 },
-        { label: "Final", at: "2026-09-30", fav: "elijah", points: 7.5 }
+        { label: "Wednesday", at: "2026-09-30", fav: "elijah", points: 7.5 },
+        { label: "Thursday update", at: "2026-10-01", fav: "elijah", points: 17.5 }
       ],
       takes: {
-        holly: "Jesse may escape Week 3 with a win; Elijah still carries early-season contender heat even with Jacob currently working him over. Five and a half keeps this one close enough to flirt with and dangerous enough to regret.",
+        holly: "Elijah averages 134.23 to Jesse's 108.25. Jesse's scoring is climbing, but seventeen and a half reflects the current lineup comparison, not another free pass for last week's result.",
         carl: null
       }
     }
@@ -126,13 +141,13 @@ window.CTE_SPORTSBOOK = {
       role: "Senior Fantasy Investigative Analyst", startWeek: 4, startingBankroll: 1000,
       // Tickets are graded at the official final board prices (pinned per wager).
       cards: {
-        4: { postedAt: "2026-09-30", source: "2026-week-4-bankroll-war", wagers: [
-          { market: "w4-brendan-jacob", type: "ml", side: "jacob", odds: -750, stake: 250 },
-          { market: "w4-mike-jerry", type: "ml", side: "jerry", odds: -625, stake: 175 },
-          { market: "w4-cotton-troy", type: "ml", side: "troy", odds: -400, stake: 150 },
-          { market: "w4-dan-isaiah", type: "ats", side: "isaiah", odds: -105, stake: 200, lock: true },
-          { market: "w4-brendan-jacob", type: "ats", side: "brendan", odds: -105, stake: 125 },
-          { market: "w4-cotton-troy", type: "ats", side: "cotton", odds: 105, stake: 100 }
+        4: { postedAt: "2026-09-30", updatedAt: "2026-10-01T08:35:57-05:00", repricedByCommissioner: true, source: "2026-week-4-bankroll-war", wagers: [
+          { market: "w4-brendan-jacob", type: "ml", side: "jacob", odds: -435, stake: 250 },
+          { market: "w4-mike-jerry", type: "ml", side: "jerry", odds: -510, stake: 175 },
+          { market: "w4-cotton-troy", type: "ml", side: "troy", odds: -245, stake: 150 },
+          { market: "w4-dan-isaiah", type: "ats", side: "isaiah", line: -8.5, odds: -110, stake: 200, lock: true },
+          { market: "w4-brendan-jacob", type: "ats", side: "brendan", line: 28.5, odds: -110, stake: 125 },
+          { market: "w4-cotton-troy", type: "ats", side: "cotton", line: 17.5, odds: -110, stake: 100 }
         ] }
       }
     },
@@ -140,13 +155,13 @@ window.CTE_SPORTSBOOK = {
       id: "holly", name: "Anita Headcheck", shortName: "Anita", image: "anita-headcheck.webp",
       role: "Sideline Reporter & League Insider", startWeek: 4, startingBankroll: 1000,
       cards: {
-        4: { postedAt: "2026-09-30", source: "2026-week-4-bankroll-war", wagers: [
-          { market: "w4-brendan-jacob", type: "ml", side: "jacob", odds: -750, stake: 300 },
-          { market: "w4-brett-carter", type: "ml", side: "brett", odds: -475, stake: 175 },
-          { market: "w4-jesse-elijah", type: "ml", side: "elijah", odds: -325, stake: 125 },
-          { market: "w4-brett-carter", type: "ats", side: "brett", odds: -120, stake: 225, lock: true },
-          { market: "w4-dan-isaiah", type: "ats", side: "dan", odds: -115, stake: 100 },
-          { market: "w4-cotton-troy", type: "ats", side: "troy", odds: -125, stake: 75 }
+        4: { postedAt: "2026-09-30", updatedAt: "2026-10-01T08:35:57-05:00", repricedByCommissioner: true, source: "2026-week-4-bankroll-war", wagers: [
+          { market: "w4-brendan-jacob", type: "ml", side: "jacob", odds: -435, stake: 300 },
+          { market: "w4-brett-carter", type: "ml", side: "brett", odds: -185, stake: 175 },
+          { market: "w4-jesse-elijah", type: "ml", side: "elijah", odds: -245, stake: 125 },
+          { market: "w4-brett-carter", type: "ats", side: "brett", line: -11.5, odds: -110, stake: 225, lock: true },
+          { market: "w4-dan-isaiah", type: "ats", side: "dan", line: 8.5, odds: -110, stake: 100 },
+          { market: "w4-cotton-troy", type: "ats", side: "troy", line: -17.5, odds: -110, stake: 75 }
         ] }
       }
     }

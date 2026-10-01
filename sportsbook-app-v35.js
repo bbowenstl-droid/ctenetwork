@@ -175,6 +175,7 @@ function renderBoard() {
   const par = state.mode === 'parlay';
   const modeSwitch = phase === 'open' ? `<div class="bk-mode" role="group" aria-label="What are you building?"><button type="button" data-mode="card" aria-pressed="${!par}">Weekly card${state.card ? ' \u2713' : ''}</button><button type="button" data-mode="parlay" aria-pressed="${par}">Parlay${state.parlay ? ' \u2713' : ''}</button></div>` : '';
   $('#panel-board').innerHTML = `<div class="bk-head"><h2>${heading}</h2><p>${par && phase === 'open' ? `Tap numbers to build your parlay. ${E.parlayRules(B).minLegs}\u2013${E.parlayRules(B).maxLegs} legs, one per matchup.` : note}</p></div>
+    ${B.quoteNote ? `<p class="bk-note" style="margin-bottom:12px">${esc(B.quoteNote)}</p>` : ''}
     ${modeSwitch}${submissionsHTML()}
     ${state.ctxError ? `<p class="bk-note" style="margin-bottom:12px">Sleeper is unreachable, so records and scores are hidden. Lines and your card still work. <button type="button" class="bk-link-btn" data-retry>Retry</button></p>` : ''}
     <div class="bk-board">${markets.map(marketCard).join('')}</div>
@@ -348,8 +349,8 @@ function parlayLegRow(sel, removable) {
     <span class="bk-pick-odds bk-num">${E.formatOdds(sel.odds)}</span><span class="bk-pick-sub">vs ${esc(owner(sel.opponent).name)}</span>
     ${removable ? `<button type="button" class="bk-pick-remove" data-remove="${esc(sel.id)}" aria-label="Remove ${esc(selLabel(sel))}">\u00d7</button>` : ''}</li>`;
 }
-function parlayMath(ids) {
-  const sels = ids.map(id => E.selection(B, id)).filter(Boolean), rules = E.parlayRules(B);
+function parlayMath(ids, entry = {}) {
+  const sels = ids.map(id => E.ticketSelection(B, id, entry)).filter(Boolean), rules = E.parlayRules(B);
   const price = sels.length ? E.parlayPrice(sels) : null, pay = sels.length ? E.parlayPayout(rules.stake, sels) : null;
   return { sels, rules, price, pay };
 }
@@ -367,7 +368,7 @@ function parlaySlipHTML() {
     <div class="bk-slip-actions"><button type="button" class="bk-cta" data-plock ${v.valid && !block ? '' : 'disabled'}>Lock Week ${B.week} parlay</button><p class="bk-slip-hint" aria-live="polite">${esc(hint)}</p></div></div>`;
 }
 function parlayTicketHTML(p) {
-  const { sels, rules, price, pay } = parlayMath(p.ids), st = E.settleParlay(p.ids, B, rules.stake, state.results);
+  const { sels, rules, price, pay } = parlayMath(p.ids, p), st = E.settleParlay(p.ids, B, rules.stake, state.results, p);
   const legStatus = s => { const r = st.legs.find(l => l.sel.id === s.id); return r && r.status !== 'pending' ? `<small>${r.status.toUpperCase()}</small>` : ''; };
   const stamp = st.status === 'won' ? 'CASHED' : st.status === 'lost' ? 'BUSTED' : st.status === 'push' ? 'PUSH' : 'LOCKED';
   return `<div class="bk-receipt bk-parlay-ticket" id="bkParlayTicket" tabindex="-1" aria-labelledby="parlayTitle"><span class="bk-receipt-stamp" aria-hidden="true">${stamp}</span>
@@ -445,7 +446,7 @@ function wireSheet() {
 
 /* ---------------- My card / receipt ---------------- */
 function shareText(card) {
-  const sels = card.ids.map(id => E.selection(B, id)).sort((a, b) => (a.type === b.type ? 0 : a.type === 'ml' ? -1 : 1));
+  const sels = card.ids.map(id => E.ticketSelection(B, id, card)).sort((a, b) => (a.type === b.type ? 0 : a.type === 'ml' ? -1 : 1));
   const stake = B.leagueChallenge.stake;
   const lines = sels.map(s => `${s.type === 'ml' ? 'ML ' : 'ATS'}  ${selLabel(s)}${s.type === 'ats' ? ` (${E.formatOdds(s.odds)})` : ` ${E.formatOdds(s.odds)}`}`);
   const max = sels.reduce((t, s) => t + E.totalReturn(stake, s.odds), 0);
@@ -457,7 +458,7 @@ function onLedger(card) {
 }
 function receiptHTML(card) {
   const stake = B.leagueChallenge.stake, o = owner(card.ownerId);
-  const sels = card.ids.map(id => E.selection(B, id)).filter(Boolean).sort((a, b) => (a.type === b.type ? 0 : a.type === 'ml' ? -1 : 1));
+  const sels = card.ids.map(id => E.ticketSelection(B, id, card)).filter(Boolean).sort((a, b) => (a.type === b.type ? 0 : a.type === 'ml' ? -1 : 1));
   let net = 0, settled = 0;
   const items = sels.map(s => {
     const phase = E.marketPhase(B, s.market, now(), state.results);
@@ -485,7 +486,7 @@ function renderCardTab() {
   if (state.card) {
     host.innerHTML = `<div class="bk-head"><h2>My card</h2><p>Week ${B.week} \u00b7 league pick'em</p></div>${receiptHTML(state.card)}${parlaySectionHTML()}`;
     const key = 'settle:' + state.card.ownerId;
-    const sels = state.card.ids.map(id => E.selection(B, id));
+    const sels = state.card.ids.map(id => E.ticketSelection(B, id, state.card));
     if (sels.every(s => state.results[s.marketId] && state.results[s.marketId].final) && !state.celebrated.has(key)) {
       state.celebrated.add(key);
       const net = sels.reduce((t, s) => t + E.settle(s, B.leagueChallenge.stake, state.results).profit, 0);
@@ -508,6 +509,7 @@ async function lockCard() {
   if (!v.valid || lockBlocker() || state.phase !== 'open') return;
   try {
     let entry = { ownerId: whoAmI(), ids: state.ids.slice(), lockedAt: new Date().toISOString(), storage: 'device' };
+    entry.quotes = E.quoteSnapshot(B, entry.ids);
     if (cloudOn()) { if (!linked()) return; entry = await C.saveEntry(B.season, B.week, linked(), 'card', entry); refreshStatus(); }
     state.card = await S.lockCard(B.week, entry);
     state.ids = []; await S.saveDraft(B.week, { ownerId: state.ownerId, ids: [] });
@@ -531,6 +533,7 @@ async function lockParlay() {
   if (!E.validateParlay(state.pids, B).valid || lockBlocker() || state.phase !== 'open') return;
   try {
     let entry = { ownerId: whoAmI(), ids: state.pids.slice(), lockedAt: new Date().toISOString(), storage: 'device' };
+    entry.quotes = E.quoteSnapshot(B, entry.ids);
     if (cloudOn()) entry = await C.saveEntry(B.season, B.week, linked(), 'parlay', entry);
     state.parlay = await S.lockParlay(B.week, entry); state.pids = []; await S.saveParlayDraft(B.week, { ids: [] });
     refreshStatus(); closeSheet(); go('my-card'); renderAll();

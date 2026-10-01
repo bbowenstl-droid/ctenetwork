@@ -81,6 +81,7 @@
     async saveEntry(season, week, ownerId, kind, entry) {
       const b = await withTimeout(backend()), w = `${base(season)}/weeks/${week}`, col = kind === 'parlay' ? 'parlays' : 'cards';
       const doc = { ids: entry.ids.slice(), lockedAt: entry.lockedAt || new Date().toISOString(), by: uid };
+      doc.quotes = entry.quotes || window.CTE_BookEngine.quoteSnapshot(window.CTE_SPORTSBOOK, entry.ids);
       await withTimeout(b.update({ [`${w}/${col}/${ownerId}`]: doc, [`${w}/status/${ownerId}/${kind}`]: Date.now() }));
       return { ownerId, ...doc, storage: 'cloud' };
     },

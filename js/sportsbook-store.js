@@ -35,6 +35,7 @@
     async getCard(week) { return read(`${PREFIX}:card:${week}`); },
     async lockCard(week, card) {
       const saved = { ownerId: card.ownerId, ids: card.ids.slice(), lockedAt: card.lockedAt || new Date().toISOString(), storage: card.storage || 'device' };
+      if (card.quotes) saved.quotes = card.quotes;
       if (!write(`${PREFIX}:card:${week}`, saved)) throw new Error('This browser blocked saving. Share the card before leaving the page.');
       return saved;
     },
@@ -44,6 +45,7 @@
     async getParlay(week) { return read(`${PREFIX}:parlay:${week}`); },
     async lockParlay(week, p) {
       const saved = { ownerId: p.ownerId, ids: p.ids.slice(), lockedAt: p.lockedAt || new Date().toISOString(), storage: p.storage || 'device' };
+      if (p.quotes) saved.quotes = p.quotes;
       if (!write(`${PREFIX}:parlay:${week}`, saved)) throw new Error('This browser blocked saving. Share the parlay before leaving the page.');
       return saved;
     },

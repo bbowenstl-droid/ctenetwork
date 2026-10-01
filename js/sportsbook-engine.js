@@ -66,6 +66,23 @@
     return { id, market: m, marketId: m.id, week: m.week, type: p.type, side: p.side, opponent: opponent(m, p.side), line, odds,
       isFavorite: favorite(m) === p.side, isUnderdog: favorite(m) !== p.side };
   }
+  /** Accepted entries keep their saved quote, or a timestamp-resolved legacy quote. */
+  function ticketSelection(book, id, entry = {}) {
+    const saved = entry.quotes && entry.quotes[id];
+    if (saved) return selection(book, id, saved);
+    const p = parseSelectionId(id), m = p && market(book, p.marketId);
+    const old = m && m.previousQuote;
+    const accepted = Date.parse(entry.lockedAt || entry.postedAt || '');
+    if (old && Number.isFinite(accepted) && accepted < Date.parse(old.before)) {
+      return selection(book, id, { line: p.type === 'ats' ? old.spread[p.side].line : null,
+        odds: p.type === 'ats' ? old.spread[p.side].odds : old.moneyline[p.side] });
+    }
+    return selection(book, id);
+  }
+  function quoteSnapshot(book, ids) {
+    return Object.fromEntries(ids.map(id => { const s = selection(book, id);
+      return s ? [id, { odds: s.odds, line: s.line }] : null; }).filter(Boolean));
+  }
 
   /* ---------- Line movement ---------- */
   /** Spread expressed as points for sides[0]. */
@@ -259,7 +276,8 @@
       if (Number(week) > throughWeek) continue;
       for (const [ownerId, ids] of Object.entries(owners || {})) {
         for (const id of ids || []) {
-          const sel = selection(book, id); if (!sel) continue;
+          const entry = book.leagueChallenge.cardEntries?.[week]?.[ownerId] || {};
+          const sel = ticketSelection(book, id, entry); if (!sel) continue;
           (byOwner[ownerId] = byOwner[ownerId] || []).push({ sel, week: Number(week), ...settle(sel, stake, results) });
         }
       }
@@ -347,8 +365,8 @@
     if (ids.length >= rules.maxLegs) return { ids, action: 'blocked', reason: `Parlays max out at ${rules.maxLegs} legs.` };
     return { ids: [...ids, id], action: 'added' };
   }
-  function settleParlay(ids, book, stake, results) {
-    const legs = ids.map(id => selection(book, id)).filter(Boolean).map(s => ({ sel: s, ...settle(s, stake, results) }));
+  function settleParlay(ids, book, stake, results, entry = {}) {
+    const legs = ids.map(id => ticketSelection(book, id, entry)).filter(Boolean).map(s => ({ sel: s, ...settle(s, stake, results) }));
     if (legs.some(l => l.status === 'lost')) return { status: 'lost', legs, profit: -round2(stake), returned: 0 };
     if (legs.some(l => l.status === 'pending')) return { status: 'pending', legs, profit: 0, returned: null };
     const live = legs.filter(l => l.status === 'won').map(l => l.sel);
@@ -362,8 +380,9 @@
     for (const [week, owners] of Object.entries(byWeek)) for (const [ownerId, ids] of Object.entries(owners || {})) {
       if (!Array.isArray(ids) || !validateParlay(ids, book, Number(week)).valid) continue;
       const r = rows[ownerId] || (rows[ownerId] = { ownerId, entered: 0, hits: 0, misses: 0, pushes: 0, pending: 0, profit: 0, best: null, parlays: [] });
-      const st = settleParlay(ids, book, rules.stake, results);
-      r.entered++; r.parlays.push({ week: Number(week), ids, ...st, price: parlayPrice(ids.map(id => selection(book, id))) });
+      const entry = book.leagueChallenge.parlayEntries?.[week]?.[ownerId] || {};
+      const st = settleParlay(ids, book, rules.stake, results, entry);
+      r.entered++; r.parlays.push({ week: Number(week), ids, ...st, price: parlayPrice(ids.map(id => ticketSelection(book, id, entry))) });
       if (st.status === 'won') { r.hits++; r.profit = round2(r.profit + st.profit); if (!r.best || st.profit > r.best.profit) r.best = { week: Number(week), profit: st.profit, legs: ids.length }; }
       else if (st.status === 'lost') { r.misses++; r.profit = round2(r.profit + st.profit); }
       else if (st.status === 'push') r.pushes++; else r.pending++;
@@ -379,6 +398,16 @@
     const clean = x => (x && Array.isArray(x.ids) ? x.ids : Array.isArray(x) ? x : null);
     for (const [o, c] of Object.entries(cards || {})) { const ids = clean(c); if (ids) (lc.cards[week] = lc.cards[week] || {})[o] = ids; }
     for (const [o, c] of Object.entries(parlays || {})) { const ids = clean(c); if (ids) (lc.parlays[week] = lc.parlays[week] || {})[o] = ids; }
+    for (const [key, entries] of [['cardEntries', cards], ['parlayEntries', parlays]]) {
+      lc[key] = lc[key] || {};
+      for (const [owner, entry] of Object.entries(entries || {})) {
+        if (entry && !Array.isArray(entry) && clean(entry)) {
+          (lc[key][week] = lc[key][week] || {})[owner] = {
+            lockedAt: entry.lockedAt || null, quotes: entry.quotes || null
+          };
+        }
+      }
+    }
     return b;
   }
 
@@ -391,7 +420,7 @@
 
   const api = {
     round2, impliedProbability, profit, totalReturn, formatOdds, formatLine, formatMoney, formatPct,
-    market, weekMarkets, opponent, favorite, selectionId, parseSelectionId, selection,
+    market, weekMarkets, opponent, favorite, selectionId, parseSelectionId, selection, ticketSelection, quoteSnapshot,
     lineMovement, lineForFirstSide, moneylineShift,
     grade, gradeSpread, gradeMoneyline, liveStatus, settle,
     lockTime, marketPhase, bookPhase,

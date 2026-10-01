@@ -20,7 +20,7 @@ function fixture(context, { leg = 3, live = null } = {}) {
     return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(data) });
   }).then(() => context.route('https://sleepercdn.com/**', r => r.abort())).then(() => context.route('https://www.gstatic.com/**', r => r.abort()));
 }
-const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:00-05:00';
+const BEFORE_LOCK = '2026-10-01T12:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:00-05:00';
 
 (async () => {
   await new Promise(r => server.listen(8766, '127.0.0.1', r));
@@ -41,7 +41,7 @@ const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:
     await p.goto('http://127.0.0.1:8766/sportsbook.html'); await p.waitForSelector('.bk-market .bk-team-sub:not(:has(.bk-skel))');
     check(await p.locator('.bk-market').count() === 6, `${width}: six markets`);
     const txt = await p.locator('#panel-board').innerText();
-    for (const s of ['+16.5', '\u2212105', '\u221216.5', '\u2212115', '+525', '\u2212750', '\u221212.5', '\u2212120', '+100', '\u2212475', '+350', '+14.5', '+450', '\u2212625', '+4.5', '+170', '\u2212210', '+9.5', '+105', '\u2212125', '+310', '\u2212400', '+7.5', '\u2212110', '+260', '\u2212325'])
+    for (const s of ['+28.5', '−28.5', '+340', '−435', '−11.5', '+11.5', '−185', '+155', '+31.5', '−510', '+390', '+8.5', '−8.5', '+135', '−160', '+17.5', '−17.5', '+205', '−245', '−110'])
       check(txt.includes(s), `${width}: board shows ${s}`);
     check(!await overflow(p), `${width}: no horizontal overflow on board`);
     if (width === 390) await p.screenshot({ path: `${out}/m-board.png` });
@@ -59,9 +59,9 @@ const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:
     const sheet = await p.locator('#bkSheet').innerText();
     check(/2\s*\/\s*3/.test(sheet) && /5\s*\/\s*6/.test(sheet), `${width}: progress 3 ML / 2 ATS / 5 total`);
     check(await p.locator('#bkSheet [data-lock]').isDisabled(), `${width}: lock disabled at 5 picks`);
-    // Brendan ML +525 on 100 → profit 525 return 625; Brett ML −475 → profit 21.05
-    check(sheet.includes('CTE$525') && sheet.includes('CTE$625'), `${width}: +525 payout correct`);
-    check(sheet.includes('CTE$21.05'), `${width}: \u2212475 payout correct`);
+    // Final Thursday board: Brendan +340 → profit 340 / return 440; Brett −185 → profit 54.05
+    check(sheet.includes('CTE$340') && sheet.includes('CTE$440'), `${width}: +340 payout correct`);
+    check(sheet.includes('CTE$54.05'), `${width}: −185 payout correct`);
     await p.keyboard.press('Escape'); await p.waitForTimeout(80);
     check(!await p.locator('#bkSheet').evaluate(d => d.open), `${width}: Escape closes sheet`);
     await p.click('[data-sel="w4-jesse-elijah:ats:jesse"]');
@@ -70,8 +70,8 @@ const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:
     await p.selectOption('#bkSheet [data-owner-select]', 'brendan');
     check(!await p.locator('#bkSheet [data-lock]').isDisabled(), `${width}: lock enabled at 3+3 with owner`);
     const sheetText = await p.locator('#bkSheet').innerText();
-    // 625+121.05+116+195.24+180+190.91 = 1428.2
-    check(sheetText.includes('CTE$1,428.20'), `${width}: total potential return`);
+    // 440 + 154.05 + 119.61 + 3 × 190.91 = 1286.39
+    check(sheetText.includes('CTE$1,286.39'), `${width}: total potential return`);
     if (width === 390) await p.screenshot({ path: `${out}/m-sheet.png` });
     await p.click('#bkSheet [data-lock]'); await p.waitForTimeout(500);
     check(await p.locator('#bkReceipt').isVisible(), `${width}: receipt shown after lock`);
@@ -97,7 +97,7 @@ const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:
     check(await p.locator('.bk-slip-aside').isVisible(), '1440: desktop slip visible');
     check(!await p.locator('#bkPill').isVisible(), '1440: no mobile pill');
     await p.click('[data-sel="w4-cotton-troy:ats:troy"]');
-    check((await p.locator('.bk-slip-aside').innerText()).includes('Troy \u22129.5'), '1440: slip lists selection');
+    check((await p.locator('.bk-slip-aside').innerText()).includes('Troy −17.5'), '1440: slip lists selection');
     check((await p.locator('.bk-slip-aside').innerText()).includes('CTE$80'), '1440: \u2212125 on CTE$100 profits CTE$80');
     await p.evaluate(() => scrollTo(0, 900)); await p.waitForTimeout(100);
     const top = await p.locator('.bk-slip-aside').evaluate(e => e.getBoundingClientRect().top);
@@ -105,7 +105,7 @@ const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:
     await p.evaluate(() => scrollTo(0, 0));
     await p.click('[data-expand="w4-brendan-jacob"]'); await p.waitForTimeout(1200);
     const detail = await p.locator('#d-w4-brendan-jacob').innerText();
-    check(detail.includes('Moved 4 pts toward Jacob'), '1440: line movement summary');
+    check(detail.includes('Moved 16 pts toward Jacob'), '1440: line movement summary');
     check(detail.includes('Tale of the tape') && /#\d+/.test(detail), '1440: tape with PF rank');
     check(/W1|W2|W3/.test(detail), '1440: last-three scoring from Sleeper');
     check(detail.includes('Head to head'), '1440: head to head block');
@@ -132,13 +132,13 @@ const BEFORE_LOCK = '2026-09-30T18:00:00-05:00', AFTER_LOCK = '2026-10-04T15:00:
     check(await p.locator('.bk-odds:not(:disabled)').count() === 0, 'live: every odds button locked');
     check((await p.locator('#bkStatus').innerText()).includes('live'), 'live: status');
     const card = await p.locator('.bk-market[data-market="w4-cotton-troy"]').innerText();
-    check(card.includes('88.40') && card.includes('74.10') && /Troy \u22129\.5 \(\+4\.8\).*Covering/s.test(card), 'live: Troy \u22129.5 covering at +14.3 (' + card.replace(/\n/g, ' ') + ')');
+    check(card.includes('88.40') && card.includes('74.10') && /Troy −17\.5 \(−3\.2\).*Not covering/s.test(card), 'live: Troy −17.5 not covering at +14.3 (' + card.replace(/\n/g, ' ') + ')');
     check(!/WON|LOST/.test(await p.locator('#panel-board').innerText()), 'live: nothing settled');
     await p.screenshot({ path: `${out}/m-live.png` });
     await p.goto('http://127.0.0.1:8766/game-day.html'); await p.waitForSelector('.bk-gc');
     check(await p.locator('.n-match-card').count() === 6, 'game day: still six score cards');
     check(await p.locator('.bk-gc').count() === 6, 'game day: six sportsbook lines');
-    check(/TROY COVERING|Troy covering/i.test(await p.locator('.bk-gc').nth(4).innerText()), 'game day: cover status on card');
+    check(/COTTON COVERING|Cotton covering/i.test(await p.locator('.bk-gc').nth(4).innerText()), 'game day: cover status on card');
     await p.screenshot({ path: `${out}/m-gameday-live.png` });
     check(errors.length === 0, 'live: no console errors (' + errors.join(' | ') + ')');
     await c.close();

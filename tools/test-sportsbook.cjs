@@ -16,18 +16,59 @@ const PINNED = {
 };
 const BOOK = JSON.parse(JSON.stringify(LIVE));
 for (const m of BOOK.markets) { const x = PINNED[m.id]; if (!x) continue; for (const k in x.spread) m.spread[k].odds = x.spread[k]; Object.assign(m.moneyline, x.ml); }
+for (const m of BOOK.markets) if (m.previousQuote) m.spread = JSON.parse(JSON.stringify(m.previousQuote.spread));
+for (const p of Object.values(BOOK.personalities)) for (const wg of p.cards[4].wagers) {
+  const m = BOOK.markets.find(m => m.id === wg.market);
+  wg.odds = wg.type === 'ats' ? m.spread[wg.side].odds : m.moneyline[wg.side];
+  if (wg.type === 'ats') wg.line = m.spread[wg.side].line;
+}
+for (const m of BOOK.markets) m.lineHistory = m.lineHistory.filter(x => !String(x.label).includes('Thursday'));
 const clone = o => JSON.parse(JSON.stringify(o));
 let passed = 0;
 const test = (name, fn) => { try { fn(); passed++; } catch (e) { console.error('FAIL', name, '\n ', e.message); process.exitCode = 1; } };
 
+test('accepted quotes remain pinned across board updates', () => {
+  const id = 'w4-cotton-troy:ats:troy';
+  const legacy = E.ticketSelection(LIVE, id, { lockedAt: '2026-09-30T18:00:00-05:00' });
+  assert.deepStrictEqual([legacy.line, legacy.odds], [-9.5, -125]);
+  const current = E.ticketSelection(LIVE, id, { lockedAt: '2026-10-01T12:00:00-05:00' });
+  assert.deepStrictEqual([current.line, current.odds], [-17.5, -110]);
+  const quotes = E.quoteSnapshot(LIVE, [id]);
+  const changed = clone(LIVE); changed.markets.find(m => m.id === 'w4-cotton-troy').spread.troy = { line: -99.5, odds: -500 };
+  const pinned = E.ticketSelection(changed, id, { quotes });
+  assert.deepStrictEqual([pinned.line, pinned.odds], [-17.5, -110]);
+});
+test('all twelve personality tickets use the approved final board', () => {
+  for (const p of Object.values(LIVE.personalities)) for (const wg of p.cards[4].wagers) {
+    const s = E.selection(LIVE, E.selectionId(wg.market, wg.type, wg.side));
+    assert.strictEqual(wg.odds, s.odds);
+    if (wg.type === 'ats') assert.strictEqual(wg.line, s.line);
+  }
+});
+test('published bankroll slips match each repriced ticket and payout', () => {
+  require(path.join(__dirname, '..', 'news-2026-09-30-bankroll-war.js'));
+  const story = window.CTE_NEWS.find(s => s.id === '2026-week-4-bankroll-war');
+  const tables = [...story.body.matchAll(/<table class="article-table bankroll-slip">([\s\S]*?)<\/table>/g)];
+  assert.strictEqual(tables.length, 2);
+  ['carl', 'holly'].forEach((owner, i) => {
+    const rows = [...tables[i][1].matchAll(/<tr>([\s\S]*?)<\/tr>/g)].slice(1, -1);
+    LIVE.personalities[owner].cards[4].wagers.forEach((wg, j) => {
+      const s = E.selection(LIVE, E.selectionId(wg.market, wg.type, wg.side));
+      assert.ok(rows[j][1].includes(E.formatOdds(s.odds)), owner + ' odds ' + j);
+      if (s.type === 'ats') assert.ok(rows[j][1].includes(E.formatLine(s.line)), owner + ' spread ' + j);
+      assert.ok(rows[j][1].includes('CTE$' + E.profit(wg.stake, s.odds).toFixed(2)), owner + ' profit ' + j);
+      assert.ok(rows[j][1].includes('CTE$' + E.totalReturn(wg.stake, s.odds).toFixed(2)), owner + ' return ' + j);
+    });
+  });
+});
 /* The official locked Week 4 final board */
 const EXPECTED = {
-  'w4-brendan-jacob': { spread: { brendan: [16.5, -105], jacob: [-16.5, -115] }, ml: { brendan: 525, jacob: -750 }, open: ['jacob', 12.5], final: ['jacob', 16.5] },
-  'w4-brett-carter': { spread: { brett: [-12.5, -120], carter: [12.5, 100] }, ml: { brett: -475, carter: 350 }, open: ['brett', 8.5], final: ['brett', 12.5] },
-  'w4-mike-jerry': { spread: { mike: [14.5, -105], jerry: [-14.5, -115] }, ml: { mike: 450, jerry: -625 }, open: ['jerry', 10.5], final: ['jerry', 14.5] },
-  'w4-dan-isaiah': { spread: { dan: [4.5, -115], isaiah: [-4.5, -105] }, ml: { dan: 170, isaiah: -210 }, open: ['isaiah', 6.5], final: ['isaiah', 4.5] },
-  'w4-cotton-troy': { spread: { cotton: [9.5, 105], troy: [-9.5, -125] }, ml: { cotton: 310, troy: -400 }, open: ['troy', 7.5], final: ['troy', 9.5] },
-  'w4-jesse-elijah': { spread: { jesse: [7.5, -110], elijah: [-7.5, -110] }, ml: { jesse: 260, elijah: -325 }, open: ['elijah', 5.5], final: ['elijah', 7.5] }
+  'w4-brendan-jacob': { spread: { brendan: [28.5, -110], jacob: [-28.5, -110] }, ml: { brendan: 340, jacob: -435 }, open: ['jacob', 12.5], final: ['jacob', 28.5] },
+  'w4-brett-carter': { spread: { brett: [-11.5, -110], carter: [11.5, -110] }, ml: { brett: -185, carter: 155 }, open: ['brett', 8.5], final: ['brett', 11.5] },
+  'w4-mike-jerry': { spread: { mike: [31.5, -110], jerry: [-31.5, -110] }, ml: { mike: 390, jerry: -510 }, open: ['jerry', 10.5], final: ['jerry', 31.5] },
+  'w4-dan-isaiah': { spread: { dan: [8.5, -110], isaiah: [-8.5, -110] }, ml: { dan: 135, isaiah: -160 }, open: ['isaiah', 6.5], final: ['isaiah', 8.5] },
+  'w4-cotton-troy': { spread: { cotton: [17.5, -110], troy: [-17.5, -110] }, ml: { cotton: 205, troy: -245 }, open: ['troy', 7.5], final: ['troy', 17.5] },
+  'w4-jesse-elijah': { spread: { jesse: [17.5, -110], elijah: [-17.5, -110] }, ml: { jesse: 205, elijah: -245 }, open: ['elijah', 5.5], final: ['elijah', 17.5] }
 };
 test('six Week 4 markets with exact lines, juice, moneylines, open and final', () => {
   const ms = E.weekMarkets(LIVE, 4);
@@ -181,7 +222,7 @@ test('board favorites match the tickets Carl and Anita bet', () => {
   }
 });
 test('Week 4 Carl/Anita tickets use final board prices and match the published max returns', () => {
-  for (const [id, max] of [['carl', 1513.36], ['holly', 1449.76]]) {
+  for (const [id, max] of [['carl', 1539.37], ['holly', 1578.22]]) {
     const w = E.bankrollLedger(LIVE, id, {}).thisWeek;
     assert.strictEqual(w.staked, 1000); assert.deepStrictEqual(w.issues, []);
     assert.strictEqual(Math.round((1000 + w.wagers.reduce((a, x) => a + E.profit(x.stake, x.sel.odds), 0)) * 100) / 100, max);
