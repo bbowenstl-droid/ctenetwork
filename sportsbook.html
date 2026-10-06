@@ -35,10 +35,10 @@
       var m=missing();
       if(!m.length)return setTimeout(explain,2500);
       m.reduce(function(p,n){return p.then(function(){return load(n[1].split("/").pop())})},Promise.resolve()).then(function(){
-        if(!missing().length&&!booted()){window.__bkErrs=[];return load("sportsbook-app-v35.js?v=38").then(function(){setTimeout(explain,3000)})}
+        if(!missing().length&&!booted()){window.__bkErrs=[];return load("sportsbook-app-v35.js?v=20261006history").then(function(){setTimeout(explain,3000)})}
         explain();
       });
     },1500);
   });
 })();
-</script><script src="sportsbook-embeds-v32.js?v=37"></script><script src="app-v29.js?v=32"></script><script src="sportsbook-app-v35.js?v=38"></script><script src="install-card-v36.js?v=36"></script></body></html>
+</script><script src="sportsbook-embeds-v32.js?v=37"></script><script src="app-v29.js?v=32"></script><script src="sportsbook-app-v35.js?v=20261006history"></script><script src="install-card-v36.js?v=36"></script></body></html>

@@ -24,7 +24,13 @@ const cloudOn = () => !!(state.cloud && state.cloud.ok);
 const linked = () => cloudOn() && state.cloud.linked ? state.cloud.linked : null;
 const whoAmI = () => linked() || state.ownerId;
 /** Book with everyone's submitted cards/parlays merged in (after lock). */
-function LB() { const sub = state.cloud && state.cloud.subs; return sub ? E.withSubmissions(B, B.week, sub.cards, sub.parlays) : B; }
+function LB() {
+  let book = B;
+  for (const [week, sub] of Object.entries((state.cloud && state.cloud.history) || {}))
+    book = E.withSubmissions(book, Number(week), sub.cards, sub.parlays);
+  const sub = state.cloud && state.cloud.subs;
+  return sub ? E.withSubmissions(book, B.week, sub.cards, sub.parlays) : book;
+}
 state.phase = E.bookPhase(B, now(), state.results);
 
 /* ---------------- Small helpers ---------------- */
@@ -662,7 +668,22 @@ function renderLeaders() {
           <span class="bk-num" role="cell">${E.recordText(r.ml)}</span><span class="bk-num" role="cell">${E.recordText(r.ats)}</span><span class="bk-num" role="cell">${E.recordText(r.total)}</span>
           <span class="bk-num bk-lb-profit ${cls(r.profit)}" role="cell">${money(r.profit, { sign: true })}</span><span class="bk-num ${cls(r.roi)}" role="cell">${(r.roi * 100).toFixed(1)}%</span><span class="bk-num" role="cell">${r.streak.text}</span>
           <span class="bk-lb-sub bk-num"><span>ML <b>${E.recordText(r.ml)}</b></span><span>ATS <b>${E.recordText(r.ats)}</b></span><span>ROI <b class="${cls(r.roi)}">${(r.roi * 100).toFixed(1)}%</b></span><span>Streak <b>${r.streak.text}</b></span>${wk != null ? `<span>Week ${latestWeek} <b class="${cls(wk)}">${money(wk, { sign: true })}</b></span>` : ''}${r.worstBeat ? `<span>Worst beat: <b>${esc(selLabel(r.worstBeat.sel))} by ${Math.abs(r.worstBeat.margin).toFixed(2)}</b></span>` : ''}</span></div>`; }).join('')}
-    </div>${parlayRaceHTML()}`;
+    </div>${challengeReceiptsHTML(graded)}${parlayRaceHTML()}`;
+}
+function challengeReceiptsHTML(rows) {
+  return '<h3 class="bk-week-title">Submitted card receipts</h3>' + rows.map(r => {
+    const weeks = [...new Set(r.tickets.map(t => t.week))].sort((a,b) => b-a);
+    return weeks.map(week => {
+      const tickets = r.tickets.filter(t => t.week === week);
+      const pnl = E.round2(tickets.reduce((sum,t) => sum+t.profit,0));
+      return '<details class="bk-block"><summary>' + esc(owner(r.ownerId).name) + ' · Week ' + week +
+        ' · ' + money(pnl,{sign:true}) + '</summary>' + tickets.map(t =>
+        '<div class="bk-eb-row"><b class="bk-num">' + esc(selLabel(t.sel)) + ' ' + E.formatOdds(t.sel.odds) +
+        '</b><span class="bk-num">' + money(t.stake) + ' stake</span><span class="bk-num">' +
+        t.status.toUpperCase() + ' ' + money(t.profit,{sign:true}) + '</span></div>'
+      ).join('') + '</details>';
+    }).join('');
+  }).join('');
 }
 function parlayRaceHTML() {
   const rows = E.parlayLeaderboard(LB(), state.results), cls = n => n > 0 ? 'bk-pos' : n < 0 ? 'bk-neg' : '';
@@ -754,8 +775,20 @@ async function refreshStatus() {
   if (state.tab === 'board') { const el = $('.bk-subs'); if (el) el.outerHTML = submissionsHTML(); else renderBoard(); }
 }
 async function loadSubmissions() {
-  if (!cloudOn() || state.phase === 'open') return;
-  try { const all = await C.all(B.season, B.week); if (all) { state.cloud.subs = all; renderLeaders(); } } catch (_) {}
+  if (!cloudOn()) return;
+  const weeks = [...new Set((B.markets || []).map(m => Number(m.week)))]
+    .filter(w => w < Number(B.week) || (w === Number(B.week) && state.phase !== 'open'));
+  const history = state.cloud.history || (state.cloud.history = {});
+  await Promise.all(weeks.map(async week => {
+    try {
+      const all = await C.all(B.season, week);
+      if (all) {
+        if (week === Number(B.week)) state.cloud.subs = all;
+        else history[week] = all;
+      }
+    } catch (_) {}
+  }));
+  renderLeaders();
 }
 async function linkDevice(box) {
   const scope = box || document, who = ($('[data-owner-select]', scope) || {}).value || state.ownerId, code = ($('[data-code]', scope) || {}).value || '';
