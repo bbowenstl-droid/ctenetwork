@@ -409,7 +409,88 @@ window.CTE_SPORTSBOOK = {
     stake: 100,
     required: { ml: 3, ats: 3 },
     // cards: { 4: { brendan: ["w4-brendan-jacob:ats:brendan", ...six selection ids] } }
-    cards: {},
+    cards: {
+  "4": {
+    "brendan": [
+      "w4-brendan-jacob:ats:brendan",
+      "w4-brett-carter:ats:brett",
+      "w4-mike-jerry:ml:jerry",
+      "w4-dan-isaiah:ml:isaiah",
+      "w4-cotton-troy:ats:troy",
+      "w4-jesse-elijah:ml:elijah"
+    ],
+    "jacob": [
+      "w4-brendan-jacob:ats:brendan",
+      "w4-brett-carter:ats:carter",
+      "w4-mike-jerry:ats:mike",
+      "w4-dan-isaiah:ml:isaiah",
+      "w4-cotton-troy:ml:troy",
+      "w4-jesse-elijah:ml:jesse"
+    ]
+  }
+},
+    cardEntries: {
+  "4": {
+    "brendan": {
+      "quotes": {
+        "w4-brendan-jacob:ats:brendan": {
+          "odds": -110,
+          "line": 28.5
+        },
+        "w4-brett-carter:ats:brett": {
+          "odds": -110,
+          "line": -11.5
+        },
+        "w4-mike-jerry:ml:jerry": {
+          "odds": -510,
+          "line": null
+        },
+        "w4-dan-isaiah:ml:isaiah": {
+          "odds": -160,
+          "line": null
+        },
+        "w4-cotton-troy:ats:troy": {
+          "odds": -110,
+          "line": -17.5
+        },
+        "w4-jesse-elijah:ml:elijah": {
+          "odds": -245,
+          "line": null
+        }
+      },
+      "source": "Verified saved Week 4 card receipt, October 6"
+    },
+    "jacob": {
+      "quotes": {
+        "w4-brendan-jacob:ats:brendan": {
+          "odds": -110,
+          "line": 28.5
+        },
+        "w4-brett-carter:ats:carter": {
+          "odds": -110,
+          "line": 11.5
+        },
+        "w4-mike-jerry:ats:mike": {
+          "odds": -110,
+          "line": 31.5
+        },
+        "w4-dan-isaiah:ml:isaiah": {
+          "odds": -160,
+          "line": null
+        },
+        "w4-cotton-troy:ml:troy": {
+          "odds": -245,
+          "line": null
+        },
+        "w4-jesse-elijah:ml:jesse": {
+          "odds": 205,
+          "line": null
+        }
+      },
+      "source": "Verified saved Week 4 card receipt, October 6"
+    }
+  }
+},
     // parlays: { 4: { brendan: ["w4-...:ml:jacob", "w4-...:ats:troy"] } }  (cloud submissions merge on top)
     parlays: {}
   },
