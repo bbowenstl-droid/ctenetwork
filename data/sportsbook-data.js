@@ -20,17 +20,252 @@
  */
 window.CTE_SPORTSBOOK = {
   season: 2026,
-  week: 4,
-  status: "final_lines",               // "opening_lines" | "final_lines"
-  lockAt: "2026-10-01T19:15:00-05:00", // Week 4 Thursday kickoff, Central time
+  week: 5,
+  status: "opening_lines",               // "opening_lines" | "final_lines"
+  lockAt: "2026-10-08T19:15:00-05:00", // Week 5 Thursday kickoff, Central time
   lockLabel: "Thursday kickoff",
   currency: "CTE$",
-  updatedAt: "2026-10-01T08:32:01-05:00",
-  quoteNote: "Thursday final update. All spreads are -110 both ways. Carl and Anita tickets repriced by commissioner approval; picks and stakes unchanged. Troy assumes Kamara for Etienne and Puka for Deebo; Puka must play.",
+  updatedAt: "2026-10-06T17:45:00-05:00",
+  quoteNote: "Week 5 provisional opening board, carried forward from the October 6 opening-line draft. Fictional CTE estimates, not provider projections. All spreads -110 both ways. Injury availability, bye replacements and final lineups require review before final lines. Week 4 tickets retain their posted terms.",
 
   /* Approved Thursday Week 4 board. Prices are fictional estimates, not
    * provider projections. previousQuote preserves pre-update submissions. */
   markets: [
+    {
+      "id": "w5-brendan-brett",
+      "week": 5,
+      "sides": [
+        "brendan",
+        "brett"
+      ],
+      "spread": {
+        "brendan": {
+          "line": -2.5,
+          "odds": -110
+        },
+        "brett": {
+          "line": 2.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "brendan": -135,
+        "brett": 115
+      },
+      "openMoneyline": {
+        "brendan": -135,
+        "brett": 115
+      },
+      "lineHistory": [
+        {
+          "label": "Open",
+          "at": "2026-10-06",
+          "fav": "brendan",
+          "points": 2.5
+        }
+      ],
+      "assumptions": "Provisional opening quote. Brett's Justin Jefferson availability and final lineup need review.",
+      "takes": {
+        "holly": null,
+        "carl": null
+      }
+    },
+    {
+      "id": "w5-jacob-jesse",
+      "week": 5,
+      "sides": [
+        "jacob",
+        "jesse"
+      ],
+      "spread": {
+        "jacob": {
+          "line": -35.5,
+          "odds": -110
+        },
+        "jesse": {
+          "line": 35.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "jacob": -500,
+        "jesse": 360
+      },
+      "openMoneyline": {
+        "jacob": -500,
+        "jesse": 360
+      },
+      "lineHistory": [
+        {
+          "label": "Open",
+          "at": "2026-10-06",
+          "fav": "jacob",
+          "points": 35.5
+        }
+      ],
+      "assumptions": "Provisional opening quote. Jesse's Saquon Barkley availability needs review; no healthy-starter assumption is guaranteed.",
+      "takes": {
+        "holly": null,
+        "carl": null
+      }
+    },
+    {
+      "id": "w5-troy-mike",
+      "week": 5,
+      "sides": [
+        "troy",
+        "mike"
+      ],
+      "spread": {
+        "troy": {
+          "line": -18.5,
+          "odds": -110
+        },
+        "mike": {
+          "line": 18.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "troy": -260,
+        "mike": 210
+      },
+      "openMoneyline": {
+        "troy": -260,
+        "mike": 210
+      },
+      "lineHistory": [
+        {
+          "label": "Open",
+          "at": "2026-10-06",
+          "fav": "troy",
+          "points": 18.5
+        }
+      ],
+      "assumptions": "Provisional opening quote. Troy's Tee Higgins availability and Chiefs bye replacements need review.",
+      "takes": {
+        "holly": null,
+        "carl": null
+      }
+    },
+    {
+      "id": "w5-dan-carter",
+      "week": 5,
+      "sides": [
+        "dan",
+        "carter"
+      ],
+      "spread": {
+        "dan": {
+          "line": -8.5,
+          "odds": -110
+        },
+        "carter": {
+          "line": 8.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "dan": -170,
+        "carter": 145
+      },
+      "openMoneyline": {
+        "dan": -170,
+        "carter": 145
+      },
+      "lineHistory": [
+        {
+          "label": "Open",
+          "at": "2026-10-06",
+          "fav": "dan",
+          "points": 8.5
+        }
+      ],
+      "assumptions": "Provisional opening quote. Carter's Chiefs and Panthers bye replacements need review.",
+      "takes": {
+        "holly": null,
+        "carl": null
+      }
+    },
+    {
+      "id": "w5-isaiah-cotton",
+      "week": 5,
+      "sides": [
+        "isaiah",
+        "cotton"
+      ],
+      "spread": {
+        "isaiah": {
+          "line": -6.5,
+          "odds": -110
+        },
+        "cotton": {
+          "line": 6.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "isaiah": -155,
+        "cotton": 130
+      },
+      "openMoneyline": {
+        "isaiah": -155,
+        "cotton": 130
+      },
+      "lineHistory": [
+        {
+          "label": "Open",
+          "at": "2026-10-06",
+          "fav": "isaiah",
+          "points": 6.5
+        }
+      ],
+      "assumptions": "Provisional opening quote. Isaiah's Ja'Marr Chase availability needs review.",
+      "takes": {
+        "holly": null,
+        "carl": null
+      }
+    },
+    {
+      "id": "w5-jerry-elijah",
+      "week": 5,
+      "sides": [
+        "jerry",
+        "elijah"
+      ],
+      "spread": {
+        "jerry": {
+          "line": -9.5,
+          "odds": -110
+        },
+        "elijah": {
+          "line": 9.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "jerry": -180,
+        "elijah": 155
+      },
+      "openMoneyline": {
+        "jerry": -180,
+        "elijah": 155
+      },
+      "lineHistory": [
+        {
+          "label": "Open",
+          "at": "2026-10-06",
+          "fav": "jerry",
+          "points": 9.5
+        }
+      ],
+      "assumptions": "Provisional opening quote. Elijah's Lamar Jackson availability and Jerry's Chiefs bye replacements need review.",
+      "takes": {
+        "holly": null,
+        "carl": null
+      }
+    },
+
     {
       id: "w4-brendan-jacob", week: 4, sides: ["brendan", "jacob"],
       spread: { brendan: { line: 28.5, odds: -110 }, jacob: { line: -28.5, odds: -110 } },
@@ -180,5 +415,42 @@ window.CTE_SPORTSBOOK = {
   },
 
   // Commissioner-confirmed finals. Overrides Sleeper. { "<marketId>": { scores: { ownerId: pts, ownerId: pts } } }
-  results: {}
+  results: {
+    "w4-brendan-jacob": {
+      "scores": {
+        "brendan": 163.62,
+        "jacob": 205.92
+      }
+    },
+    "w4-brett-carter": {
+      "scores": {
+        "brett": 125.66,
+        "carter": 95.2
+      }
+    },
+    "w4-mike-jerry": {
+      "scores": {
+        "mike": 106.18,
+        "jerry": 142.36
+      }
+    },
+    "w4-dan-isaiah": {
+      "scores": {
+        "dan": 138.08,
+        "isaiah": 138.78
+      }
+    },
+    "w4-cotton-troy": {
+      "scores": {
+        "cotton": 136.28,
+        "troy": 148.62
+      }
+    },
+    "w4-jesse-elijah": {
+      "scores": {
+        "jesse": 95.42,
+        "elijah": 90.38
+      }
+    }
+  }
 };
