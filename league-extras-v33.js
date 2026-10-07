@@ -36,6 +36,27 @@
     return out;
   }
 
+  /** League leg can lag after Monday. Published commissioner finals are also
+   * authoritative, but only a complete six-matchup/twelve-owner week qualifies. */
+  function completedWeek(leg, season, book) {
+    let last = Math.max(0, Number(leg || 0) - 1);
+    if (!book || Number(book.season) !== Number(season)) return last;
+    const weeks = [...new Set((book.markets || []).map(m => Number(m.week)))];
+    for (const week of weeks) {
+      if (!Number.isInteger(week) || week < 1 || week > Number(book.week)) continue;
+      const markets = book.markets.filter(m => Number(m.week) === week);
+      const owners = new Set(markets.flatMap(m => m.sides || []));
+      if (markets.length !== 6 || owners.size !== 12) continue;
+      const finalized = markets.every(m => {
+        const result = book.results && book.results[m.id];
+        return m.sides && m.sides.length === 2 && result && result.final !== false &&
+          m.sides.every(id => result.scores && typeof result.scores[id] === 'number' && Number.isFinite(result.scores[id]));
+      });
+      if (finalized) last = Math.max(last, week);
+    }
+    return last;
+  }
+
   function seasons() {
     const s = (LD && LD.league && LD.league.seasons) || {};
     return Object.keys(s).map(Number).sort((a, b) => a - b).map(y => ({ season: y, ...s[y] }));
@@ -61,20 +82,22 @@
     if (after) after.insertAdjacentHTML('afterend', html); else if (before) before.insertAdjacentHTML('beforebegin', html);
   }
 
-  async function run() {
+  async function render() {
     if (!LE || !SL || !UI || !LD) return;
     const all = seasons(), cur = all.find(s => s.status === 'current');
     if (!cur) return;
     let leg = 0;
-    try { const snap = await SL.getLeagueSnapshot(cur.sleeperLeagueId); leg = Number(snap.league && snap.league.settings && snap.league.settings.leg || 0); } catch (_) { return; }
-    const lastDone = leg - 1;
+    try { const snap = await SL.getLeagueSnapshot(cur.sleeperLeagueId, { fresh: true }); leg = Number(snap.league && snap.league.settings && snap.league.settings.leg || 0); } catch (_) { return; }
+    const lastDone = completedWeek(leg, cur.season, window.CTE_SPORTSBOOK);
     // Weekly awards: last completed week of the current season.
-    if (lastDone >= 1 && !document.querySelector('.x-awards')) {
+    if (lastDone >= 1) {
       try {
-        const d = await weekData(cur.season, cur.sleeperLeagueId, lastDone);
+        const d = await weekData(cur.season, cur.sleeperLeagueId, lastDone, true);
         const awards = computeAwards(d.rows, d.games, d.ownerOfRoster);
-        if (awards && !document.querySelector('.x-awards')) {
-          if (view === 'game-day') place(awardsHTML(lastDone, awards), '#readiness', '#scoreboard');
+        if (awards) {
+          const previous = document.querySelector('.x-awards');
+          if (previous) previous.outerHTML = awardsHTML(lastDone, awards);
+          else if (view === 'game-day') place(awardsHTML(lastDone, awards), '#readiness', '#scoreboard');
           else place(awardsHTML(lastDone, awards), '.bk-teaser', '.n-talent');
         }
       } catch (_) {}
@@ -94,8 +117,15 @@
       if (items.length) place(historyHTML(leg, items.reverse()), '.x-awards', '.n-talent');
     }
   }
-  window.CTE_Extras = { computeAwards, run };
+  let running = false;
+  async function run() {
+    if (running) return;
+    running = true;
+    try { await render(); } finally { running = false; }
+  }
+  window.CTE_Extras = { computeAwards, completedWeek, run };
   if (view === 'index' || view === 'game-day') {
+    document.addEventListener('cte:scoreboard', run);
     if (document.readyState === 'complete') run(); else addEventListener('load', () => run());
   }
 })();
