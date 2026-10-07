@@ -599,7 +599,7 @@ function sparkline(carl, holly) {
 function renderDuel() {
   const carl = E.bankrollLedger(B, 'carl', state.results), holly = E.bankrollLedger(B, 'holly', state.results);
   const delta = led => led.lastWeekPnl == null ? '<span class="bk-delta">No settled weeks yet</span>' : `<span class="bk-delta ${led.lastWeekPnl > 0 ? 'is-up' : led.lastWeekPnl < 0 ? 'is-down' : ''}">${led.lastWeekPnl > 0 ? '\u25b2' : led.lastWeekPnl < 0 ? '\u25bc' : '='} ${money(led.lastWeekPnl, { sign: true })} last week</span>`;
-  const duelist = (led, cls) => `<div class="bk-duelist ${cls}"><img src="${esc(led.personality.image)}" alt="${esc(led.personality.name)}" loading="lazy"><h3>${esc(led.personality.name)}</h3><strong class="bk-bank bk-num" data-count="${led.current}" data-value="${led.startingBankroll}">${money(led.startingBankroll)}</strong>${delta(led)}${led.busted ? '<span class="bk-badge" data-b="degen">BUSTED</span>' : ''}</div>`;
+  const duelist = (led, cls) => `<div class="bk-duelist ${cls}"><img src="${esc(led.personality.image)}" alt="${esc(led.personality.name)}" loading="lazy"><h3>${esc(led.personality.name)}</h3><strong class="bk-bank bk-num" data-count="${led.current}" data-value="${led.current}">${money(led.current)}</strong>${delta(led)}${led.busted ? '<span class="bk-badge" data-b="degen">BUSTED</span>' : ''}</div>`;
   const cmp = (label, a, b, av, bv, higherWins = true) => {
     const aw = av != null && bv != null && (higherWins ? av > bv : av < bv), bw = av != null && bv != null && (higherWins ? bv > av : bv < av);
     return `<div><span class="bk-num ${aw ? 'is-lead' : ''}">${a}</span><span>${label}</span><span class="bk-num ${bw ? 'is-lead' : ''}">${b}</span></div>`;
@@ -732,6 +732,22 @@ function renderMast() {
   $('#bkWalletCard').textContent = (state.card ? 'Locked \u2713' : `${c.total} / 6`) + (state.parlay ? ' +P' : '');
   const carl = E.bankrollLedger(B, 'carl', state.results), holly = E.bankrollLedger(B, 'holly', state.results);
   $('#bkWalletCarl').textContent = money(carl.current); $('#bkWalletHolly').textContent = money(holly.current);
+  $('#bkEdition').textContent = `${B.season} season · Week ${B.week}`;
+  for (const [led, id] of [[carl,'#bkCarlDetail'],[holly,'#bkAnitaDetail']]) {
+    const el=$(id), pnl=led.lastWeekPnl;
+    el.textContent = `${E.recordText(led.records.total)} season · ${pnl == null ? 'Awaiting results' : money(pnl,{sign:true})+' last settled week'}`;
+    el.className='bk-wallet-detail'+(pnl>0?' is-up':pnl<0?' is-down':'');
+    if(led.pendingChain)el.textContent+=' · settlement pending';
+  }
+  const me=whoAmI(), rows=E.leaderboardWithMovement(LB(),state.results).rows;
+  const rank=rows.find(r=>r.ownerId===me), entry=state.card;
+  const pending=entry ? entry.ids.filter(id=>{const sel=E.ticketSelection(B,id,entry);return !sel||E.settle(sel,B.leagueChallenge.stake,state.results).status==='pending'}).length : null;
+  const title=entry ? (pending ? `Week ${B.week} card submitted` : `Week ${B.week} card graded`) : `Week ${B.week}: ${c.total} of 6 picks selected`;
+  const saved=entry ? storageNote(entry,'card') : (state.phase==='open'?'Choose 3 moneylines and 3 spreads, then submit your card.':'Markets are locked. View results or your saved card.');
+  const standing=rank&&rank.risked ? ` Season rank #${rank.rank} · ${money(rank.profit,{sign:true})} card profit.` : '';
+  const host=$('#bkPersonal');
+  host.innerHTML=`<div><span class="n-label">${me?esc(owner(me).name)+"’S SPORTSBOOK":'YOUR SPORTSBOOK'}</span><h2>${title}</h2><p>${esc(saved)}${entry&&pending?' '+pending+' picks awaiting settlement.':''}${standing}</p></div><a class="n-action" href="#${entry?'my-card':state.phase==='open'?'board':'results'}">${entry?'View my card':state.phase==='open'?'Build my card':'View results'} ↗</a>`;
+
 }
 
 /* ---------------- Tabs ---------------- */

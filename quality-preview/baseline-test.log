@@ -1,0 +1,37 @@
+FAIL card enforces exactly 3 ML + 3 ATS 
+  w4-brendan-jacob:ml:jacob is not a Week 5 market, w4-brett-carter:ml:brett is not a Week 5 market, w4-mike-jerry:ml:jerry is not a Week 5 market, w4-dan-isaiah:ats:dan is not a Week 5 market, w4-cotton-troy:ats:troy is not a Week 5 market, w4-jesse-elijah:ats:jesse is not a Week 5 market
+FAIL Week 4 Carl/Anita tickets use final board prices and match the published max returns 
+  Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 1000
+
+FAIL bankroll carries forward — no refill — and next week must stake it all 
+  Expected values to be strictly deep-equal:
++ actual - expected
+
++ [
++   'Card needs 3 ML + 3 ATS (has 3 ML + 9 ATS)'
++ ]
+- []
+
+FAIL leaderboard ranks by profit, not win % 
+  Expected values to be strictly equal:
+
+26.81 !== 12.29
+
+FAIL parlay validation: 2–6 legs, one per matchup, this week only 
+  The expression evaluated to a falsy value:
+
+  assert.ok(E.validateParlay(['w4-brendan-jacob:ml:jacob', 'w4-mike-jerry:ats:mike'], BOOK).valid)
+
+FAIL cloud submissions merge over the ledger and feed both leaderboards 
+  original book untouched
+FAIL book phases: open → live at lock → final only when results are final 
+  Expected values to be strictly equal:
+
+'live' !== 'final'
+
+
+24 passed, some FAILED

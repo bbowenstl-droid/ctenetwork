@@ -1,0 +1,176 @@
+/* CTE Network 40 — Taste pass.
+   Applied with the Taste redesign skill (github.com/Leonxlnx/taste-skill, MIT).
+   Loaded LAST on every page. Delete this file + its <link> tags to roll back. */
+
+/* 1. Font swap — one typeface everywhere (was Inter on old pages, system font on new ones) */
+:root{
+  --t-sans:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --t-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* 2. One palette: cool neutrals + one red accent (slightly desaturated) */
+  --t-ink:#14161a;
+  --t-offblack:#0e1013;
+  --t-red:#d42a3a;
+  --t-red-deep:#b8222f;
+  --t-shadow:20 22 30;
+  --n-red:var(--t-red);
+  --n-ink:var(--t-ink);
+}
+body,body.n-app,body.n-legacy{font-family:var(--t-sans)!important;font-feature-settings:"ss01","cv11";text-rendering:optimizeLegibility}
+
+/* Headlines: heavier presence, tighter tracking, no orphaned words */
+h1,h2,h3,.n-hero h1{letter-spacing:-.025em;text-wrap:balance}
+h1{letter-spacing:-.04em;line-height:1.02}
+p,li{text-wrap:pretty}
+article p,.article-body p{max-width:68ch;line-height:1.65}
+
+/* Numbers line up: scores, records, odds, standings, tables */
+table,td,th,
+.n-score-value,.n-record,.n-rank,.n-story-number,.hero-stat,.profile-record,.profile-stat,
+.record-box,.rival-stat,.schedule-record,.team-card-stats,.tx-stat,.power-rank,.rank-main,
+.scout-score,.carl-stat,
+.bk-num,.bk-odds,.bk-odds-ml,.bk-pick-odds,.bk-rank,.bk-score,.bk-result-score,.bk-duel-stats{
+  font-variant-numeric:tabular-nums;
+}
+.n-score-value,.bk-odds,.bk-odds-ml,.bk-pick-odds,.bk-score,.bk-result-score{font-family:var(--t-mono);letter-spacing:-.02em}
+
+/* Off-black instead of pure #000 on dark story cards */
+.n-cover,.n-holly{background-color:var(--t-offblack)}
+.bk-take img,.bk-embed-duel img{background:var(--t-offblack)}
+
+/* One accent: focus ring matches the brand instead of a stray blue */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid var(--t-red)!important;outline-offset:3px;border-radius:6px
+}
+
+/* 3. Hover + press feel consistent everywhere */
+a,button,.n-button{transition:background-color .2s ease,color .2s ease,transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease,opacity .2s ease}
+button:active,.n-button:active,[role="button"]:active{transform:scale(.98)}
+@media (hover:hover){
+  .n-button:hover,button:not(:disabled):hover{transform:translateY(-1px)}
+}
+
+/* Shadows tinted to the page instead of flat black */
+.n-card,.n-panel,.team-card,.power-rank,.record-box{box-shadow:0 1px 2px rgb(var(--t-shadow)/.05),0 8px 24px -12px rgb(var(--t-shadow)/.12)}
+
+/* Small labels: a touch more air so all-caps kicker text reads cleaner */
+.n-kicker,.n-eyebrow,.eyebrow,.kicker{letter-spacing:.14em}
+
+/* Article tables (recaps, odds, bankroll slips) */
+.article-table{border-collapse:collapse;width:100%}
+.article-table th{font-weight:600;font-size:.78em;letter-spacing:.06em;text-transform:uppercase;color:var(--n-muted,#71747a)}
+.article-table td,.article-table th{padding:.6em .75em;border-bottom:1px solid var(--n-line,#e4e5e8)}
+.article-table tbody tr:hover{background:rgb(var(--t-shadow)/.03)}
+
+/* Mobile viewport: avoid iOS jump on full-height sections */
+.n-full,.full-height{min-height:100dvh}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}
+}
+
+/* v41: surface-aware tokens and shared components. Legacy gold/silver tokens
+   retain their original meaning on TV/admin; never recolor them globally. */
+:root{--t-win:#16794a;--t-loss:#b8222f;--t-live:#16794a;--t-space:8px}
+.n-app,.n-legacy{--gold:var(--t-red);--gold2:var(--t-red-deep);--silver:var(--t-ink)}
+.n-app main,.n-legacy main{min-width:0}
+.n-app input,.n-legacy input,.bk-page select{font-size:16px}
+.n-navigation a,.n-navigation button{min-height:48px}
+.n-footer,.n-legacy .footer{font-size:11px;line-height:1.7}
+.n-context{display:flex;align-items:center;gap:8px;color:var(--n-muted);font-size:12px;margin-bottom:22px}
+.n-context a{text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.n-context strong{color:var(--n-ink);font-weight:600}
+.n-week-hub{display:flex;justify-content:space-between;align-items:center;gap:20px;background:#fff;border:1px solid var(--n-line);border-radius:20px;padding:22px 24px;margin-bottom:20px}
+.n-week-hub h1{font-size:32px;line-height:1.1;margin:7px 0}
+.n-week-hub p{font-size:13px;color:var(--n-muted);margin:0}
+.n-hub-actions{display:flex;gap:8px;flex-wrap:wrap}
+.n-hub-actions a,.n-action{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 16px;border-radius:12px;border:1px solid var(--n-line);text-decoration:none;font-size:13px;font-weight:650}
+.n-hub-actions .is-primary{background:var(--n-red);color:white;border-color:var(--n-red)}
+.n-brand-signature{margin:28px 0 12px;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.n-brand-signature strong{font-size:22px;letter-spacing:-.04em}
+.n-brand-signature span{font-size:12px;color:var(--n-muted)}
+.n-home-grid .n-table-row:nth-child(-n+4){background:#fafafa}
+.n-team-status{display:block;font-size:10px;font-weight:600;margin-top:4px;color:var(--t-win)}
+.n-team-status.is-out{color:var(--n-muted)}
+.n-record-breakdown{display:block;font-size:10px;color:var(--n-muted);font-family:var(--t-sans);font-weight:450;line-height:1.7}
+.n-playoff-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.n-playoff-slot{padding:18px;border:1px solid var(--n-line);border-radius:16px;background:#fff;text-decoration:none;min-width:0}
+.n-playoff-slot strong{display:block;font-size:20px;margin:8px 0 4px}
+.n-playoff-slot small{display:block;font-size:12px;color:var(--n-muted)}
+.n-playoff-slot.is-bye{border-top:3px solid var(--n-red)}
+.n-playoff-slot .n-label{font-size:10px}
+.n-playoff-note{font-size:12px;color:var(--n-muted);line-height:1.7;margin:12px 0 22px}
+.n-playoff-cut{border-top:2px dashed #b6b8bf}
+.n-table-row{min-height:72px}
+.n-legacy .article-shell{background:transparent;border:0;padding:0;box-shadow:none}
+.n-legacy .article-header{max-width:850px;margin:0 auto 30px;padding:0 0 28px;border-bottom:1px solid var(--n-line)}
+.n-legacy .article-header h1{font-size:clamp(34px,4vw,58px)!important;line-height:1.08;margin:18px 0;letter-spacing:-.045em;overflow-wrap:anywhere}
+.n-legacy .article-subtitle{font-size:18px!important;line-height:1.6;color:var(--n-muted)}
+.n-legacy .article-body{max-width:760px;margin:auto;font-size:17px!important;line-height:1.75}
+.n-legacy .article-body>p{margin:0 0 24px}
+.n-legacy .article-body h2{margin:36px 0 16px;font-size:28px;line-height:1.2}
+.n-legacy .article-body h3{margin:28px 0 12px;font-size:21px;line-height:1.3}
+.n-byline{display:flex;align-items:center;gap:12px;margin-top:22px;font-size:12px;color:var(--n-muted)}
+.n-byline img,.n-author-mark{width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:top;background:#202126;flex-shrink:0}
+.n-author-mark{display:grid;place-items:center;color:#fff;font-weight:800;font-size:11px}
+.n-byline strong{display:block;color:var(--n-ink);font-size:13px}
+.n-byline a{text-decoration:none}
+.n-byline a:hover{color:var(--n-red)}
+.n-table-scroll{overflow-x:auto;max-width:100%;margin:24px 0;border:1px solid var(--n-line);border-radius:14px;scrollbar-width:thin}
+.n-table-scroll table{margin:0!important;width:100%;min-width:520px}
+.n-related{border-top:1px solid var(--n-line);padding-top:28px;margin:42px auto 0;max-width:850px}
+.n-related-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.n-related-grid a{display:block;text-decoration:none;background:#fff;border:1px solid var(--n-line);border-radius:16px;padding:20px}
+.n-related-grid h3{font-size:16px;line-height:1.35;margin:12px 0 0}
+.n-author-page .n-author-hero{display:grid;grid-template-columns:1fr 230px;gap:24px;align-items:center;padding:32px;border-radius:22px;background:#14171d;color:white;margin-bottom:28px}
+.n-author-hero img{width:100%;height:280px;object-fit:contain;object-position:top}
+.n-author-hero h1{font-size:48px;line-height:1.05;margin:12px 0}
+.n-author-hero p{color:#c5c9d2;font-size:16px;line-height:1.65}
+.n-author-hero .n-label{color:#e7bec3}
+.n-author-hero .n-action{color:white;border-color:#ffffff40}
+.bk-personal{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;padding:20px 24px;background:var(--bk-s1);border:1px solid var(--bk-line2);border-radius:18px;margin-top:16px}
+.bk-personal h2{font-size:20px;line-height:1.2;margin:6px 0}
+.bk-personal p{font-size:12px;line-height:1.6;color:var(--bk-mute);margin:0}
+.bk-personal .n-label{color:var(--bk-mute)}
+.bk-personal .n-action{background:var(--bk-text);color:var(--bk-bg);border:0;white-space:nowrap}
+.bk-wallet-detail{display:block;font-size:10px;line-height:1.5;color:var(--bk-mute);margin-top:6px;max-width:180px}
+.bk-wallet-detail.is-up{color:var(--bk-win)}
+.bk-wallet-detail.is-down{color:var(--bk-loss)}
+.bk-page .bk-sheet{max-height:calc(100dvh - env(safe-area-inset-top) - 16px);padding-bottom:env(safe-area-inset-bottom)}
+.bk-page .bk-sheet-body{overscroll-behavior:contain}
+.bk-page .bk-odds-btn{min-height:48px}
+@media(min-width:821px){.n-home-grid{gap:28px}.n-section-head h2{font-size:22px}}
+@media(max-width:820px){
+ .n-navigation>a[href="news.html"]{display:none}.n-navigation{grid-template-columns:repeat(5,minmax(0,1fr));justify-content:space-around}
+ .n-week-hub{display:block;padding:20px}.n-week-hub h1{font-size:29px}.n-hub-actions{margin-top:16px}.n-hub-actions a{flex:1;font-size:12px;padding:10px}
+ .n-brand-signature{display:block}.n-brand-signature span{display:block;margin-top:6px}
+ .n-playoff-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.n-playoff-slot{padding:14px}.n-playoff-slot strong{font-size:18px}
+ .n-table-row{padding-top:16px;padding-bottom:16px}.n-record-breakdown{font-size:9px}.n-team-status{font-size:9px}
+ .n-related-grid{grid-template-columns:1fr}.n-related-grid a{padding:18px}.n-related-grid h3{font-size:18px}
+ .n-legacy .article-header h1{font-size:34px!important}.n-legacy .article-subtitle{font-size:16px!important}.n-legacy .article-body{font-size:16px!important;line-height:1.75}
+ .n-author-page .n-author-hero{grid-template-columns:1fr;padding:24px;gap:12px}.n-author-hero img{grid-row:1;height:230px}.n-author-hero h1{font-size:38px}
+ .bk-personal{padding:18px;grid-template-columns:1fr}.bk-personal .n-action{justify-self:start}.bk-personal h2{font-size:19px}
+ .bk-wallet{width:100%;grid-template-columns:repeat(3,minmax(0,1fr))}.bk-wallet-cell{min-width:0}.bk-wallet-cell strong{font-size:clamp(14px,4vw,19px)}.bk-wallet-detail{font-size:9px}
+ .n-footer,.n-legacy .footer{padding-bottom:24px}.n-talent .n-label{font-size:10px}.n-source{font-size:11px}
+}
+@media(max-width:374px){.n-playoff-grid{gap:8px}.n-playoff-slot{padding:12px}.bk-personal h2{font-size:18px}.n-week-hub h1{font-size:26px}}
+/* Keep long bankrolls and matchup text inside narrow mobile grids. */
+.bk-panels,.bk-duelist,.bk-pcard{min-width:0}
+.bk-duel{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+.bk-duel-stats{grid-template-columns:minmax(0,1fr) minmax(70px,.8fr) minmax(0,1fr)}
+.bk-duel-stats span{min-width:0;overflow-wrap:anywhere}
+@media(max-width:1239px){.bk-layout{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:820px){.bk-duel{grid-template-columns:repeat(2,minmax(0,1fr))}.bk-duelist{padding:12px}.bk-duelist .bk-bank{font-size:clamp(17px,5.4vw,27px);letter-spacing:-.04em}.bk-duel-stats span{font-size:12px;padding:10px 8px}.bk-tug-legend{flex-wrap:wrap;gap:8px}.bk-wager{grid-template-columns:28px minmax(0,1fr) auto}}
+.bk-owner{grid-template-columns:minmax(0,1fr)}
+.bk-owner select{width:100%;min-width:0;max-width:100%}
+@media(max-width:820px){.bk-mast{grid-template-columns:minmax(0,1fr)}.bk-wallet{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.bk-wallet-cell{padding:10px 8px}.bk-wallet-cell strong{display:block;font-size:clamp(12px,3.7vw,18px);letter-spacing:-.035em}}
+@media(max-width:374px){.bk-wordmark{font-size:32px}.bk-tabs{margin-left:-16px;margin-right:-16px}.bk-pcard[data-slip-host]{padding:8px}}
+.n-legacy :is(.profile-layout,.profile-history-grid,.feature-dashboard,.record-grid,.feature-grid)>*{min-width:0}
+.n-legacy .table-wrap{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+.n-legacy .profile-game>div{min-width:0;overflow-wrap:anywhere}
+@media(max-width:820px){.n-legacy .profile-layout{grid-template-columns:minmax(0,1fr)!important}.n-legacy .profile-game{grid-template-columns:24px minmax(0,1fr);gap:6px}.n-legacy .profile-game-score{grid-column:2;font-size:13px}.n-legacy .profile-team-name{overflow-wrap:anywhere}}
+
+/* Editorial leads without artwork lead with the story, avoiding an empty image stage. */
+@media(max-width:820px){.n-cover-text .n-cover-art{display:none}.n-cover-text .n-cover-copy{padding:26px;margin:0}.n-cover-text h2{font-size:28px;margin-top:14px}.n-hub-actions a{white-space:nowrap}.bk-head h2{white-space:nowrap}.bk-head{align-items:start}.bk-head p{max-width:28ch;text-align:right}}
+.n-match-card,.n-news-card,.n-division{min-width:0}
+@media(max-width:820px){.n-match-grid{grid-template-columns:minmax(0,1fr)}.n-match-foot{flex-wrap:wrap;gap:8px}.n-match-card .bk-embed-lines{flex-wrap:wrap}}

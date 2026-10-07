@@ -1,0 +1,34 @@
+{
+  "checks": 89,
+  "views": [
+    "390 index.html",
+    "390 standings.html",
+    "390 sportsbook.html",
+    "390 article.html?id=2026-week-4-bankroll-war",
+    "390 article.html?id=2026-week-4-thursday-headcheck",
+    "390 anita.html",
+    "390 team.html?owner=brendan",
+    "390 news.html",
+    "390 scores.html",
+    "390 schedule.html",
+    "390 rivalries.html",
+    "390 records.html",
+    "390 game-day.html",
+    "390 carl.html",
+    "390 changes.html",
+    "390 transactions.html",
+    "390 draft-central.html",
+    "390 teams.html",
+    "390 rivalry.html?id=father-knows-best",
+    "390 league-history.html",
+    "390 tv.html"
+  ],
+  "screenshots": [
+    "390-index.png",
+    "390-standings.png",
+    "390-sportsbook.png",
+    "390-article.png",
+    "390-anita.png"
+  ],
+  "fixture": "Synthetic Sleeper data, current sportsbook ledger; no production writes"
+}
