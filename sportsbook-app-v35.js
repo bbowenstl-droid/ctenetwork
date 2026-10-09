@@ -191,7 +191,7 @@ function submissionsHTML() {
   if (!cloudOn() || !state.cloud.status) return '';
   const st = state.cloud.status, active = Object.values(window.CTE_LEAGUE_DATA.owners).filter(o => o.status === 'active').sort((a, b) => a.name.localeCompare(b.name));
   const cards = active.filter(o => st[o.id] && st[o.id].card).length, pars = active.filter(o => st[o.id] && st[o.id].parlay).length;
-  return `<div class="bk-subs" aria-label="Submitted picks"><div class="bk-subs-top"><b>${cards}/${active.length} cards in</b><span>${pars} parlay${pars === 1 ? '' : 's'}</span><span>Picks unlock at kickoff</span></div>
+  return `<div class="bk-subs" aria-label="Submitted picks"><div class="bk-subs-top"><b>${cards}/${active.length} cards in</b><span>${pars} parlay${pars === 1 ? '' : 's'}</span><span>Picks reveal at Sunday noon Central</span></div>
     <div class="bk-subs-list">${active.map(o => { const s = st[o.id] || {}; return `<span class="bk-sub ${s.card ? 'is-in' : ''}"><span aria-hidden="true">${s.card ? '\u2713 ' : ''}${esc(o.name)}</span>${s.parlay ? '<i aria-hidden="true">P</i>' : ''}<span class="bk-sr">${esc(o.name)} ${s.card ? 'card in' : 'no card yet'}${s.parlay ? ', parlay in' : ''}</span></span>`; }).join('')}</div></div>`;
 }
 function rerenderMarket(id) {
@@ -344,7 +344,7 @@ function slipHTML() {
   if (v.counts.ml < v.required.ml) missing.push(`${v.required.ml - v.counts.ml} more moneyline${v.required.ml - v.counts.ml > 1 ? 's' : ''}`);
   if (v.counts.ats < v.required.ats) missing.push(`${v.required.ats - v.counts.ats} more spread${v.required.ats - v.counts.ats > 1 ? 's' : ''}`);
   const block = lockBlocker();
-  const hint = missing.length ? `Add ${missing.join(' and ')}.` : block || 'Ready. Locks can be edited until kickoff.';
+  const hint = missing.length ? `Add ${missing.join(' and ')}.` : block || 'Ready. Locks can be edited until Sunday noon Central.';
   return `<div class="bk-slip"><div class="bk-slip-head"><h2>Bet slip <span class="bk-sr">${ids.length} selections</span></h2>${ids.length ? '<button type="button" class="bk-link-btn" data-clear>Clear slip</button>' : ''}</div>
     ${identityHTML()}${progressHTML(ids)}
     ${sels.length ? `<ul class="bk-picks" aria-label="Selections">${sels.map(s => pickRow(s, stake, true)).join('')}</ul>` : `<p class="bk-slip-empty">Your Week ${B.week} card is empty. Pick exactly three moneylines and three spreads from the board. Every pick carries a standard ${money(stake)} stake.</p>`}
@@ -387,7 +387,7 @@ function parlayTicketHTML(p) {
 }
 function storageNote(entry, kind) {
   const what = kind === 'parlay' ? 'parlay' : 'card';
-  if (entry.storage === 'cloud') return `\u2713 Saved to the CTE Sportsbook. It counts automatically, and the league sees it at kickoff.`;
+  if (entry.storage === 'cloud') return `\u2713 Saved to the CTE Sportsbook. It counts automatically, and the league sees it at Sunday noon Central.`;
   if (cloudOn() && state.phase === 'open') return linked() ? `Saved on this device only. <button type="button" class="bk-link-btn" data-push="${kind}">Send this ${what} to the league</button>` : `Saved on this device only. Sign in with your league code on the Board to send it to the league.`;
   if (kind === 'card' && onLedger(entry)) return '\u2713 This card is on the league ledger and counts toward the leaderboard.';
   return `Saved on this device only. It counts once you share it to the league chat and the commissioner adds it to the ledger.`;
@@ -524,7 +524,7 @@ async function lockCard() {
     renderAll();
     const r = $('#bkReceipt'); r && r.focus({ preventScroll: true }); burst(r);
     if (navigator.vibrate) try { navigator.vibrate([10, 40, 14]); } catch (_) {}
-  } catch (e) { toast(e.code === 'PERMISSION_DENIED' ? 'The Sportsbook rejected this card. Is it past kickoff, or was your code reset?' : e.message || 'Could not save the card.'); }
+  } catch (e) { toast(e.code === 'PERMISSION_DENIED' ? 'The Sportsbook rejected this card. Is it past Sunday noon Central, or was your code reset?' : e.message || 'Could not save the card.'); }
 }
 async function editCard() {
   if (state.phase !== 'open' || !state.card) return;
@@ -534,7 +534,7 @@ async function editCard() {
   }
   state.ids = state.card.ids.slice(); state.ownerId = state.card.ownerId; state.card = null;
   await S.unlockCard(B.week); await S.saveDraft(B.week, { ownerId: state.ownerId, ids: state.ids });
-  renderAll(); toast(cloudOn() ? 'Card withdrawn. Lock it again before kickoff or it won\u2019t count.' : 'Card unlocked. Make changes, then lock it again.');
+  renderAll(); toast(cloudOn() ? 'Card withdrawn. Lock it again before Sunday noon Central or it won\u2019t count.' : 'Card unlocked. Make changes, then lock it again.');
 }
 async function lockParlay() {
   if (!E.validateParlay(state.pids, B).valid || lockBlocker() || state.phase !== 'open') return;
@@ -545,7 +545,7 @@ async function lockParlay() {
     state.parlay = await S.lockParlay(B.week, entry); state.pids = []; await S.saveParlayDraft(B.week, { ids: [] });
     refreshStatus(); closeSheet(); go('my-card'); renderAll();
     const t = $('#bkParlayTicket'); if (t) { t.scrollIntoView({ block: 'center', behavior: reduced() ? 'auto' : 'smooth' }); t.focus({ preventScroll: true }); burst(t); }
-  } catch (e) { toast(e.code === 'PERMISSION_DENIED' ? 'The Sportsbook rejected this parlay. Is it past kickoff, or was your code reset?' : e.message || 'Could not save the parlay.'); }
+  } catch (e) { toast(e.code === 'PERMISSION_DENIED' ? 'The Sportsbook rejected this parlay. Is it past Sunday noon Central, or was your code reset?' : e.message || 'Could not save the parlay.'); }
 }
 async function editParlay() {
   if (state.phase !== 'open' || !state.parlay) return;
@@ -554,7 +554,7 @@ async function editParlay() {
   }
   state.pids = state.parlay.ids.slice(); state.parlay = null; state.mode = 'parlay';
   await S.unlockParlay(B.week); await S.saveParlayDraft(B.week, { ids: state.pids });
-  refreshStatus(); go('board'); renderAll(); toast('Parlay reopened. Lock it again before kickoff.');
+  refreshStatus(); go('board'); renderAll(); toast('Parlay reopened. Lock it again before Sunday noon Central.');
 }
 async function share() {
   const text = shareText(state.card);
@@ -585,7 +585,7 @@ function personalityCard(led) {
   }
   const alloc = wk.wagers.map(w => `<i style="flex:${Number(w.stake) || 0}"></i>`).join('');
   const card = p.cards[B.week];
-  const release = card && card.lateRelease ? `<p class="bk-note"><strong>Late Friday release — after Thursday.</strong> Filed ${esc(new Date(card.postedAt).toLocaleString('en-US', { timeZone: 'America/Chicago', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }))} CT. Full-week scores, Friday pinned prices; no Thursday pregame credit.</p>` : '';
+  const release = card && (card.releaseLabel || card.lateRelease) ? `<p class="bk-note"><strong>${esc(card.releaseLabel || "Late Friday release — after Thursday")}</strong> Filed ${esc(new Date(card.postedAt).toLocaleString('en-US', { timeZone: 'America/Chicago', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }))} CT. Full-week scores at the saved Friday prices.</p>` : '';
   return `<div class="bk-pcard ${cls}"><h3>${esc(p.shortName)}'s Week ${B.week} card</h3><p class="bk-num">${money(wk.staked)} staked of ${wk.start != null ? money(wk.start) : 'a pending bankroll'}${wk.status === 'settled' ? ` \u00b7 ${money(wk.pnl, { sign: true })}` : ''}</p>
     ${release}<div class="bk-alloc" role="img" aria-label="Stake allocation">${alloc}</div>${wk.wagers.map(wagerRow).join('')}${wk.issues.map(i => `<p class="bk-issue">\u26a0 ${esc(i)}</p>`).join('')}</div>`;
 }
@@ -852,7 +852,7 @@ async function pushLocal(kind, btn) {
     const saved = await C.saveEntry(B.season, B.week, linked(), kind, { ...entry, ownerId: linked() });
     if (kind === 'parlay') state.parlay = await S.lockParlay(B.week, saved); else state.card = await S.lockCard(B.week, saved);
     refreshStatus(); renderAll(); toast(`Sent. Your ${kind} now counts for the league.`);
-  } catch (e) { btn.disabled = false; toast(e.code === 'PERMISSION_DENIED' ? 'Rejected: it may be past kickoff.' : 'Could not reach the Sportsbook.'); }
+  } catch (e) { btn.disabled = false; toast(e.code === 'PERMISSION_DENIED' ? 'Rejected: it may be past Sunday noon Central.' : 'Could not reach the Sportsbook.'); }
 }
 
 /* ---------------- Commissioner (sportsbook.html#commissioner) ---------------- */

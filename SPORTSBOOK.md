@@ -15,8 +15,16 @@ Fictional entertainment only. CTE$ has no cash value; no real-money wagering.
 | `sportsbook-embeds-v32.js` | Homepage teaser, Game Day line strips, article embeds. |
 | `tools/test-sportsbook*.cjs` | Engine, browser and shared-picks tests. |
 
+## Weekly line schedule
+
+- Wednesday: publish the weekly opening lines.
+- Friday morning: refresh all six lines after Thursday, including points already scored in the full-matchup estimate. Keep the Friday prices until lock.
+- Sunday: close all cards and parlays at 12:00 PM America/Chicago, even if an earlier game is played. Use the correct CDT/CST offset for that date.
+- Save every accepted ticket’s quotes. New or relocked entries use the current board; price changes never rewrite saved receipts. Archive each revision with a timestamp.
+- Sync the Sunday deadline with Firebase using the authorized commissioner device.
+
 ## Weekly workflow (commissioner)
-1. **Open a new week:** set `week`, `lockAt` (ISO with offset, e.g. `2026-10-08T19:15:00-05:00`) and add six markets. Each market needs `sides`, `spread`, `moneyline`, and a `lineHistory` entry with the opener. Add later entries to `lineHistory` whenever the line moves; the movement graphics read it automatically.
+1. **Open a new week:** set `week`, `lockAt` (ISO with offset, e.g. `2026-10-11T12:00:00-05:00`) and add six markets. Each market needs `sides`, `spread`, `moneyline`, and a `lineHistory` entry with the opener. Add later entries to `lineHistory` whenever the line moves; the movement graphics read it automatically.
 2. **Record owner cards:** owners lock on their phone and share a line like `CTE-BOOK W4 brendan w4-...:ml:brendan,...`. Paste the IDs into `leagueChallenge.cards[week][owner]`.
 3. **Carl and Anita:** add their six picks and stakes to `personalities.<id>.cards[week]`. Stakes must add up to their current bankroll exactly. The page shows a warning if they don't.
 4. **Grading:** automatic from Sleeper once the week is final. To force a result (stat correction, ruling), set `results[marketId] = { scores: { ownerA: 101.2, ownerB: 99.4 } }`.
@@ -28,7 +36,7 @@ Run `node tools/test-sportsbook.cjs` after editing the data file.
 
 Owners sign in once per device with a 6-character league code, then their card and parlay save to the
 Sportsbook database. They show up on any device they sign in on, count on the leaderboard automatically,
-and stay hidden from everyone else until kickoff (the board only shows who's in).
+and stay hidden from everyone else until Sunday noon Central (the board only shows who's in).
 
 ### One-time setup (about 5 minutes, works from an iPhone)
 1. Open `sportsbook.html#commissioner` on the live site, on the phone you'll run the league from.

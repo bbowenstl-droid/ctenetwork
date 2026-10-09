@@ -5,8 +5,8 @@ require('../data/sportsbook-data.js');
 require('../news-2026-10-09-friday-recovery.js');
 const B = window.CTE_SPORTSBOOK, story = window.CTE_NEWS[0];
 const results = Object.fromEntries(Object.entries(B.results).map(([id,r])=>[id,{...r,final:true}]));
-assert.ok(Date.parse(B.updatedAt) > Date.parse(B.lockAt));
-assert.equal(B.lockAt, '2026-10-08T19:15:00-05:00');
+assert.ok(Date.parse(B.updatedAt) < Date.parse(B.lockAt));
+assert.equal(B.lockAt, '2026-10-11T12:00:00-05:00');
 assert.equal(E.weekMarkets(B).length, 6);
 for (const m of E.weekMarkets(B)) {
   for (const side of m.sides) {
@@ -26,7 +26,7 @@ for (const m of E.weekMarkets(B)) {
 }
 for (const [id,balance] of [['carl',918.91],['holly',1259.02]]) {
   const card=B.personalities[id].cards[5],led=E.bankrollLedger(B,id,results);
-  assert.ok(card.lateRelease && Date.parse(card.postedAt)>Date.parse(B.lockAt));
+  assert.ok(!card.lateRelease && Date.parse(card.postedAt)<Date.parse(B.lockAt));
   assert.equal(led.thisWeek.start,balance);assert.equal(led.thisWeek.staked,balance);
   assert.deepEqual(led.thisWeek.issues,[]);assert.equal(led.thisWeek.status,'pending');
   assert.equal(led.records.total.w,4);assert.equal(led.records.total.l,2);
@@ -39,6 +39,15 @@ assert.equal(story.publishedAt,B.updatedAt);
 assert.ok(story.body.includes('138.90–113.00')&&story.body.includes('126.90–116.00'));
 assert.ok(story.body.includes('Dan 125.00, Carter 118.00'));
 assert.ok(story.body.includes('not Lamar Jackson'));
-assert.equal(E.bookPhase(B,Date.parse(B.updatedAt),results),'live');
-assert.equal(B.recovery.submissionAudit.cardsReadable,false);
-console.log('PASS: Friday estimates, timestamped cards, exact carryover, pending grading and original-ticket protection');
+assert.equal(E.bookPhase(B,Date.parse(B.updatedAt),results),'open');
+assert.equal(E.bookPhase(B,Date.parse(B.lockAt)-1,results),'open');
+assert.equal(E.bookPhase(B,Date.parse(B.lockAt),results),'live');
+assert.ok(!story.body.includes('submission audit') && !story.body.includes('commissioner must'));
+assert.equal(B.lineSchedule.openingDay,'Wednesday');
+assert.equal(B.lineSchedule.refreshDay,'Friday');
+for (const m of E.weekMarkets(B)) for (const side of m.sides) {
+ const id=E.selectionId(m.id,'ats',side);
+ assert.equal(E.ticketSelection(B,id,{lockedAt:'2026-10-08T10:00:00-05:00'}).line,m.previousQuote.spread[side].line);
+ assert.equal(E.ticketSelection(B,id,{lockedAt:'2026-10-09T12:00:00-05:00'}).line,m.spread[side].line);
+}
+console.log('PASS: Sunday cutoff, Friday estimates, bankroll carryover and accepted-price protection');

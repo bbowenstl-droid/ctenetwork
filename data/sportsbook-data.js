@@ -1,13 +1,13 @@
-/** CTE Sportsbook: fictional CTE$ only. Original tickets are archived in previousQuote; Friday cards are timestamped after TNF. */
+/** CTE Sportsbook: fictional CTE$ only. Wednesday lines, Friday refresh, Sunday noon Central lock. */
 window.CTE_SPORTSBOOK = {
   "season": 2026,
   "week": 5,
   "status": "final_lines",
-  "lockAt": "2026-10-08T19:15:00-05:00",
-  "lockLabel": "Original Thursday entry deadline",
+  "lockAt": "2026-10-11T12:00:00-05:00",
+  "lockLabel": "Sunday noon Central",
   "currency": "CTE$",
   "updatedAt": "2026-10-09T15:58:43.622Z",
-  "quoteNote": "Friday recovery board • October 9 at 10:58 AM CDT. These are post-Thursday full-matchup estimates INCLUDING points already scored. New league cards remain closed at the original Thursday deadline. Existing tickets keep their original quotes. Carl and Anita's new cards are explicitly late Friday editorial picks, not pregame Thursday calls. CTE estimates are not Sleeper projections; injury designations and lineups remain conditional.",
+  "quoteNote": "Wednesday lines → Friday morning update after Thursday → Sunday noon Central lock. Week 5 stays open through October 11 at 12:00 PM CDT with the Friday lines below. Full-matchup estimates INCLUDE Thursday points. Accepted tickets retain their saved prices; new or relocked cards use current prices. CTE estimates are not Sleeper projections; injury designations and lineups remain conditional.",
   "markets": [
     {
       "id": "w5-brendan-brett",
@@ -952,8 +952,8 @@ window.CTE_SPORTSBOOK = {
         "5": {
           "postedAt": "2026-10-09T15:58:43.622Z",
           "source": "2026-week-5-friday-recovery",
-          "lateRelease": true,
-          "note": "Posted Friday after Thursday results; full-week grading at Friday pinned prices. No Thursday pregame credit.",
+          "lateRelease": false,
+          "note": "Posted Friday after Thursday results; full-week grading at Friday pinned prices.",
           "wagers": [
             {
               "market": "w5-brendan-brett",
@@ -1001,7 +1001,8 @@ window.CTE_SPORTSBOOK = {
               "odds": -110,
               "line": 23.5
             }
-          ]
+          ],
+          "releaseLabel": "Friday card — after Thursday"
         }
       }
     },
@@ -1071,8 +1072,8 @@ window.CTE_SPORTSBOOK = {
         "5": {
           "postedAt": "2026-10-09T15:58:43.622Z",
           "source": "2026-week-5-friday-recovery",
-          "lateRelease": true,
-          "note": "Posted Friday after Thursday results; full-week grading at Friday pinned prices. No Thursday pregame credit.",
+          "lateRelease": false,
+          "note": "Posted Friday after Thursday results; full-week grading at Friday pinned prices.",
           "wagers": [
             {
               "market": "w5-jacob-jesse",
@@ -1120,7 +1121,8 @@ window.CTE_SPORTSBOOK = {
               "odds": -110,
               "line": 7.5
             }
-          ]
+          ],
+          "releaseLabel": "Friday card — after Thursday"
         }
       }
     }
@@ -1261,16 +1263,7 @@ window.CTE_SPORTSBOOK = {
   "recovery": {
     "publishedAt": "2026-10-09T15:58:43.622Z",
     "label": "Friday recovery — after Thursday",
-    "originalLockAt": "2026-10-08T19:15:00-05:00",
-    "cardPolicy": "Original league-card deadline retained; no backdated entries. Friday personality cards use the revised full-matchup quotes and settle against full-week scores.",
-    "submissionAudit": {
-      "checkedAt": "2026-10-09T15:58:43.622Z",
-      "databaseLockAt": null,
-      "statusEntries": 0,
-      "cardsReadable": false,
-      "parlaysReadable": false,
-      "note": "Week 5 database deadline was not configured. Empty public submission status does not prove no cards exist; cards and parlays were permission denied. Commissioner device must set the original Week 5 lock time, then audit receipts."
-    },
+    "cardPolicy": "Friday cards and new league entries use revised full-matchup quotes. Entries remain open until Sunday noon Central. Previously accepted tickets keep their saved quotes.",
     "model": {
       "label": "CTE editorial starter estimates",
       "scoring": "League PPR, four-point passing touchdowns",
@@ -2204,5 +2197,14 @@ window.CTE_SPORTSBOOK = {
         ]
       }
     }
+  },
+  "lineSchedule": {
+    "timeZone": "America/Chicago",
+    "openingDay": "Wednesday",
+    "refreshDay": "Friday",
+    "refreshWindow": "morning after Thursday matchup",
+    "lockDay": "Sunday",
+    "lockTime": "12:00",
+    "ticketPolicy": "Accepted tickets retain their saved quotes; newly locked or relocked tickets take the current board."
   }
 };
