@@ -73,7 +73,7 @@
     const p = parseSelectionId(id), m = p && market(book, p.marketId);
     const old = m && m.previousQuote;
     const accepted = Date.parse(entry.lockedAt || entry.postedAt || '');
-    if (old && Number.isFinite(accepted) && accepted < Date.parse(old.before)) {
+    if (old && (m.freezeLegacyTickets || (Number.isFinite(accepted) && accepted < Date.parse(old.before)))) {
       return selection(book, id, { line: p.type === 'ats' ? old.spread[p.side].line : null,
         odds: p.type === 'ats' ? old.spread[p.side].odds : old.moneyline[p.side] });
     }

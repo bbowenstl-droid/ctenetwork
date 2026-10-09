@@ -242,8 +242,9 @@ function probHTML(m) {
 }
 function takesHTML(m) {
   const t = m.takes || {};
+  const source = m.freezeLegacyTickets && B.sources.current ? B.sources.current : B.sources.open;
   const carl = t.carl ? `<p>${esc(t.carl)}</p>` : `<p class="bk-muted">Carl hasn't filed a Week ${B.week} take yet.</p>`;
-  const holly = t.holly ? `<p>${esc(t.holly)}</p><cite>From <a href="article.html?id=${esc(B.sources.open.articleId)}">the early-look board</a></cite>` : `<p class="bk-muted">Anita hasn't filed yet.</p>`;
+  const holly = t.holly ? `<p>${esc(t.holly)}</p><cite>From <a href="article.html?id=${esc(source.articleId)}">${esc(source.label)}</a></cite>` : `<p class="bk-muted">Anita hasn't filed yet.</p>`;
   return `<div class="bk-takes"><div class="bk-take is-carl"><img src="concussion-carl.webp" alt="" loading="lazy"><div><strong>Carl's take</strong>${carl}</div></div>
     <div class="bk-take is-holly"><img src="anita-headcheck.webp" alt="" loading="lazy"><div><strong>Anita's take</strong>${holly}</div></div></div>`;
 }
@@ -583,8 +584,10 @@ function personalityCard(led) {
       <div class="bk-alloc" aria-hidden="true"></div>${slots.map((t, i) => `<div class="bk-slot"><span>${t}</span><span>${i === 0 ? `${esc(p.shortName)} hasn't posted this week's card.` : 'Open slot'}</span></div>`).join('')}</div>`;
   }
   const alloc = wk.wagers.map(w => `<i style="flex:${Number(w.stake) || 0}"></i>`).join('');
+  const card = p.cards[B.week];
+  const release = card && card.lateRelease ? `<p class="bk-note"><strong>Late Friday release — after Thursday.</strong> Filed ${esc(new Date(card.postedAt).toLocaleString('en-US', { timeZone: 'America/Chicago', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }))} CT. Full-week scores, Friday pinned prices; no Thursday pregame credit.</p>` : '';
   return `<div class="bk-pcard ${cls}"><h3>${esc(p.shortName)}'s Week ${B.week} card</h3><p class="bk-num">${money(wk.staked)} staked of ${wk.start != null ? money(wk.start) : 'a pending bankroll'}${wk.status === 'settled' ? ` \u00b7 ${money(wk.pnl, { sign: true })}` : ''}</p>
-    <div class="bk-alloc" role="img" aria-label="Stake allocation">${alloc}</div>${wk.wagers.map(wagerRow).join('')}${wk.issues.map(i => `<p class="bk-issue">\u26a0 ${esc(i)}</p>`).join('')}</div>`;
+    ${release}<div class="bk-alloc" role="img" aria-label="Stake allocation">${alloc}</div>${wk.wagers.map(wagerRow).join('')}${wk.issues.map(i => `<p class="bk-issue">\u26a0 ${esc(i)}</p>`).join('')}</div>`;
 }
 function sparkline(carl, holly) {
   const pts = led => [led.startingBankroll, ...led.weeks.filter(w => w.status === 'settled').map(w => w.end)];
