@@ -1,13 +1,13 @@
 /** CTE Sportsbook: fictional CTE$ only. Wednesday lines, Friday refresh, Sunday noon Central lock. */
 window.CTE_SPORTSBOOK = {
   "season": 2026,
-  "week": 5,
-  "status": "final_lines",
-  "lockAt": "2026-10-11T12:00:00-05:00",
+  "week": 6,
+  "status": "thursday_lines",
+  "lockAt": "2026-10-18T12:00:00-05:00",
   "lockLabel": "Sunday noon Central",
   "currency": "CTE$",
-  "updatedAt": "2026-10-09T15:58:43.622Z",
-  "quoteNote": "Wednesday lines → Friday morning update after Thursday → Sunday noon Central lock. Week 5 stays open through October 11 at 12:00 PM CDT with the Friday lines below. Full-matchup estimates INCLUDE Thursday points. Accepted tickets retain their saved prices; new or relocked cards use current prices. CTE estimates are not Sleeper projections; injury designations and lineups remain conditional.",
+  "updatedAt": "2026-10-15T13:46:00-05:00",
+  "quoteNote": "Week 6 Thursday official opening board. Friday morning repricing after Seattle–Denver; Sunday Oct 18 noon Central lock. Accepted ticket quotes preserved. Fictional CTE$ only. Bye replacements assumed, not guaranteed.",
   "markets": [
     {
       "id": "w5-brendan-brett",
@@ -873,6 +873,216 @@ window.CTE_SPORTSBOOK = {
         "holly": "Elijah averages 134.23 to Jesse's 108.25. Jesse's scoring is climbing, but seventeen and a half reflects the current lineup comparison, not another free pass for last week's result.",
         "carl": null
       }
+    },
+    {
+      "id": "w6-brendan-jesse",
+      "week": 6,
+      "sides": [
+        "brendan",
+        "jesse"
+      ],
+      "spread": {
+        "brendan": {
+          "line": -14.5,
+          "odds": -110
+        },
+        "jesse": {
+          "line": 14.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "brendan": -270,
+        "jesse": 210
+      },
+      "openMoneyline": {
+        "brendan": -270,
+        "jesse": 210
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-15",
+          "fav": "brendan",
+          "points": 14.5
+        }
+      ],
+      "assumptions": "Thursday editorial line based on five-week production and expected bye replacements. Verify inactive players before Sunday. Friday repricing scheduled after TNF."
+    },
+    {
+      "id": "w6-jacob-jerry",
+      "week": 6,
+      "sides": [
+        "jacob",
+        "jerry"
+      ],
+      "spread": {
+        "jacob": {
+          "line": 3.5,
+          "odds": -110
+        },
+        "jerry": {
+          "line": -3.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "jacob": 115,
+        "jerry": -135
+      },
+      "openMoneyline": {
+        "jacob": 115,
+        "jerry": -135
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-15",
+          "fav": "jerry",
+          "points": 3.5
+        }
+      ],
+      "assumptions": "Thursday editorial line based on five-week production and expected bye replacements. Verify inactive players before Sunday. Friday repricing scheduled after TNF."
+    },
+    {
+      "id": "w6-brett-dan",
+      "week": 6,
+      "sides": [
+        "brett",
+        "dan"
+      ],
+      "spread": {
+        "brett": {
+          "line": -4.5,
+          "odds": -110
+        },
+        "dan": {
+          "line": 4.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "brett": -145,
+        "dan": 120
+      },
+      "openMoneyline": {
+        "brett": -145,
+        "dan": 120
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-15",
+          "fav": "brett",
+          "points": 4.5
+        }
+      ],
+      "assumptions": "Thursday editorial line based on five-week production and expected bye replacements. Verify inactive players before Sunday. Friday repricing scheduled after TNF."
+    },
+    {
+      "id": "w6-mike-isaiah",
+      "week": 6,
+      "sides": [
+        "mike",
+        "isaiah"
+      ],
+      "spread": {
+        "mike": {
+          "line": 3.5,
+          "odds": -110
+        },
+        "isaiah": {
+          "line": -3.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "mike": 115,
+        "isaiah": -135
+      },
+      "openMoneyline": {
+        "mike": 115,
+        "isaiah": -135
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-15",
+          "fav": "isaiah",
+          "points": 3.5
+        }
+      ],
+      "assumptions": "Thursday editorial line based on five-week production and expected bye replacements. Verify inactive players before Sunday. Friday repricing scheduled after TNF."
+    },
+    {
+      "id": "w6-carter-cotton",
+      "week": 6,
+      "sides": [
+        "carter",
+        "cotton"
+      ],
+      "spread": {
+        "carter": {
+          "line": 2.5,
+          "odds": -110
+        },
+        "cotton": {
+          "line": -2.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "carter": 110,
+        "cotton": -130
+      },
+      "openMoneyline": {
+        "carter": 110,
+        "cotton": -130
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-15",
+          "fav": "cotton",
+          "points": 2.5
+        }
+      ],
+      "assumptions": "Thursday editorial line based on five-week production and expected bye replacements. Verify inactive players before Sunday. Friday repricing scheduled after TNF."
+    },
+    {
+      "id": "w6-elijah-troy",
+      "week": 6,
+      "sides": [
+        "elijah",
+        "troy"
+      ],
+      "spread": {
+        "elijah": {
+          "line": 9.5,
+          "odds": -110
+        },
+        "troy": {
+          "line": -9.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "elijah": 155,
+        "troy": -190
+      },
+      "openMoneyline": {
+        "elijah": 155,
+        "troy": -190
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-15",
+          "fav": "troy",
+          "points": 9.5
+        }
+      ],
+      "assumptions": "Thursday editorial line based on five-week production and expected bye replacements. Verify inactive players before Sunday. Friday repricing scheduled after TNF."
     }
   ],
   "sources": {
