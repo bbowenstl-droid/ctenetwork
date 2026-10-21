@@ -1,4 +1,4 @@
-"""CTE Network site check: every local link/asset exists, and the commissioner page stays private."""
+"""Check local links/assets and commissioner-page indexing, not authentication."""
 import re, sys
 from pathlib import Path
 root = Path(__file__).resolve().parent.parent
@@ -15,5 +15,5 @@ for page in sorted(root.glob('*.html')):
         problems.append(f'{page.name}: links to the commissioner page')
 if 'noindex' not in (root / 'admin.html').read_text(encoding='utf-8'):
     problems.append('admin.html: missing noindex')
-print('\n'.join(problems) or 'PASS: all local links and assets resolve; commissioner page is private')
+print('\n'.join(problems) or 'PASS: all local links and assets resolve; commissioner page has noindex (not access control)')
 sys.exit(1 if problems else 0)

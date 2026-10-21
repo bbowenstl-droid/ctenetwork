@@ -5,6 +5,38 @@
 (function () {
   'use strict';
 
+  // One completion boundary for records, awards, schedules and settlements.
+  // Scores alone never establish finality. last_scored_leg may equal leg on Tuesday.
+  function completedWeek(league) {
+    const settings = league?.settings || {};
+    const scored = Number(settings.last_scored_leg);
+    if (settings.last_scored_leg != null && Number.isInteger(scored) && scored >= 0)
+      return Math.min(18, scored);
+    const leg = Number(settings.leg || 0);
+    return Math.max(0, Math.min(18, league?.status === 'complete' ? leg : leg - 1));
+  }
+  function score(row) {
+    const value = row?.custom_points ?? row?.points;
+    return value == null || !Number.isFinite(Number(value)) ? null : Number(value);
+  }
+  function gameStatus(league, week) {
+    if (Number(week) <= completedWeek(league)) return 'final';
+    return Number(week) === Number(league?.settings?.leg) ? 'live' : 'upcoming';
+  }
+  const typeLabels = {regular:'Regular season', championship:'Championship playoffs', placement:'Placement game', consolation:'Consolation', unknown:'Postseason · unclassified'};
+  function gameType(week, league, rosterA, rosterB, winners, losers) {
+    const start = Number(league?.settings?.playoff_week_start || 15);
+    if (week < start) return 'regular';
+    // This league uses single-week rounds. Do not guess classifications for other formats.
+    if (Number(league?.settings?.playoff_round_type || 0) !== 0) return 'unknown';
+    const round = week - start + 1;
+    const matches = m => Number(m.r) === round &&
+      [Number(m.t1), Number(m.t2)].sort((a,b)=>a-b).join('|') === [Number(rosterA),Number(rosterB)].sort((a,b)=>a-b).join('|');
+    const winner = (winners || []).find(matches);
+    if (winner) return winner.p && Number(winner.p) !== 1 ? 'placement' : 'championship';
+    return (losers || []).some(matches) ? 'consolation' : 'unknown';
+  }
+
   function normalize(value) {
     return String(value || '')
       .toLowerCase()
@@ -97,7 +129,7 @@
   function resolveGames(matchups, rosterLookup, season, week) {
     const games = [];
     for (const pair of groupMatchups(matchups)) {
-      if (pair.length !== 2) continue;
+      if (pair.length !== 2) throw new Error(`Incomplete matchup: ${season} Week ${week}`);
       const [a, b] = pair;
       const aMap = rosterLookup[String(a.roster_id)];
       const bMap = rosterLookup[String(b.roster_id)];
@@ -105,13 +137,15 @@
 
       const ownerA = ownerForHistoricalWeek(aMap.ownerId, Number(season), Number(week));
       const ownerB = ownerForHistoricalWeek(bMap.ownerId, Number(season), Number(week));
-      const scoreA = Number(a.points || 0);
-      const scoreB = Number(b.points || 0);
+      const scoreA = score(a);
+      const scoreB = score(b);
+      if (scoreA == null || scoreB == null) throw new Error(`Missing score: ${season} Week ${week}`);
 
       games.push({
         season: Number(season),
         week: Number(week),
         matchupId: a.matchup_id,
+        rosterA: a.roster_id, rosterB: b.roster_id,
         ownerA,
         ownerB,
         scoreA,
@@ -125,6 +159,7 @@
   }
 
   window.CTE_LeagueEngine = {
+    completedWeek, score, gameStatus, gameType, typeLabels,
     normalize,
     activeOwners,
     seasonConfig,

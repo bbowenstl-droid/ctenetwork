@@ -738,9 +738,12 @@ function renderMast() {
   $('#bkEdition').textContent = `${B.season} season · Week ${B.week}`;
   for (const [led, id] of [[carl,'#bkCarlDetail'],[holly,'#bkAnitaDetail']]) {
     const el=$(id), pnl=led.lastWeekPnl;
-    el.textContent = `${E.recordText(led.records.total)} season · ${pnl == null ? 'Awaiting results' : money(pnl,{sign:true})+' last settled week'}`;
+    const lastSettled=led.weeks.filter(w=>w.status==='settled').at(-1);
+    el.textContent = `${E.recordText(led.records.total)} season · ${lastSettled ? 'Settled through Week '+lastSettled.week+' · '+money(pnl,{sign:true}) : 'No settled cards'}`;
     el.className='bk-wallet-detail'+(pnl>0?' is-up':pnl<0?' is-down':'');
-    if(led.pendingChain)el.textContent+=' · settlement pending';
+    if(led.pendingChain)el.textContent+=' · pending weeks '+led.weeks.filter(w=>w.status==='pending').map(w=>w.week).join(', ');
+    if(led.thisWeek?.status==='no-card')el.textContent+=' · No Week '+B.week+' card posted';
+    if(state.ctx?.failures?.length)el.textContent+=' · Results unavailable for weeks '+state.ctx.failures.join(', ');
   }
   const me=whoAmI(), rows=E.leaderboardWithMovement(LB(),state.results).rows;
   const rank=rows.find(r=>r.ownerId===me), entry=state.card;

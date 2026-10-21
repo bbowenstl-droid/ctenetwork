@@ -16,10 +16,10 @@ function splitRecords(weeks,lookup){
  const tally=(rec,a,b)=>rec[Math.abs(a-b)<.000001?'t':a>b?'w':'l']++;
  for(const rows of weeks){
   // A missing roster makes the median invalid; show unavailable instead of guessing.
-  if(!Array.isArray(rows)||rows.length!==12||new Set(rows.map(r=>String(r.roster_id))).size!==12||rows.some(r=>r.points==null||!Number.isFinite(Number(r.points))))return null;
-  const scores=rows.map(r=>Number(r.points)).sort((a,b)=>a-b),median=(scores[5]+scores[6])/2;
-  const groups={};for(const r of rows){const id=lookup[String(r.roster_id)]?.ownerId;if(!id)return null;tally(get(id).median,Number(r.points),median);if(r.matchup_id!=null)(groups[r.matchup_id]||(groups[r.matchup_id]=[])).push(r)}
-  for(const pair of Object.values(groups)){if(pair.length!==2)return null;const [a,b]=pair;tally(get(lookup[String(a.roster_id)].ownerId).h2h,Number(a.points),Number(b.points));tally(get(lookup[String(b.roster_id)].ownerId).h2h,Number(b.points),Number(a.points))}
+  if(!Array.isArray(rows)||rows.length!==12||new Set(rows.map(r=>String(r.roster_id))).size!==12||rows.some(r=>window.CTE_LeagueEngine.score(r)==null||!Number.isFinite(window.CTE_LeagueEngine.score(r))))return null;
+  const scores=rows.map(r=>window.CTE_LeagueEngine.score(r)).sort((a,b)=>a-b),median=(scores[5]+scores[6])/2;
+  const groups={};for(const r of rows){const id=lookup[String(r.roster_id)]?.ownerId;if(!id)return null;tally(get(id).median,window.CTE_LeagueEngine.score(r),median);if(r.matchup_id!=null)(groups[r.matchup_id]||(groups[r.matchup_id]=[])).push(r)}
+  for(const pair of Object.values(groups)){if(pair.length!==2)return null;const [a,b]=pair;tally(get(lookup[String(a.roster_id)].ownerId).h2h,window.CTE_LeagueEngine.score(a),window.CTE_LeagueEngine.score(b));tally(get(lookup[String(b.roster_id)].ownerId).h2h,window.CTE_LeagueEngine.score(b),window.CTE_LeagueEngine.score(a))}
  }
  return out;
 }

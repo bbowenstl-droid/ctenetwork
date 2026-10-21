@@ -13,6 +13,7 @@ function emptyOwnerStats(ownerId){
     games:0,wins:0,losses:0,ties:0,
     regularWins:0,regularLosses:0,regularTies:0,
     playoffWins:0,playoffLosses:0,playoffTies:0,
+    placementWins:0,placementLosses:0,placementTies:0,consolationWins:0,consolationLosses:0,consolationTies:0,unknownWins:0,unknownLosses:0,unknownTies:0,
     pointsFor:0,pointsAgainst:0,
     highScore:null,lowScore:null,
     biggestWin:null,biggestLoss:null,closestWin:null,
@@ -23,7 +24,7 @@ function emptyOwnerStats(ownerId){
 }
 
 function applyGame(stats, game, playoffStartWeek){
-  const isPlayoff=Number(game.week)>=Number(playoffStartWeek||99);
+  const category={regular:'regular',championship:'playoff',placement:'placement',consolation:'consolation',unknown:'unknown'}[game.type] || (Number(game.week)<Number(playoffStartWeek||99)?'regular':'unknown');
   const sides=[
     {id:game.ownerA,pf:game.scoreA,pa:game.scoreB,opp:game.ownerB},
     {id:game.ownerB,pf:game.scoreB,pa:game.scoreA,opp:game.ownerA}
@@ -37,18 +38,18 @@ function applyGame(stats, game, playoffStartWeek){
     let result='T';
     if(side.pf>side.pa) result='W'; else if(side.pf<side.pa) result='L';
     if(result==='W'){
-      s.wins++; if(isPlayoff)s.playoffWins++; else s.regularWins++;
+      s.wins++; s[category+'Wins']++;
       const margin=side.pf-side.pa;
       if(!s.biggestWin||margin>s.biggestWin.margin)s.biggestWin={margin,season:game.season,week:game.week,opponentId:side.opp,score:side.pf,oppScore:side.pa};
       if(!s.closestWin||margin<s.closestWin.margin)s.closestWin={margin,season:game.season,week:game.week,opponentId:side.opp,score:side.pf,oppScore:side.pa};
       s.currentStreak=s.currentStreakType==='W'?s.currentStreak+1:1; s.currentStreakType='W'; s.longestWinStreak=Math.max(s.longestWinStreak,s.currentStreak);
     }else if(result==='L'){
-      s.losses++; if(isPlayoff)s.playoffLosses++; else s.regularLosses++;
+      s.losses++; s[category+'Losses']++;
       const margin=side.pa-side.pf;
       if(!s.biggestLoss||margin>s.biggestLoss.margin)s.biggestLoss={margin,season:game.season,week:game.week,opponentId:side.opp,score:side.pf,oppScore:side.pa};
       s.currentStreak=s.currentStreakType==='L'?s.currentStreak+1:1; s.currentStreakType='L'; s.longestLossStreak=Math.max(s.longestLossStreak,s.currentStreak);
     }else{
-      s.ties++; if(isPlayoff)s.playoffTies++; else s.regularTies++;
+      s.ties++; s[category+'Ties']++;
       s.currentStreakType='T'; s.currentStreak=0;
     }
   }
@@ -78,8 +79,8 @@ async function loadSeason(season, options={}){
   const unmatched=Object.values(lookup).filter(x=>!x.ownerId);
   if(unmatched.length) throw new Error(`${season} has ${unmatched.length} unmapped roster(s).`);
   const playoffStartWeek=Number(snapshot.league?.settings?.playoff_week_start||15);
-  const currentLeg=Math.max(1, Number(snapshot.league?.settings?.leg||1));
-  const maxWeek=cfg.status==='current' ? Math.min(18,currentLeg) : Math.max(18, playoffStartWeek+3);
+  const maxWeek=window.CTE_LeagueEngine.completedWeek(snapshot.league);
+  const [winners,losers]=maxWeek>=playoffStartWeek ? await Promise.all([window.CTE_Sleeper.getWinnersBracket(cfg.sleeperLeagueId,options),window.CTE_Sleeper.getLosersBracket(cfg.sleeperLeagueId,options)]) : [[],[]];
   // Stats only need matchup scores. Do not fetch transactions here; that would
   // double the number of Sleeper calls on the Record Book page for no benefit.
   const weeks=await Promise.all(Array.from({length:maxWeek},(_,i)=>
@@ -87,14 +88,15 @@ async function loadSeason(season, options={}){
   ));
   const games=[];
   for(const w of weeks){
+    if(!Array.isArray(w.matchups)||w.matchups.length!==snapshot.rosters.length||new Set(w.matchups.map(r=>r.roster_id)).size!==snapshot.rosters.length||w.matchups.some(r=>!lookup[String(r.roster_id)])) throw new Error(`${season} Week ${w.week}: incomplete history; retry to load every roster.`);
     const resolved=window.CTE_LeagueEngine.resolveGames(w.matchups,lookup,season,w.week);
-    // Avoid preseason / empty matchup rows where every score is zero.
+    if(w.week<playoffStartWeek&&resolved.length*2!==snapshot.rosters.length) throw new Error(`${season} Week ${w.week}: missing regular-season matchup.`);
     for(const g of resolved){
-      if(g.scoreA===0&&g.scoreB===0) continue;
+      g.type=window.CTE_LeagueEngine.gameType(w.week,snapshot.league,g.rosterA,g.rosterB,winners,losers);
       games.push(g);
     }
   }
-  return {season:Number(season),cfg,snapshot,lookup,playoffStartWeek,games};
+  return {season:Number(season),cfg,snapshot,lookup,playoffStartWeek,completedWeek:maxWeek,games};
 }
 
 async function loadAllCompleteSeasons(options={}){
@@ -115,12 +117,16 @@ async function loadAllSeasons(options={}){
   return out;
 }
 
+function filterArchives(archives, scope='all') {
+  return archives.map(a=>({...a,games:a.games.filter(g=>scope==='all'||g.type===scope)}));
+}
+
 function calculateOwnerStats(seasonArchives){
   const stats={};
   for(const id of Object.keys(owners())) stats[id]=emptyOwnerStats(id);
   const allGames=[];
-  for(const archive of seasonArchives){
-    for(const game of archive.games){applyGame(stats,game,archive.playoffStartWeek);allGames.push(game);}
+  for(const archive of [...seasonArchives].sort((a,b)=>a.season-b.season)){
+    for(const game of [...archive.games].sort((a,b)=>a.week-b.week)){applyGame(stats,game,archive.playoffStartWeek);allGames.push(game);}
   }
   return {owners:finalizeStats(stats),games:allGames};
 }
@@ -173,5 +179,5 @@ function headToHead(games){
   return map;
 }
 
-window.CTE_StatsEngine={loadSeason,loadAllCompleteSeasons,loadAllSeasons,calculateOwnerStats,calculateLeagueRecords,headToHead};
+window.CTE_StatsEngine={filterArchives,loadSeason,loadAllCompleteSeasons,loadAllSeasons,calculateOwnerStats,calculateLeagueRecords,headToHead};
 })();

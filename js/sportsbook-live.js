@@ -9,7 +9,7 @@
   const E = () => window.CTE_BookEngine;
   const book = () => window.CTE_SPORTSBOOK;
   const cfgFor = season => window.CTE_LEAGUE_DATA.league.seasons[season];
-  const pts = r => Number(r && r.points || 0);
+  const pts = r => window.CTE_LeagueEngine.score(r);
 
   /** Core snapshot: owners, records, live/final scores for the book's week. */
   async function load(options = {}) {
@@ -30,29 +30,35 @@
         ties: row.ties, pf: row.pf, pfRank: pfOrder.indexOf(m.ownerId) + 1, avatar };
     }
     const leg = Math.max(0, Number(snap.league && snap.league.settings && snap.league.settings.leg || 0));
-    const seasonComplete = snap.league && snap.league.status === 'complete';
-    let rows = [];
-    try { rows = await window.CTE_Sleeper.getMatchups(cfg.sleeperLeagueId, B.week, options); } catch (_) { rows = []; }
-    const byRoster = Object.fromEntries((rows || []).map(r => [String(r.roster_id), r]));
-    const sleeperFinal = seasonComplete || leg > Number(B.week);
-    const live = {}, sleeperResults = {}, pairing = {};
-    for (const m of E().weekMarkets(B)) {
-      const [a, b] = m.sides, ra = byRoster[String(owners[a] && owners[a].rosterId)], rb = byRoster[String(owners[b] && owners[b].rosterId)];
-      if (!ra || !rb) { pairing[m.id] = rows.length ? 'missing' : 'unposted'; continue; }
-      if (ra.matchup_id == null || String(ra.matchup_id) !== String(rb.matchup_id)) { pairing[m.id] = 'mismatch'; continue; }
-      pairing[m.id] = 'ok';
-      const scores = { [a]: pts(ra), [b]: pts(rb) };
-      live[m.id] = { scores, rows: { [a]: ra, [b]: rb }, started: scores[a] > 0 || scores[b] > 0 };
-      if (sleeperFinal && live[m.id].started) sleeperResults[m.id] = { final: true, scores, source: 'sleeper' };
+    const completed = window.CTE_LeagueEngine.completedWeek(snap.league);
+    const marketWeeks = [...new Set(B.markets.map(m=>Number(m.week)))];
+    const failures = [];
+    const batches = await Promise.all(marketWeeks.map(async week => {
+      try { return {week, rows:await window.CTE_Sleeper.getMatchups(cfg.sleeperLeagueId,week,options)}; }
+      catch (_) { failures.push(week); return {week,rows:[]}; }
+    }));
+    const live = {}, results = {}, pairing = {};
+    for (const {week,rows} of batches) {
+      const byRoster = Object.fromEntries((rows||[]).map(r=>[String(r.roster_id),r]));
+      for (const m of E().weekMarkets(B,week)) {
+        const [a,b]=m.sides,ra=byRoster[String(owners[a]?.rosterId)],rb=byRoster[String(owners[b]?.rosterId)];
+        if(!ra||!rb) { pairing[m.id]=rows.length?'missing':'unposted'; continue; }
+        if(ra.matchup_id==null||String(ra.matchup_id)!==String(rb.matchup_id)) {pairing[m.id]='mismatch';continue;}
+        if(pts(ra)==null||pts(rb)==null) {pairing[m.id]='missing';continue;}
+        pairing[m.id]='ok';
+        const scores={[a]:pts(ra),[b]:pts(rb)};
+        live[m.id]={scores,rows:{[a]:ra,[b]:rb},started:week<=completed||scores[a]!==0||scores[b]!==0};
+        if(week<=completed)results[m.id]={final:true,scores,source:'sleeper'};
+      }
     }
-    const results = { ...sleeperResults };
-    for (const [id, r] of Object.entries(B.results || {})) if (r && r.scores) results[id] = { final: true, ...r, source: 'commissioner' };
-    return { season, cfg, snap, lookup, owners, standings, leg, live, results, pairing, loadedAt: Date.now() };
+    // Explicit commissioner results retain precedence; accepted odds/stakes are untouched.
+    for(const [id,result] of Object.entries(B.results||{}))if(result?.scores)results[id]={final:true,...result,source:'commissioner'};
+    return {season,cfg,snap,lookup,owners,standings,leg,completed,live,results,pairing,failures,loadedAt:Date.now()};
   }
 
   /** Real weekly scores for this season before the book's week. */
   async function recentScores(ctx, options = {}) {
-    const B = book(), last = Math.min(Number(B.week) - 1, ctx.leg || Number(B.week) - 1);
+    const B = book(), last = Math.min(Number(B.week) - 1, ctx.completed);
     const weeks = [];
     for (let w = 1; w <= last; w++) weeks.push(w);
     const data = await Promise.all(weeks.map(w => window.CTE_Sleeper.getMatchups(ctx.cfg.sleeperLeagueId, w, options).then(rows => ({ w, rows })).catch(() => ({ w, rows: null }))));
@@ -61,7 +67,7 @@
       if (!rows) continue;
       for (const r of rows) {
         const id = ctx.lookup[String(r.roster_id)] && ctx.lookup[String(r.roster_id)].ownerId;
-        if (!id || pts(r) === 0) continue;
+        if (!id || pts(r) == null) continue;
         (out[id] = out[id] || []).push({ week: w, points: pts(r), row: r });
       }
     }
@@ -70,25 +76,9 @@
   }
 
   /** All-time head-to-head from Sleeper history (every completed week, every season). */
-  let h2hPromise = null;
-  function headToHead() {
-    if (h2hPromise) return h2hPromise;
-    h2hPromise = (async () => {
-      const L = window.CTE_LEAGUE_DATA.league, games = [];
-      for (const season of Object.keys(L.seasons).map(Number).sort()) {
-        const cfg = L.seasons[season];
-        const snap = await window.CTE_Sleeper.getLeagueSnapshot(cfg.sleeperLeagueId);
-        const lookup = window.CTE_UI.mapForSeason(season, snap.users, snap.rosters);
-        const leg = Number(snap.league && snap.league.settings && snap.league.settings.leg || 0);
-        const lastWeek = cfg.status === 'current' ? Math.min(leg - 1, Number(book().week) - 1) : 18;
-        const weeks = [];
-        for (let w = 1; w <= lastWeek; w++) weeks.push(w);
-        const all = await Promise.all(weeks.map(w => window.CTE_Sleeper.getMatchups(cfg.sleeperLeagueId, w).then(rows => ({ w, rows })).catch(() => null)));
-        for (const x of all) if (x) for (const g of window.CTE_LeagueEngine.resolveGames(x.rows, lookup, season, x.w)) if (g.scoreA || g.scoreB) games.push(g);
-      }
-      return games;
-    })().catch(e => { h2hPromise = null; throw e; });
-    return h2hPromise;
+  async function headToHead() {
+    const archives=await window.CTE_StatsEngine.loadAllSeasons();
+    return archives.flatMap(a=>a.games);
   }
   function seriesBetween(games, a, b) {
     const list = games.filter(g => (g.ownerA === a && g.ownerB === b) || (g.ownerA === b && g.ownerB === a));

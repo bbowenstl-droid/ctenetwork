@@ -9,3 +9,10 @@ jobs:
         with:
           python-version: '3.12'
       - run: python tools/check-site.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tools/check-syntax.cjs
+      - run: node tools/test-history.cjs
+      - run: node tools/test-sportsbook.cjs
+      - run: node tools/test-weekly-awards.cjs

@@ -15,6 +15,14 @@ const PINNED = {
   'w4-jesse-elijah': { spread: { jesse: -110, elijah: -110 }, ml: { jesse: 260, elijah: -325 } }
 };
 const BOOK = JSON.parse(JSON.stringify(LIVE));
+// Keep scenario tests isolated from newly published weeks and user submissions.
+BOOK.week = 4;
+BOOK.markets = BOOK.markets.filter(m => m.week === 4);
+for (const p of Object.values(BOOK.personalities)) p.cards = {4:p.cards[4]};
+BOOK.leagueChallenge.cards = {};
+BOOK.leagueChallenge.cardEntries = {};
+BOOK.leagueChallenge.parlays = {};
+if (BOOK.parlayChallenge) BOOK.parlayChallenge.cards = {};
 for (const m of BOOK.markets) { const x = PINNED[m.id]; if (!x) continue; for (const k in x.spread) m.spread[k].odds = x.spread[k]; Object.assign(m.moneyline, x.ml); }
 for (const m of BOOK.markets) if (m.previousQuote) m.spread = JSON.parse(JSON.stringify(m.previousQuote.spread));
 for (const p of Object.values(BOOK.personalities)) for (const wg of p.cards[4].wagers) {
@@ -223,7 +231,7 @@ test('board favorites match the tickets Carl and Anita bet', () => {
 });
 test('Week 4 Carl/Anita tickets use final board prices and match the published max returns', () => {
   for (const [id, max] of [['carl', 1539.37], ['holly', 1578.22]]) {
-    const w = E.bankrollLedger(LIVE, id, {}).thisWeek;
+    const w = E.bankrollLedger(LIVE, id, {}).weeks.find(w => w.week === 4);
     assert.strictEqual(w.staked, 1000); assert.deepStrictEqual(w.issues, []);
     assert.strictEqual(Math.round((1000 + w.wagers.reduce((a, x) => a + E.profit(x.stake, x.sel.odds), 0)) * 100) / 100, max);
   }

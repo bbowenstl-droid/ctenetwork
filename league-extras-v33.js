@@ -86,9 +86,9 @@
     if (!LE || !SL || !UI || !LD) return;
     const all = seasons(), cur = all.find(s => s.status === 'current');
     if (!cur) return;
-    let leg = 0;
-    try { const snap = await SL.getLeagueSnapshot(cur.sleeperLeagueId, { fresh: true }); leg = Number(snap.league && snap.league.settings && snap.league.settings.leg || 0); } catch (_) { return; }
-    const lastDone = completedWeek(leg, cur.season, window.CTE_SPORTSBOOK);
+    let leg = 0, completed = 0;
+    try { const snap = await SL.getLeagueSnapshot(cur.sleeperLeagueId, { fresh: true }); leg = Number(snap.league && snap.league.settings && snap.league.settings.leg || 0); completed = LE.completedWeek(snap.league); } catch (_) { return; }
+    const lastDone = completed;
     // Weekly awards: last completed week of the current season.
     if (lastDone >= 1) {
       try {
