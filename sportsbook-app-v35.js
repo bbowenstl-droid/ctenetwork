@@ -629,7 +629,7 @@ function renderDuel() {
     </div>
     <div class="bk-duel-cards">${personalityCard(carl)}${personalityCard(holly)}</div>
     ${ledgerTable(carl, holly)}
-    <p class="bk-note" style="margin-top:14px">Rules: both started Week ${B.personalities.carl.startWeek} with ${money(B.personalities.carl.startingBankroll)}. Each week they must wager their entire bankroll across exactly 3 moneyline and 3 ATS bets. Whatever they finish with is next week's bankroll.</p>`;
+    <p class="bk-note" style="margin-top:14px">Rules: both started Week ${B.personalities.carl.startWeek} with ${money(B.personalities.carl.startingBankroll)}. Cards contain exactly 3 moneyline and 3 ATS bets. Full-bankroll staking applies unless a posted card explicitly allows a reserve; Week 7 allows reserves. Whatever they finish with is next week's bankroll.</p>`;
   for (const el of $$('#panel-duel [data-count]')) countUp(el, Number(el.dataset.count));
 }
 function ledgerTable(carl, holly) {

@@ -1,13 +1,13 @@
 /** CTE Sportsbook: fictional CTE$ only. Wednesday lines, Friday refresh, Sunday noon Central lock. */
 window.CTE_SPORTSBOOK = {
   "season": 2026,
-  "week": 6,
+  "week": 7,
   "status": "thursday_lines",
-  "lockAt": "2026-10-18T12:00:00-05:00",
+  "lockAt": "2026-10-25T12:00:00-05:00",
   "lockLabel": "Sunday noon Central",
   "currency": "CTE$",
-  "updatedAt": "2026-10-15T13:46:00-05:00",
-  "quoteNote": "Week 6 Thursday official opening board. Friday morning repricing after Seattle–Denver; Sunday Oct 18 noon Central lock. Accepted ticket quotes preserved. Fictional CTE$ only. Bye replacements assumed, not guaranteed.",
+  "updatedAt": "2026-10-22T14:00:36.474421+00:00",
+  "quoteNote": "Week 7 official Thursday board. Friday reassessment after Patriots–Bears; Sunday October 25 noon Central lock. Accepted ticket quotes preserved. Fictional CTE$ only.",
   "markets": [
     {
       "id": "w5-brendan-brett",
@@ -1083,16 +1083,226 @@ window.CTE_SPORTSBOOK = {
         }
       ],
       "assumptions": "Thursday editorial line based on five-week production and expected bye replacements. Verify inactive players before Sunday. Friday repricing scheduled after TNF."
+    },
+    {
+      "id": "w7-brendan-dan",
+      "week": 7,
+      "sides": [
+        "brendan",
+        "dan"
+      ],
+      "spread": {
+        "brendan": {
+          "line": -5.5,
+          "odds": -110
+        },
+        "dan": {
+          "line": 5.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "brendan": -150,
+        "dan": 125
+      },
+      "openMoneyline": {
+        "brendan": -150,
+        "dan": 125
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-22T14:00:36.474421+00:00",
+          "fav": "brendan",
+          "points": 5.5
+        }
+      ],
+      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
+    },
+    {
+      "id": "w7-jacob-troy",
+      "week": 7,
+      "sides": [
+        "jacob",
+        "troy"
+      ],
+      "spread": {
+        "jacob": {
+          "line": -9.5,
+          "odds": -110
+        },
+        "troy": {
+          "line": 9.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "jacob": -190,
+        "troy": 155
+      },
+      "openMoneyline": {
+        "jacob": -190,
+        "troy": 155
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-22T14:00:36.474421+00:00",
+          "fav": "jacob",
+          "points": 9.5
+        }
+      ],
+      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
+    },
+    {
+      "id": "w7-brett-cotton",
+      "week": 7,
+      "sides": [
+        "brett",
+        "cotton"
+      ],
+      "spread": {
+        "brett": {
+          "line": -3.5,
+          "odds": -110
+        },
+        "cotton": {
+          "line": 3.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "brett": -135,
+        "cotton": 115
+      },
+      "openMoneyline": {
+        "brett": -135,
+        "cotton": 115
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-22T14:00:36.474421+00:00",
+          "fav": "brett",
+          "points": 3.5
+        }
+      ],
+      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
+    },
+    {
+      "id": "w7-mike-carter",
+      "week": 7,
+      "sides": [
+        "mike",
+        "carter"
+      ],
+      "spread": {
+        "carter": {
+          "line": -4.5,
+          "odds": -110
+        },
+        "mike": {
+          "line": 4.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "carter": -140,
+        "mike": 115
+      },
+      "openMoneyline": {
+        "carter": -140,
+        "mike": 115
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-22T14:00:36.474421+00:00",
+          "fav": "carter",
+          "points": 4.5
+        }
+      ],
+      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
+    },
+    {
+      "id": "w7-isaiah-elijah",
+      "week": 7,
+      "sides": [
+        "isaiah",
+        "elijah"
+      ],
+      "spread": {
+        "isaiah": {
+          "line": -9.5,
+          "odds": -110
+        },
+        "elijah": {
+          "line": 9.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "isaiah": -190,
+        "elijah": 155
+      },
+      "openMoneyline": {
+        "isaiah": -190,
+        "elijah": 155
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-22T14:00:36.474421+00:00",
+          "fav": "isaiah",
+          "points": 9.5
+        }
+      ],
+      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
+    },
+    {
+      "id": "w7-jerry-jesse",
+      "week": 7,
+      "sides": [
+        "jerry",
+        "jesse"
+      ],
+      "spread": {
+        "jerry": {
+          "line": -10.5,
+          "odds": -110
+        },
+        "jesse": {
+          "line": 10.5,
+          "odds": -110
+        }
+      },
+      "moneyline": {
+        "jerry": -205,
+        "jesse": 165
+      },
+      "openMoneyline": {
+        "jerry": -205,
+        "jesse": 165
+      },
+      "lineHistory": [
+        {
+          "label": "Thursday official",
+          "at": "2026-10-22T14:00:36.474421+00:00",
+          "fav": "jerry",
+          "points": 10.5
+        }
+      ],
+      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
     }
   ],
   "sources": {
     "open": {
-      "articleId": "2026-week-4-bankroll-receipts",
-      "label": "October 6 Week 5 opening board"
+      "articleId": "2026-week7-thursday-headcheck",
+      "label": "Week 7 Thursday board, October 22"
     },
     "current": {
-      "articleId": "2026-week-5-friday-recovery",
-      "label": "Friday recovery board, October 9"
+      "articleId": "2026-week7-thursday-headcheck",
+      "label": "Week 7 Thursday board, October 22"
     }
   },
   "personalities": {
@@ -1213,6 +1423,61 @@ window.CTE_SPORTSBOOK = {
             }
           ],
           "releaseLabel": "Friday card — after Thursday"
+        },
+        "7": {
+          "postedAt": "2026-10-22T14:00:36.474421+00:00",
+          "source": "2026-week7-thursday-headcheck",
+          "allowReserve": true,
+          "releaseLabel": "Thursday card — before kickoff",
+          "note": "Approved Week 7 reserve allocation; accepted odds fixed for these tickets.",
+          "wagers": [
+            {
+              "market": "w7-brett-cotton",
+              "type": "ml",
+              "side": "cotton",
+              "stake": 15,
+              "odds": 115
+            },
+            {
+              "market": "w7-mike-carter",
+              "type": "ml",
+              "side": "mike",
+              "stake": 10,
+              "odds": 115
+            },
+            {
+              "market": "w7-jacob-troy",
+              "type": "ml",
+              "side": "jacob",
+              "stake": 20,
+              "odds": -190
+            },
+            {
+              "market": "w7-brendan-dan",
+              "type": "ats",
+              "side": "dan",
+              "stake": 20,
+              "odds": -110,
+              "line": 5.5
+            },
+            {
+              "market": "w7-jacob-troy",
+              "type": "ats",
+              "side": "troy",
+              "stake": 20,
+              "odds": -110,
+              "line": 9.5,
+              "lock": true
+            },
+            {
+              "market": "w7-isaiah-elijah",
+              "type": "ats",
+              "side": "elijah",
+              "stake": 15,
+              "odds": -110,
+              "line": 9.5
+            }
+          ]
         }
       }
     },
@@ -1333,6 +1598,61 @@ window.CTE_SPORTSBOOK = {
             }
           ],
           "releaseLabel": "Friday card — after Thursday"
+        },
+        "7": {
+          "postedAt": "2026-10-22T14:00:36.474421+00:00",
+          "source": "2026-week7-thursday-headcheck",
+          "allowReserve": true,
+          "releaseLabel": "Thursday card — before kickoff",
+          "note": "Approved Week 7 reserve allocation; accepted odds fixed for these tickets.",
+          "wagers": [
+            {
+              "market": "w7-brendan-dan",
+              "type": "ml",
+              "side": "brendan",
+              "stake": 50,
+              "odds": -150
+            },
+            {
+              "market": "w7-mike-carter",
+              "type": "ml",
+              "side": "carter",
+              "stake": 50,
+              "odds": -140
+            },
+            {
+              "market": "w7-jerry-jesse",
+              "type": "ml",
+              "side": "jerry",
+              "stake": 50,
+              "odds": -205
+            },
+            {
+              "market": "w7-jacob-troy",
+              "type": "ats",
+              "side": "jacob",
+              "stake": 60,
+              "odds": -110,
+              "line": -9.5,
+              "lock": true
+            },
+            {
+              "market": "w7-brett-cotton",
+              "type": "ats",
+              "side": "cotton",
+              "stake": 40,
+              "odds": -110,
+              "line": 3.5
+            },
+            {
+              "market": "w7-isaiah-elijah",
+              "type": "ats",
+              "side": "isaiah",
+              "stake": 50,
+              "odds": -110,
+              "line": -9.5
+            }
+          ]
         }
       }
     }

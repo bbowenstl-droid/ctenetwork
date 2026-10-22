@@ -236,7 +236,7 @@
       const counts = cardCounts(wagers.filter(x => !x.invalid).map(x => x.sel.id), book);
       const req = requirement(book);
       if (counts.ml !== req.ml || counts.ats !== req.ats) issues.push(`Card needs ${req.ml} ML + ${req.ats} ATS (has ${counts.ml} ML + ${counts.ats} ATS)`);
-      if (startBank != null && Math.abs(staked - startBank) > EPS) issues.push(`Stakes total ${formatMoney(staked)}, bankroll is ${formatMoney(startBank)}`);
+      if (startBank != null && (card.allowReserve ? staked - startBank > EPS : Math.abs(staked - startBank) > EPS)) issues.push(`Stakes total ${formatMoney(staked)}, bankroll is ${formatMoney(startBank)}`);
       if (wagers.some(x => x.invalid)) issues.push('A wager points at a market that is not on the board');
       const settled = wagers.every(x => x.status !== 'pending');
       const end = settled ? round2(wagers.reduce((a, x) => a + Number(x.returned || 0), 0) + (startBank != null ? startBank - staked : 0)) : null;
