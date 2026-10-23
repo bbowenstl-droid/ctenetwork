@@ -2,12 +2,12 @@
 window.CTE_SPORTSBOOK = {
   "season": 2026,
   "week": 7,
-  "status": "thursday_lines",
+  "status": "friday_refresh",
   "lockAt": "2026-10-25T12:00:00-05:00",
   "lockLabel": "Sunday noon Central",
   "currency": "CTE$",
-  "updatedAt": "2026-10-22T14:00:36.474421+00:00",
-  "quoteNote": "Week 7 official Thursday board. Friday reassessment after Patriots–Bears; Sunday October 25 noon Central lock. Accepted ticket quotes preserved. Fictional CTE$ only.",
+  "updatedAt": "2026-10-23T16:47:58.695497+00:00",
+  "quoteNote": "Week 7 Friday refresh after Patriots–Bears. Sunday October 25 noon Central lock. Accepted tickets retain original quotes. Fictional CTE$ only.",
   "markets": [
     {
       "id": "w5-brendan-brett",
@@ -1093,17 +1093,17 @@ window.CTE_SPORTSBOOK = {
       ],
       "spread": {
         "brendan": {
-          "line": -5.5,
+          "line": -7.5,
           "odds": -110
         },
         "dan": {
-          "line": 5.5,
+          "line": 7.5,
           "odds": -110
         }
       },
       "moneyline": {
-        "brendan": -150,
-        "dan": 125
+        "brendan": -165,
+        "dan": 140
       },
       "openMoneyline": {
         "brendan": -150,
@@ -1115,9 +1115,33 @@ window.CTE_SPORTSBOOK = {
           "at": "2026-10-22T14:00:36.474421+00:00",
           "fav": "brendan",
           "points": 5.5
+        },
+        {
+          "label": "Friday after Thursday",
+          "at": "2026-10-23T16:47:58.695497+00:00",
+          "fav": "brendan",
+          "points": 7.5
         }
       ],
-      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
+      "assumptions": "Full-week editorial price including Thursday scores. Active replacements assumed; injury uncertainty remains. See Friday recap. Accepted Thursday quotes preserved.",
+      "previousQuote": {
+        "before": "2026-10-23T16:47:58.695497+00:00",
+        "spread": {
+          "brendan": {
+            "line": -5.5,
+            "odds": -110
+          },
+          "dan": {
+            "line": 5.5,
+            "odds": -110
+          }
+        },
+        "moneyline": {
+          "brendan": -150,
+          "dan": 125
+        }
+      },
+      "freezeLegacyTickets": true
     },
     {
       "id": "w7-jacob-troy",
@@ -1128,17 +1152,17 @@ window.CTE_SPORTSBOOK = {
       ],
       "spread": {
         "jacob": {
-          "line": -9.5,
+          "line": -6.5,
           "odds": -110
         },
         "troy": {
-          "line": 9.5,
+          "line": 6.5,
           "odds": -110
         }
       },
       "moneyline": {
-        "jacob": -190,
-        "troy": 155
+        "jacob": -155,
+        "troy": 130
       },
       "openMoneyline": {
         "jacob": -190,
@@ -1150,9 +1174,33 @@ window.CTE_SPORTSBOOK = {
           "at": "2026-10-22T14:00:36.474421+00:00",
           "fav": "jacob",
           "points": 9.5
+        },
+        {
+          "label": "Friday after Thursday",
+          "at": "2026-10-23T16:47:58.695497+00:00",
+          "fav": "jacob",
+          "points": 6.5
         }
       ],
-      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
+      "assumptions": "Full-week editorial price including Thursday scores. Active replacements assumed; injury uncertainty remains. See Friday recap. Accepted Thursday quotes preserved.",
+      "previousQuote": {
+        "before": "2026-10-23T16:47:58.695497+00:00",
+        "spread": {
+          "jacob": {
+            "line": -9.5,
+            "odds": -110
+          },
+          "troy": {
+            "line": 9.5,
+            "odds": -110
+          }
+        },
+        "moneyline": {
+          "jacob": -190,
+          "troy": 155
+        }
+      },
+      "freezeLegacyTickets": true
     },
     {
       "id": "w7-brett-cotton",
@@ -1163,17 +1211,17 @@ window.CTE_SPORTSBOOK = {
       ],
       "spread": {
         "brett": {
-          "line": -3.5,
+          "line": -5.5,
           "odds": -110
         },
         "cotton": {
-          "line": 3.5,
+          "line": 5.5,
           "odds": -110
         }
       },
       "moneyline": {
-        "brett": -135,
-        "cotton": 115
+        "brett": -150,
+        "cotton": 125
       },
       "openMoneyline": {
         "brett": -135,
@@ -1185,9 +1233,33 @@ window.CTE_SPORTSBOOK = {
           "at": "2026-10-22T14:00:36.474421+00:00",
           "fav": "brett",
           "points": 3.5
+        },
+        {
+          "label": "Friday after Thursday",
+          "at": "2026-10-23T16:47:58.695497+00:00",
+          "fav": "brett",
+          "points": 5.5
         }
       ],
-      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
+      "assumptions": "Full-week editorial price including Thursday scores. Active replacements assumed; injury uncertainty remains. See Friday recap. Accepted Thursday quotes preserved.",
+      "previousQuote": {
+        "before": "2026-10-23T16:47:58.695497+00:00",
+        "spread": {
+          "brett": {
+            "line": -3.5,
+            "odds": -110
+          },
+          "cotton": {
+            "line": 3.5,
+            "odds": -110
+          }
+        },
+        "moneyline": {
+          "brett": -135,
+          "cotton": 115
+        }
+      },
+      "freezeLegacyTickets": true
     },
     {
       "id": "w7-mike-carter",
@@ -1197,18 +1269,18 @@ window.CTE_SPORTSBOOK = {
         "carter"
       ],
       "spread": {
-        "carter": {
-          "line": -4.5,
+        "mike": {
+          "line": -3.5,
           "odds": -110
         },
-        "mike": {
-          "line": 4.5,
+        "carter": {
+          "line": 3.5,
           "odds": -110
         }
       },
       "moneyline": {
-        "carter": -140,
-        "mike": 115
+        "mike": -135,
+        "carter": 115
       },
       "openMoneyline": {
         "carter": -140,
@@ -1220,9 +1292,33 @@ window.CTE_SPORTSBOOK = {
           "at": "2026-10-22T14:00:36.474421+00:00",
           "fav": "carter",
           "points": 4.5
+        },
+        {
+          "label": "Friday after Thursday",
+          "at": "2026-10-23T16:47:58.695497+00:00",
+          "fav": "mike",
+          "points": 3.5
         }
       ],
-      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
+      "assumptions": "Full-week editorial price including Thursday scores. Active replacements assumed; injury uncertainty remains. See Friday recap. Accepted Thursday quotes preserved.",
+      "previousQuote": {
+        "before": "2026-10-23T16:47:58.695497+00:00",
+        "spread": {
+          "carter": {
+            "line": -4.5,
+            "odds": -110
+          },
+          "mike": {
+            "line": 4.5,
+            "odds": -110
+          }
+        },
+        "moneyline": {
+          "carter": -140,
+          "mike": 115
+        }
+      },
+      "freezeLegacyTickets": true
     },
     {
       "id": "w7-isaiah-elijah",
@@ -1233,17 +1329,17 @@ window.CTE_SPORTSBOOK = {
       ],
       "spread": {
         "isaiah": {
-          "line": -9.5,
+          "line": -23.5,
           "odds": -110
         },
         "elijah": {
-          "line": 9.5,
+          "line": 23.5,
           "odds": -110
         }
       },
       "moneyline": {
-        "isaiah": -190,
-        "elijah": 155
+        "isaiah": -330,
+        "elijah": 255
       },
       "openMoneyline": {
         "isaiah": -190,
@@ -1255,9 +1351,33 @@ window.CTE_SPORTSBOOK = {
           "at": "2026-10-22T14:00:36.474421+00:00",
           "fav": "isaiah",
           "points": 9.5
+        },
+        {
+          "label": "Friday after Thursday",
+          "at": "2026-10-23T16:47:58.695497+00:00",
+          "fav": "isaiah",
+          "points": 23.5
         }
       ],
-      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
+      "assumptions": "Full-week editorial price including Thursday scores. Active replacements assumed; injury uncertainty remains. See Friday recap. Accepted Thursday quotes preserved.",
+      "previousQuote": {
+        "before": "2026-10-23T16:47:58.695497+00:00",
+        "spread": {
+          "isaiah": {
+            "line": -9.5,
+            "odds": -110
+          },
+          "elijah": {
+            "line": 9.5,
+            "odds": -110
+          }
+        },
+        "moneyline": {
+          "isaiah": -190,
+          "elijah": 155
+        }
+      },
+      "freezeLegacyTickets": true
     },
     {
       "id": "w7-jerry-jesse",
@@ -1268,17 +1388,17 @@ window.CTE_SPORTSBOOK = {
       ],
       "spread": {
         "jerry": {
-          "line": -10.5,
+          "line": -22.5,
           "odds": -110
         },
         "jesse": {
-          "line": 10.5,
+          "line": 22.5,
           "odds": -110
         }
       },
       "moneyline": {
-        "jerry": -205,
-        "jesse": 165
+        "jerry": -315,
+        "jesse": 245
       },
       "openMoneyline": {
         "jerry": -205,
@@ -1290,9 +1410,33 @@ window.CTE_SPORTSBOOK = {
           "at": "2026-10-22T14:00:36.474421+00:00",
           "fav": "jerry",
           "points": 10.5
+        },
+        {
+          "label": "Friday after Thursday",
+          "at": "2026-10-23T16:47:58.695497+00:00",
+          "fav": "jerry",
+          "points": 22.5
         }
       ],
-      "assumptions": "Current Week 7 roster snapshot with injury uncertainty and active replacements assumed. Cotton must replace Lawrence. See Thursday article for matchup-specific assumptions."
+      "assumptions": "Full-week editorial price including Thursday scores. Active replacements assumed; injury uncertainty remains. See Friday recap. Accepted Thursday quotes preserved.",
+      "previousQuote": {
+        "before": "2026-10-23T16:47:58.695497+00:00",
+        "spread": {
+          "jerry": {
+            "line": -10.5,
+            "odds": -110
+          },
+          "jesse": {
+            "line": 10.5,
+            "odds": -110
+          }
+        },
+        "moneyline": {
+          "jerry": -205,
+          "jesse": 165
+        }
+      },
+      "freezeLegacyTickets": true
     }
   ],
   "sources": {
@@ -1301,8 +1445,8 @@ window.CTE_SPORTSBOOK = {
       "label": "Week 7 Thursday board, October 22"
     },
     "current": {
-      "articleId": "2026-week7-thursday-headcheck",
-      "label": "Week 7 Thursday board, October 22"
+      "articleId": "2026-week7-friday-headcheck",
+      "label": "Week 7 Friday refresh, October 23"
     }
   },
   "personalities": {
