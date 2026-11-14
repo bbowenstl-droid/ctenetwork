@@ -1,0 +1,46 @@
+/*
+ * CTE Network 2.0 — semantic design tokens, Step 5.
+ * Deliberately NOT linked from production pages until Step 6 migration.
+ * Namespaced to avoid colliding with legacy --gold/--silver/--bg.
+ */
+:root {
+  --cte2-font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --cte2-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --cte2-canvas: #f5f5f7;
+  --cte2-surface: #ffffff;
+  --cte2-ink: #14161a;
+  --cte2-muted: #626770;
+  --cte2-border: #d9dce1;
+  --cte2-accent: #b8222f;
+  --cte2-accent-strong: #a11d2a;
+  --cte2-positive: #16794a;
+  --cte2-caution: #825300;
+  --cte2-focus: #b8222f;
+  --cte2-space-1: 4px;
+  --cte2-space-2: 8px;
+  --cte2-space-3: 12px;
+  --cte2-space-4: 16px;
+  --cte2-space-6: 24px;
+  --cte2-space-8: 32px;
+  --cte2-space-12: 48px;
+  --cte2-space-16: 64px;
+  --cte2-radius-control: 8px;
+  --cte2-radius-small: 12px;
+  --cte2-radius-card: 16px;
+  --cte2-radius-feature: 22px;
+  --cte2-content-max: 1260px;
+  --cte2-reading-max: 68ch;
+  --cte2-touch-min: 44px;
+}
+.cte2-dark-feature {
+  --cte2-canvas: #0e1013;
+  --cte2-surface: #191d22;
+  --cte2-ink: #f5f3ee;
+  --cte2-muted: #bac2cc;
+  --cte2-border: #343d47;
+  --cte2-accent: #f06b78;
+  --cte2-accent-strong: #ff9ca5;
+  --cte2-positive: #8bd9a4;
+  --cte2-caution: #f2c46b;
+  --cte2-focus: #ff9ca5;
+}
