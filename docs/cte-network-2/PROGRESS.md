@@ -17,10 +17,12 @@ Updated: 2026-11-14
 
 | 8 — Visual consistency and CSS consolidation | Partial migration, browser QA pending | Four representative pages opt in to scoped palette/typography bridge; no legacy CSS removed |
 
-Steps 9–32: Not started.
+| 9 — Navigation redesign | Implemented, browser QA pending | Shared shell loads grouped searchable navigation, source tests, CI workflow |
+
+Steps 10–32: Not started.
 
 ## Next checkpoint
-Confirm Step 4–6 CI checks. Step 9 navigation redesign requires new authorization. No production deployment authorized.
+Confirm Step 4–6 CI checks. Step 10 homepage redesign requires new authorization. No production deployment authorized.
 
 ## Session rule
 One step per user authorization. Update this file after each session and stop.
