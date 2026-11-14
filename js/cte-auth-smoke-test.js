@@ -2,8 +2,10 @@
  * No database SDK import and no database reads/writes.
  * Commissioner custom claims are deliberately NOT changed here.
  */
-import {initializeApp} from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js';
-import {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut} from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js';
+async function boot(){
+const [appLib,authLib]=await Promise.all([import('https://www.gstatic.com/firebasejs/13.3.0/firebase-app.js'),import('https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js')]);
+const {initializeApp}=appLib;
+const {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut}=authLib;
 
 const $=id=>document.getElementById(id);
 const status=$('status'),error=$('error'),signInButton=$('signIn'),signOutButton=$('signOut');
@@ -61,3 +63,6 @@ if(!config?.projectId||!config?.apiKey||!config?.authDomain){
   onAuthStateChanged(auth,renderUser,showError);
  }catch(e){showError(e);signInButton.disabled=true;}
 }
+
+}
+boot().catch(e=>{const status=document.getElementById('status'),error=document.getElementById('error');status.textContent='Unable to start Firebase sign-in.';error.hidden=false;error.textContent='Firebase sign-in could not load. Check your connection and try again.';});
