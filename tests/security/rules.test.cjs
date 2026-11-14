@@ -41,7 +41,7 @@ const {ref,set,get}=require('firebase/database');
  await assertFails(set(ref(admin,'v2/polls/open'),null));
  await assertFails(set(ref(admin,'v2/polls/closed/closeAt'),future));
 
- await assertFails(set(ref(brendan,'v2/results/closed/1'),'brendan'));await assertSucceeds(set(ref(admin,'v2/results/closed/1'),'brendan'));await assertFails(set(ref(admin,'v2/results/open/1'),'brendan'));await assertFails(set(ref(admin,'v2/results/closed/1'),'mike'));
+ await assertFails(set(ref(brendan,'v2/results/closed/1'),'brendan'));await assertSucceeds(set(ref(admin,'v2/results/closed/1'),'brendan'));await assertFails(set(ref(admin,'v2/results/open/1'),'brendan'));await assertFails(set(ref(admin,'v2/results/closed/1'),'mike'));await assertFails(set(ref(admin,'v2/results/closed/7'),'tie'));
  await assertSucceeds(set(ref(brendan,'v2/votes/open/brendan'),'a'));await assertFails(set(ref(jacob,'v2/votes/open/brendan'),'b'));await assertFails(set(ref(brendan,'v2/votes/open/brendan'),'z'));await assertFails(set(ref(brendan,'v2/votes/closed/brendan'),'a'));
  await assertSucceeds(set(ref(brendan,'v2/comments/week10/brendan'),{text:'A receipt',updatedAt:Date.now()}));await assertFails(set(ref(jacob,'v2/comments/week10/brendan'),{text:'Forged',updatedAt:Date.now()}));await assertFails(set(ref(brendan,'v2/comments/week10/brendan'),{text:'x'.repeat(501),updatedAt:Date.now()}));await assertSucceeds(set(ref(admin,'v2/comments/week10/brendan'),null));
  await assertSucceeds(set(ref(brendan,'v2/reactions/week10/brendan'),'laugh'));await assertFails(set(ref(brendan,'v2/reactions/week10/brendan'),'bad'));await assertFails(set(ref(brendan,'v2/claims/uid-b/commissioner'),true));
