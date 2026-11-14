@@ -21,5 +21,9 @@ const updateTeamLink=()=>{const a=document.getElementById('myTeamLink');a.href=m
 const main=document.querySelector('main');if(main&&!main.id)main.id='main';if(main)main.setAttribute('tabindex','-1');if(main&&!main.querySelector('h1')){const old=main.querySelector('h2');if(old){const heading=document.createElement('h1');heading.innerHTML=old.innerHTML;heading.className=old.className;heading.id=old.id;old.replaceWith(heading);}}
 if(document.body.classList.contains('n-legacy')&&main){const context=document.createElement('div');context.className='n-context';const label=document.title.split(/[·•]/)[0].trim();context.innerHTML='<a href="index.html">CTE Network</a><span aria-hidden="true">/</span><strong></strong>';context.querySelector('strong').textContent=file==='article.html'?'Newsroom':label;main.prepend(context)}const skip=document.createElement('a');skip.className='n-skip';skip.href='#'+(main?.id||'main');skip.textContent='Skip to content';document.body.prepend(skip);
 if(file==='article.html'){const progress=document.createElement('div');progress.className='n-reading-progress';progress.setAttribute('aria-hidden','true');document.body.append(progress);let ticking=false;const update=()=>{progress.style.transform=`scaleX(${scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight)})`;ticking=false};addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});update()}
+
+// Step 9: progressive navigation directory, available on every page using this shell.
+const cteNavStyle=document.createElement('link');cteNavStyle.rel='stylesheet';cteNavStyle.href='css/cte-navigation.css?v=1';document.head.append(cteNavStyle);
+const cteNavScript=document.createElement('script');cteNavScript.src='js/cte-navigation.js?v=1';document.body.append(cteNavScript);
 if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw-v22.js').catch(()=>{}));
 })();
