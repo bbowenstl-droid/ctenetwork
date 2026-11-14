@@ -1,0 +1,21 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const html=fs.readFileSync('index.html','utf8');
+const js=fs.readFileSync('network-v29.js','utf8');
+const css=fs.readFileSync('css/cte-homepage.css','utf8');
+for(const id of ['cteHomeTitle','cteHomePulseValue','cteHomePulseDetail','cteHomePlayoffField','homeScores','homeStandings','homeLead','homeStories'])assert.match(html,new RegExp('id="'+id+'"'),id+' missing');
+for(const dest of ['game-day.html','news.html','teams.html','transactions.html','records.html','draft-central.html','standings.html'])assert.ok(html.includes('href="'+dest+'"'),dest+' missing');
+assert.ok(html.indexOf('css/cte-homepage.css')>html.indexOf('css/cte-legacy-bridge.css'),'stylesheet ordering');
+assert.match(js,/renderHomePlayoffs\(\)/);
+assert.match(js,/renderHomePulse\(\)/);
+assert.match(js,/CTE_Quality\.playoffField\(snapshot\.standings\)/);
+assert.match(js,/CTE_LeagueEngine\.completedWeek\(snapshot\.league\)/);
+assert.match(js,/Live data unavailable/);
+assert.match(css,/body\[data-view="index"\]/);
+assert.match(css,/@media\(max-width:640px\)/);
+assert.match(css,/prefers-reduced-motion/);
+assert.doesNotMatch(html,/Week 1[012345678]/,'homepage cannot hardcode current week');
+console.log('PASS Step 10 homepage structure and integration checks');
+
+assert.equal((html.match(/<h1(?:\s|>)/g)||[]).length,1,'homepage has one primary heading');

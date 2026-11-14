@@ -24,6 +24,19 @@ function standings(rows,limit=12){
  const rec=x=>`${x.w}–${x.l}${x.t?'–'+x.t:''}`;
  return `<div class="n-table"><div class="n-table-head"><span>#</span><span>TEAM / OWNER</span><span>W–L–T</span><span>PF</span></div>${rows.slice(0,limit).map((r,i)=>{const seed=seeds.get(r.ownerId),split=snapshot.splits?.[r.ownerId];return `<a class="n-table-row " href="${CTE_UI.profileHref(r.ownerId)}"><span class="n-rank">${String(i+1).padStart(2,'0')}</span><span class="n-team-cell"><span class="n-avatar" aria-hidden="true">${esc(r.name.slice(0,2).toUpperCase())}</span><span><strong>${esc(r.name)}</strong><small>${esc(r.team)}</small>${view==='standings'?`<span class="n-team-status ${seed?'':'is-out'}">${seed?seed.bye?'Division leader · bye':seed.wildcard?'Wildcard position':'Division leader':'Outside playoff field'}</span>`:''}</span></span><span class="n-record">${r.wins}–${r.losses}${r.ties?'–'+r.ties:''}${view==='standings'?`<small class="n-record-breakdown">${split?`H2H ${rec(split.h2h)}<br>MED ${rec(split.median)}`:snapshot.splitState||'Loading splits…'}</small>`:''}</span><span class="n-points">${fmt(r.pf)}</span></a>`}).join('')}</div>`;
 }
+function renderHomePlayoffs(){
+ const host=$('cteHomePlayoffField');if(!host||!snapshot)return;
+ const field=CTE_Quality.playoffField(snapshot.standings);
+ if(!field.length){host.innerHTML='<p class="n-empty">The playoff field is not available until division standings are mapped.</p>';return;}
+ host.innerHTML=field.map(r=>`<a class="cte-home-seed" href="${CTE_UI.profileHref(r.ownerId)}"><span>Seed ${r.seed} · ${r.bye?'Current bye':r.wildcard?'Wildcard position':'Division leader'}</span><strong>${esc(r.name)}</strong><small>${r.wins}–${r.losses}${r.ties?'–'+r.ties:''} · ${fmt(r.pf)} PF</small></a>`).join('');
+}
+function renderHomePulse(){
+ const value=$('cteHomePulseValue'),detail=$('cteHomePulseDetail');if(!value||!detail||!snapshot)return;
+ const done=CTE_LeagueEngine.completedWeek(snapshot.league);
+ const status=CTE_LeagueEngine.gameStatus(snapshot.league,snapshot.week);
+ value.textContent='Week '+snapshot.week+' · '+(status==='final'?'Final':status==='live'?'In progress':'Upcoming');
+ detail.textContent='Season '+snapshot.season+' · '+done+' completed week'+(done===1?'':'s')+' recorded by Sleeper.';
+}
 function renderPlayoffs(){
  const host=$('playoffField');if(!host||!snapshot)return;
  const field=CTE_Quality.playoffField(snapshot.standings);
@@ -40,7 +53,7 @@ function matchCard(pair,compact=false){const [a,b]=pair;const who=r=>{const m=sn
 let loading=false;
 async function load(){if(loading)return;loading=true;document.querySelectorAll('[data-refresh]').forEach(b=>b.disabled=true);try{const season=CTE_LEAGUE_DATA.league.currentSeason,cfg=CTE_LEAGUE_DATA.league.seasons[season],snap=await CTE_Sleeper.getLeagueSnapshot(cfg.sleeperLeagueId,{fresh:true});const lookup=CTE_UI.mapForSeason(season,snap.users,snap.rosters),week=Math.max(1,Number(snap.league?.settings?.leg||1));snapshot={...snap,season,lookup,week,standings:CTE_UI.standingsRows(snap.rosters,lookup)};
  if(view==='standings'){renderStandings();renderPlayoffs();loadSplits(snap,cfg);$('liveStamp').textContent='Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
- if(view==='index'){$('homeStandings').innerHTML=standings(snapshot.standings,5);$('hubTitle').textContent='Week '+week+' · '+season;$('hubStatus').textContent='Scores, standings and this week’s sportsbook in one place.';}
+ if(view==='index'){$('homeStandings').innerHTML=standings(snapshot.standings,5);$('hubTitle').textContent='Week '+week+' · '+season;$('hubStatus').textContent='Scores, standings and this week’s sportsbook in one place.';renderHomePulse();renderHomePlayoffs();}
  if(view==='index'||view==='game-day'){
  const target=view==='index'?'homeScores':'scoreboard';
  try{const rows=await CTE_Sleeper.getMatchups(cfg.sleeperLeagueId,week,{fresh:true}),groups=CTE_LeagueEngine.groupMatchups(rows).filter(p=>p.length===2);$(target).innerHTML=groups.length?groups.map(pair=>matchCard(pair,view==='index')).join(''):'<p class="n-empty">This week’s matchups haven’t been posted yet.</p>';try{document.dispatchEvent(new CustomEvent('cte:scoreboard',{detail:{view,season,week}}))}catch(_){};
@@ -51,7 +64,7 @@ async function load(){if(loading)return;loading=true;document.querySelectorAll('
  const required=(snap.league.roster_positions||[]).filter(p=>!['BN','IR','TAXI'].includes(p)).length;$('readiness').innerHTML=rows.map(r=>{const o=CTE_UI.owner(lookup[String(r.roster_id)]?.ownerId),filled=(r.starters||[]).filter(id=>id&&id!=='0').length;return `<a href="${CTE_UI.profileHref(o.id)}" class="n-ready"><span>${esc(o.name)}</span><b class="${required&&filled>=required?'is-ready':''}">${required?filled+'/'+required:'Unknown'}</b></a>`}).join('');}
  }catch(e){$(target).innerHTML=error('Matchups are temporarily unavailable. Retry to reconnect.');if(view==='game-day')$('liveStamp').textContent='Matchup connection unavailable'}
  }
-}catch(e){if(view==='index'){for(const id of ['homeScores','homeStandings'])$(id).innerHTML=error('Live data is unavailable. Stories and league navigation are still open.');$('homeStamp').textContent='Connection unavailable';if($('hubStatus'))$('hubStatus').textContent='Live scores are unavailable. Sportsbook and stories are still accessible.'}if(view==='game-day'){$('scoreboard').innerHTML=error();$('liveStamp').textContent='Connection unavailable'}if(view==='standings'){$('leagueStandings').innerHTML=error();$('liveStamp').textContent='Connection unavailable'}}finally{loading=false;document.querySelectorAll('[data-refresh]').forEach(b=>b.disabled=false)}}
+}catch(e){if(view==='index'){for(const id of ['homeScores','homeStandings'])$(id).innerHTML=error('Live data is unavailable. Stories and league navigation are still open.');$('homeStamp').textContent='Connection unavailable';if($('hubStatus'))$('hubStatus').textContent='Live scores are unavailable. Sportsbook and stories are still accessible.';if($('cteHomePulseValue'))$('cteHomePulseValue').textContent='Live data unavailable';if($('cteHomePulseDetail'))$('cteHomePulseDetail').textContent='Stories and league history are still available.';if($('cteHomePlayoffField'))$('cteHomePlayoffField').innerHTML='<p class="n-empty">Standings are temporarily unavailable. <a href="standings.html">Visit standings</a> to retry.</p>'}if(view==='game-day'){$('scoreboard').innerHTML=error();$('liveStamp').textContent='Connection unavailable'}if(view==='standings'){$('leagueStandings').innerHTML=error();$('liveStamp').textContent='Connection unavailable'}}finally{loading=false;document.querySelectorAll('[data-refresh]').forEach(b=>b.disabled=false)}}
 addEventListener('cte:my-team',()=>{const host=$('homeScores');if(!host)return;let id='';try{id=localStorage.getItem('cte_my_team')||''}catch(_){}const card=[...host.children].find(el=>el.dataset.owners?.split(',').includes(id));if(card)host.prepend(card);});
 document.addEventListener('click',e=>{if(e.target.closest('[data-refresh]'))load()});load();
 })();
