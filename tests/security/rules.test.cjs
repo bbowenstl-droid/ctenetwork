@@ -33,6 +33,14 @@ const {ref,set,get}=require('firebase/database');
  await assertFails(set(ref(brendan,'v2/rounds/forged'),{season:2026,week:10,lockAt:future,matchups}));
  await assertSucceeds(set(ref(admin,'v2/rounds/new'),{season:2026,week:10,lockAt:future,matchups}));
  await assertFails(set(ref(admin,'v2/rounds/closed/lockAt'),future));
+ // Once published, even commissioners cannot change matchup choices, lock time,
+ // erase an open round or change a poll after votes could be cast.
+ await assertFails(set(ref(admin,'v2/rounds/open/matchups/1/a'),'mike'));
+ await assertFails(set(ref(admin,'v2/rounds/open'),null));
+ await assertFails(set(ref(admin,'v2/polls/open/options/a'),'Changed'));
+ await assertFails(set(ref(admin,'v2/polls/open'),null));
+ await assertFails(set(ref(admin,'v2/polls/closed/closeAt'),future));
+
  await assertFails(set(ref(brendan,'v2/results/closed/1'),'brendan'));await assertSucceeds(set(ref(admin,'v2/results/closed/1'),'brendan'));await assertFails(set(ref(admin,'v2/results/open/1'),'brendan'));await assertFails(set(ref(admin,'v2/results/closed/1'),'mike'));
  await assertSucceeds(set(ref(brendan,'v2/votes/open/brendan'),'a'));await assertFails(set(ref(jacob,'v2/votes/open/brendan'),'b'));await assertFails(set(ref(brendan,'v2/votes/open/brendan'),'z'));await assertFails(set(ref(brendan,'v2/votes/closed/brendan'),'a'));
  await assertSucceeds(set(ref(brendan,'v2/comments/week10/brendan'),{text:'A receipt',updatedAt:Date.now()}));await assertFails(set(ref(jacob,'v2/comments/week10/brendan'),{text:'Forged',updatedAt:Date.now()}));await assertFails(set(ref(brendan,'v2/comments/week10/brendan'),{text:'x'.repeat(501),updatedAt:Date.now()}));await assertSucceeds(set(ref(admin,'v2/comments/week10/brendan'),null));
