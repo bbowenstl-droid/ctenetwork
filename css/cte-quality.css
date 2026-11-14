@@ -1,0 +1,18 @@
+/* CTE Network 2.0 — Step 30 shared accessibility hardening.
+   Opt-in through shared app shell; deliberately does not reset legacy layouts. */
+body:is(.n-app,.n-legacy) :where(a,button,input,select,textarea,[role="button"]):focus-visible {
+  outline:3px solid var(--cte2-focus,#b8222f);
+  outline-offset:3px;
+}
+body:is(.n-app,.n-legacy) :where(img,video,iframe) { max-width:100%; }
+body:is(.n-app,.n-legacy) :where(.n-main,.league-shell,main) { min-width:0; }
+#networkMenu :where(.n-menu-close,.n-menu-button) { min-width:44px;min-height:44px; }
+#networkMenu .cte-nav-group-links a[aria-current="page"] { font-weight:850; }
+@media(prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto!important; }
+  body:is(.n-app,.n-legacy) :where(a,button,[role="button"]) { transition:none!important; }
+  body:is(.n-app,.n-legacy) :where(.n-story-row,.n-news-card,.cte-home-shortcut) { animation:none!important;transform:none!important; }
+}
+@media(forced-colors:active) {
+  #networkMenu .cte-nav-group-links a[aria-current="page"] { outline:2px solid Highlight;outline-offset:-2px; }
+}
