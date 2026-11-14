@@ -29,4 +29,4 @@ Track each task as **implemented / CI-tested / browser-tested / deployed / block
 - Isolated production-safe Google login smoke test: merged PR #19, **not** a production CTE 2.0 release.
 
 ## Known issue
-The v2-only fixture `security/participation.rules.json` used `numChildren()`, which Realtime Database rules emulator rejected. Fix on PR #21 is **not yet a passed verification** until CI confirms. Offline fixture is not the current deployed Firebase rule set.
+The v2-only fixture `security/participation.rules.json` used `numChildren()`, which Realtime Database rules emulator rejected. The revised v2 fixture passed the **CTE 2.0 release checks** CI run 43639293838, and Site check passed run 43639293869. Offline fixture is not the current deployed Firebase rule set.
