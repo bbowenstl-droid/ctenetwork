@@ -40,7 +40,7 @@ Updated: 2026-11-14
 | 27 — Newsroom | Enhanced; browser QA pending | Existing article archive retained; shareable query/category filters |
 | 28 — Media Hub | Implemented; browser QA pending | Carl/Anita archive filters, character pages and pick receipts |
 | 29 — Commissioner Center | Source implemented; production blocked | Server-issued commissioner claim required; round/result/poll tools; no secrets in client |
-| 30 — Performance/accessibility | In progress | Single homepage H1, labelled controls, scrollable tables, lazy history assets; full audit outstanding |
+| 30 — Performance/accessibility | Partial hardening implemented; full audit pending | Shared menu state/focus, reduced motion, forced colors, Sleeper preconnect and quality CI; full Lighthouse/axe/device audits outstanding |
 | 31 — Regression | In progress | Deterministic tests pass except pending rerun after latest changes; emulator initialization currently fails locally before rules evaluation |
 | 32 — Launch | Blocked by release gates | No production merge/deploy; production authorization/backend and full browser gates remain open |
 
