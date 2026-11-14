@@ -6,6 +6,7 @@ Run ONLY in a trusted admin environment with preconfigured Application Default
 Credentials. Never commit service-account private keys or authentication tokens.
 """
 import argparse
+import json
 import sys
 
 PROJECT = "cte-draft-central"
@@ -59,7 +60,7 @@ def main(argv=None):
 
     existing = user.custom_claims or {}
     next_claims = desired_claims(existing)
-    if len(str(next_claims).encode("utf-8")) > 900:
+    if len(json.dumps(next_claims, separators=(",", ":")).encode("utf-8")) > 1000:
         print("ABORT: Custom claims may exceed Firebase's 1000-byte limit.", file=sys.stderr)
         return 2
     print(f"Firebase project: {PROJECT}")
