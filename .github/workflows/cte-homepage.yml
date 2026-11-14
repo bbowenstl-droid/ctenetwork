@@ -1,0 +1,23 @@
+name: CTE Homepage Checks
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'network-v29.js'
+      - 'css/cte-homepage.css'
+      - 'tests/components/homepage.test.cjs'
+      - '.github/workflows/cte-homepage.yml'
+  workflow_dispatch:
+jobs:
+  homepage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check network-v29.js
+      - run: node tests/components/homepage.test.cjs
+      - run: node tests/components/navigation.test.cjs
