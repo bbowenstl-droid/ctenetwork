@@ -18,7 +18,7 @@
             ".validate": "newData.isNumber() && newData.val() > now"
           },
           "matchups": {
-            ".validate": "newData.numChildren() === 6",
+            ".validate": "newData.hasChildren(['1','2','3','4','5','6'])",
             "$matchup": {
               ".validate": "newData.hasChildren(['a','b']) && newData.child('a').val() !== newData.child('b').val()",
               "a": {
@@ -70,7 +70,7 @@
             ".validate": "newData.isNumber() && newData.val() > now"
           },
           "options": {
-            ".validate": "newData.numChildren() >= 2 && newData.numChildren() <= 4",
+            ".validate": "newData.hasChildren(['a','b'])",
             "$option": {
               ".validate": "$option.matches(/^[a-d]$/) && newData.isString() && newData.val().length > 0 && newData.val().length <= 120"
             }
