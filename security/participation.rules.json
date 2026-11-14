@@ -6,7 +6,7 @@
       "rounds": {
         ".read": "auth != null && auth.token.ownerId != null",
         "$round": {
-          ".write": "auth != null && auth.token.commissioner === true && (!data.exists() || now < data.child('lockAt').val())",
+          ".write": "auth != null && auth.token.commissioner === true && !data.exists() && newData.exists()",
           ".validate": "newData.hasChildren(['season','week','lockAt','matchups'])",
           "season": {
             ".validate": "newData.isNumber() && newData.val() >= 2026 && newData.val() <= 2100"
@@ -18,14 +18,14 @@
             ".validate": "newData.isNumber() && newData.val() > now"
           },
           "matchups": {
-            ".validate": "newData.numChildren() === 6",
+            ".validate": "newData.hasChildren(['1','2','3','4','5','6'])",
             "$matchup": {
-              ".validate": "newData.hasChildren(['a','b']) && newData.child('a').val() !== newData.child('b').val()",
+              ".validate": "$matchup.matches(/^[1-6]$/) && newData.hasChildren(['a','b']) && newData.child('a').val() !== newData.child('b').val()",
               "a": {
-                ".validate": "newData.isString()"
+                ".validate": "newData.isString() && newData.val().matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/)"
               },
               "b": {
-                ".validate": "newData.isString()"
+                ".validate": "newData.isString() && newData.val().matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/)"
               },
               "$other": {
                 ".validate": false
@@ -41,7 +41,7 @@
         ".read": "auth != null && auth.token.ownerId != null",
         "$round": {
           "$matchup": {
-            ".write": "auth != null && auth.token.commissioner === true && root.child('v2/rounds').child($round).exists() && now >= root.child('v2/rounds').child($round).child('lockAt').val()",
+            ".write": "auth != null && auth.token.commissioner === true && root.child('v2/rounds').child($round).exists() && now >= root.child('v2/rounds').child($round).child('lockAt').val() && root.child('v2/rounds').child($round).child('matchups').child($matchup).exists()",
             ".validate": "newData.isString() && (newData.val() === 'tie' || newData.val() === root.child('v2/rounds').child($round).child('matchups').child($matchup).child('a').val() || newData.val() === root.child('v2/rounds').child($round).child('matchups').child($matchup).child('b').val())"
           }
         }
@@ -61,7 +61,7 @@
       "polls": {
         ".read": "auth != null && auth.token.ownerId != null",
         "$poll": {
-          ".write": "auth != null && auth.token.commissioner === true && (!data.exists() || now < data.child('closeAt').val())",
+          ".write": "auth != null && auth.token.commissioner === true && !data.exists() && newData.exists()",
           ".validate": "newData.hasChildren(['question','options','closeAt'])",
           "question": {
             ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 240"
@@ -70,7 +70,7 @@
             ".validate": "newData.isNumber() && newData.val() > now"
           },
           "options": {
-            ".validate": "newData.numChildren() >= 2 && newData.numChildren() <= 4",
+            ".validate": "newData.hasChildren(['a','b'])",
             "$option": {
               ".validate": "$option.matches(/^[a-d]$/) && newData.isString() && newData.val().length > 0 && newData.val().length <= 120"
             }
