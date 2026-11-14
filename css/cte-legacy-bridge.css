@@ -1,0 +1,37 @@
+/* CTE Network 2.0 — Step 8 incremental legacy visual bridge.
+ * Loaded AFTER taste-v40.css. No resets, no DOM/behavior changes.
+ * Scope deliberately restricted to existing n-app / n-legacy pages. */
+body:is(.n-app,.n-legacy){
+  --n-bg:var(--cte2-canvas);
+  --n-surface:var(--cte2-surface);
+  --n-ink:var(--cte2-ink);
+  --n-muted:var(--cte2-muted);
+  --n-line:var(--cte2-border);
+  --n-red:var(--cte2-accent);
+  --t-red:var(--cte2-accent);
+  --t-red-deep:var(--cte2-accent-strong);
+  font-family:var(--cte2-font-sans);
+}
+body:is(.n-app,.n-legacy) :is(a,button,input,select,textarea):focus-visible{
+  outline:3px solid var(--cte2-focus);
+  outline-offset:3px;
+}
+body:is(.n-app,.n-legacy) :is(.n-score-value,.n-record,.n-rank,.hero-stat,.profile-record,.profile-stat,.record-box,.rival-stat,.schedule-record,.tx-stat,.bk-num,.bk-odds,.bk-score,td,th){
+  font-variant-numeric:tabular-nums;
+}
+body:is(.n-app,.n-legacy) :is(.n-score-value,.bk-odds,.bk-score){
+  font-family:var(--cte2-font-mono);
+}
+body:is(.n-app,.n-legacy) :is(.n-section-head,.n-section-title,.n-card-title){
+  min-width:0;
+}
+@media(max-width:640px){
+  body:is(.n-app,.n-legacy) :is(.n-main,.n-content,.league-shell){
+    min-width:0;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body:is(.n-app,.n-legacy) :is(a,button){
+    transition-duration:.01ms!important;
+  }
+}

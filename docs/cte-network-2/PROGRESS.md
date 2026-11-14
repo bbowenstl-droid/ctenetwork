@@ -15,10 +15,12 @@ Updated: 2026-11-14
 
 | 7 — Responsive foundations | Implemented, browser QA pending | Responsive CSS, fixture, source checks, CI workflow, responsive QA documentation |
 
-Steps 8–32: Not started.
+| 8 — Visual consistency and CSS consolidation | Partial migration, browser QA pending | Four representative pages opt in to scoped palette/typography bridge; no legacy CSS removed |
+
+Steps 9–32: Not started.
 
 ## Next checkpoint
-Confirm Step 4–6 CI checks. Step 8 style consolidation requires new authorization. No production deployment authorized.
+Confirm Step 4–6 CI checks. Step 9 navigation redesign requires new authorization. No production deployment authorized.
 
 ## Session rule
 One step per user authorization. Update this file after each session and stop.
