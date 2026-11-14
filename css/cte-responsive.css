@@ -1,0 +1,54 @@
+/* CTE Network 2.0 — Step 7 responsive foundations.
+   Load AFTER cte-tokens.css and cte-components.css.
+   All styles opt in via .cte2. Existing pages are unaffected. */
+.cte2{
+  --cte2-gutter:clamp(16px,3vw,42px);
+  --cte2-layout-gap:clamp(12px,2vw,24px);
+  min-width:0;
+  max-width:100%;
+  overflow-wrap:break-word;
+}
+.cte2 :where(img,video,svg,canvas){max-width:100%;height:auto}
+.cte2 :where(pre,code){overflow-wrap:anywhere}
+.cte2 .cte2-container{width:min(100% - 2 * var(--cte2-gutter),var(--cte2-content-max));margin-inline:auto;min-width:0}
+.cte2 .cte2-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--cte2-layout-gap)}
+.cte2 .cte2-grid > *{min-width:0}
+.cte2 .cte2-grid--two,.cte2 .cte2-grid--three{grid-template-columns:minmax(0,1fr)}
+.cte2 .cte2-reading{width:100%;max-width:var(--cte2-reading-max);min-width:0}
+.cte2 .cte2-score-rail{display:flex;gap:12px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x proximity;padding-block:4px 12px;scrollbar-width:thin}
+.cte2 .cte2-score-rail > *{flex:0 0 min(84vw,300px);scroll-snap-align:start;min-width:0}
+.cte2 .cte2-table-scroll{max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}
+.cte2 .cte2-table{min-width:480px}
+.cte2 .cte2-mobile-only{display:initial}
+.cte2 .cte2-desktop-only{display:none}
+.cte2 .cte2-responsive-actions{display:flex;flex-wrap:wrap;gap:8px}
+.cte2 .cte2-responsive-actions > .cte2-button{flex:1 1 160px}
+.cte2 .cte2-safe-bottom{padding-bottom:max(16px,env(safe-area-inset-bottom,0px))}
+.cte2 .cte2-safe-top{padding-top:max(16px,env(safe-area-inset-top,0px))}
+.cte2 .cte2-skip-link{position:absolute;left:12px;top:-100px;z-index:9999;padding:12px 16px;background:var(--cte2-surface);color:var(--cte2-ink);border:2px solid var(--cte2-focus)}
+.cte2 .cte2-skip-link:focus{top:12px}
+.cte2 .cte2-scoreboard__header{flex-wrap:wrap}
+.cte2 .cte2-scoreboard__team-name{min-width:0;overflow-wrap:anywhere}
+.cte2 .cte2-article-body{max-width:100%;overflow-wrap:anywhere}
+@media(min-width:641px){
+  .cte2 .cte2-grid--two{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cte2 .cte2-grid--three{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cte2 .cte2-score-rail > *{flex-basis:280px}
+  .cte2 .cte2-responsive-actions > .cte2-button{flex:0 0 auto}
+}
+@media(min-width:1024px){
+  .cte2 .cte2-grid--three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cte2 .cte2-mobile-only{display:none}
+  .cte2 .cte2-desktop-only{display:initial}
+  .cte2 .cte2-score-rail > *{flex-basis:300px}
+}
+@media(max-width:640px){
+  .cte2 .cte2-title{font-size:clamp(24px,7vw,34px)}
+  .cte2 .cte2-card{padding:16px}
+  .cte2 .cte2-card--feature{padding:24px}
+  .cte2 .cte2-scoreboard__score{font-size:18px}
+  .cte2 .cte2-responsive-actions > .cte2-button{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  .cte2 .cte2-score-rail{scroll-behavior:auto}
+}
