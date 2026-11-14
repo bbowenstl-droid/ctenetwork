@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict');
+const c=require('../../js/cte-components.js');
+assert.equal(c.escapeHTML('<img src=x onerror="oops">'),'&lt;img src=x onerror=&quot;oops&quot;&gt;');
+assert.match(c.button({label:'View',variant:'primary'}),/type="button"/);
+assert.match(c.button({label:'View',disabled:true}),/ disabled/);
+assert.throws(()=>c.button({label:'Bad',href:'javascript:alert(1)'}),/Unsupported/);
+assert.match(c.scoreboard({week:10,state:'live',home:{name:'Brendan',score:102.2},away:{name:'Jacob',score:110.3}}),/LIVE/);
+assert.match(c.scoreboard({week:11,state:'upcoming',home:{name:'A',score:200},away:{name:'B',score:100}}),/—/);
+assert.doesNotMatch(c.scoreboard({week:11,state:'upcoming',home:{name:'A',score:200},away:{name:'B',score:100}}),/200/);
+assert.throws(()=>c.scoreboard({week:1,home:{},away:{}}),/Explicit/);
+assert.match(c.table({headers:['Owner','Wins'],rows:[['<b>','10']],numericColumns:[1]}),/&lt;b&gt;/);
+assert.throws(()=>c.table({headers:['Owner'],rows:[['a','b']]}),/mismatch/);
+assert.match(c.articleHeader({category:'League',title:'CTE & Co.',dek:'The recap',byline:'Staff',date:'2026-11-14'}),/CTE &amp; Co/);
+console.log('CTE component unit checks passed (11 assertions)');
