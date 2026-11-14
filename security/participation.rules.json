@@ -6,7 +6,7 @@
       "rounds": {
         ".read": "auth != null && auth.token.ownerId != null",
         "$round": {
-          ".write": "auth != null && auth.token.commissioner === true && (!data.exists() || now < data.child('lockAt').val())",
+          ".write": "auth != null && auth.token.commissioner === true && !data.exists() && newData.exists()",
           ".validate": "newData.hasChildren(['season','week','lockAt','matchups'])",
           "season": {
             ".validate": "newData.isNumber() && newData.val() >= 2026 && newData.val() <= 2100"
@@ -61,7 +61,7 @@
       "polls": {
         ".read": "auth != null && auth.token.ownerId != null",
         "$poll": {
-          ".write": "auth != null && auth.token.commissioner === true && (!data.exists() || now < data.child('closeAt').val())",
+          ".write": "auth != null && auth.token.commissioner === true && !data.exists() && newData.exists()",
           ".validate": "newData.hasChildren(['question','options','closeAt'])",
           "question": {
             ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 240"
