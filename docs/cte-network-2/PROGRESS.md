@@ -11,10 +11,12 @@ Updated: 2026-11-14
 | 4 — Development infrastructure | Implemented; CI confirmation pending | Dedicated branch, documentation, Node validation harness, GitHub Actions workflow, draft PR |
 | 5 — Brand and design system | Implemented, review pending | DESIGN_SYSTEM.md and scoped css/cte-tokens.css; no runtime page changes |
 
-Steps 6–32: Not started.
+| 6 — Shared component library | Implemented, CI pending | Scoped component CSS, safe JS renderers, unit tests, CI workflow, component documentation |
+
+Steps 7–32: Not started.
 
 ## Next checkpoint
-Confirm Step 4 CI, review Step 5 design tokens, and proceed to Step 6 component implementation only with authorization. Historical source-vs-site equality remains an audit gap. No production deployment authorized.
+Confirm Step 4–6 CI checks. Step 7 responsive foundations require new authorization. No production deployment authorized.
 
 ## Session rule
 One step per user authorization. Update this file after each session and stop.
