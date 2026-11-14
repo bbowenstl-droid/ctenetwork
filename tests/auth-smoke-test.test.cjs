@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const html=fs.readFileSync('auth-smoke-test.html','utf8'),js=fs.readFileSync('js/cte-auth-smoke-test.js','utf8'),cfg=fs.readFileSync('firebase-config.js','utf8');
+for(const id of ['signIn','signOut','uid','email','status','error'])assert.match(html,new RegExp('id="'+id+'"'));
+assert.match(html,/name="robots" content="noindex,nofollow"/);
+assert.match(js,/signInWithPopup/);
+assert.match(js,/signOut\(auth\)/);
+assert.match(js,/onAuthStateChanged/);
+assert.doesNotMatch(js,/firebase-database|\bgetDatabase\b|\bgetIdToken\b|\bfetch\s*\(/,'must not read databases or transmit tokens');
+assert.match(cfg,/projectId: "cte-draft-central"/);
+assert.match(html,/src="\.\/firebase-config.js"/);
+assert.match(html,/src="\.\/js\/cte-auth-smoke-test.js" type="module"/);
+console.log('PASS isolated Firebase auth smoke test has no database access');
