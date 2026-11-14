@@ -1,0 +1,22 @@
+name: Standalone Firebase Auth Smoke Test
+on:
+  pull_request:
+    paths:
+      - 'auth-smoke-test.html'
+      - 'js/cte-auth-smoke-test.js'
+      - 'tests/auth-smoke-test.test.cjs'
+      - '.github/workflows/cte-auth-smoke-site.yml'
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check js/cte-auth-smoke-test.js
+      - run: node tests/auth-smoke-test.test.cjs
+      - run: python tools/check-site.py

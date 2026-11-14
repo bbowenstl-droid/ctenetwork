@@ -22,8 +22,11 @@ const canonical=g=>{const sides=[[g.ownerA,g.scoreA],[g.ownerB,g.scoreB]].sort((
  for(const r of a.snapshot.rosters){const s=split[a.lookup[r.roster_id].ownerId];assert.equal(s.h2h.w+s.median.w,r.settings.wins);assert.equal(s.h2h.l+s.median.l,r.settings.losses);assert.equal(s.h2h.t+s.median.t,r.settings.ties);}
  assert.equal(E.completedWeek({settings:{leg:6,last_scored_leg:6}}),6);assert.equal(E.completedWeek({settings:{leg:7,last_scored_leg:6}}),6);assert.equal(E.completedWeek({settings:{leg:1,last_scored_leg:0}}),0);
  assert.equal(E.gameStatus({settings:{leg:6,last_scored_leg:5}},6),'live');assert.equal(E.gameStatus({settings:{leg:6,last_scored_leg:6}},6),'final');assert.equal(E.score({points:90,custom_points:0}),0);
- const ctx=await CTE_BookLive.load();assert.equal(ctx.completed,6);assert.equal(Object.keys(ctx.results).length,CTE_SPORTSBOOK.markets.length);assert.deepEqual(ctx.failures,[]);
- for(const m of CTE_SPORTSBOOK.markets)assert.equal(ctx.results[m.id].final,true,m.id);
+ const ctx=await CTE_BookLive.load();assert.equal(ctx.completed,6);assert.deepEqual(ctx.failures,[]);
+ const settledMarkets=CTE_SPORTSBOOK.markets.filter(m=>Number(m.week)<=ctx.completed);
+ assert.equal(Object.keys(ctx.results).length,settledMarkets.length,'only completed markets should settle');
+ for(const m of settledMarkets)assert.equal(ctx.results[m.id].final,true,m.id);
+ for(const m of CTE_SPORTSBOOK.markets.filter(m=>Number(m.week)>ctx.completed))assert.equal(ctx.results[m.id],undefined,'future markets must not settle: '+m.id);
  console.log('Bankrolls:',JSON.stringify(Object.keys(CTE_SPORTSBOOK.personalities).map(id=>{const l=CTE_BookEngine.bankrollLedger(CTE_SPORTSBOOK,id,ctx.results);return {id,current:l.current,weeks:l.weeks.map(w=>({week:w.week,status:w.status,issues:w.issues}))};})));
  source[2026].league.settings.last_scored_leg=5;assert.equal((await S.loadSeason(2026)).games.length,30);assert.ok(!Object.keys((await CTE_BookLive.load()).results).some(id=>id.startsWith('w6-')));
  source=clone(fixture.seasons);source[2026].weeks[1].pop();await assert.rejects(S.loadSeason(2026),/incomplete/i);
