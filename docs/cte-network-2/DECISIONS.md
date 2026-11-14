@@ -9,3 +9,4 @@
 - 2026-11-14: A standings rank is not a postseason finish.
 - 2026-11-14: Unpaired postseason roster entries are not opponent matchups.
 - 2026-11-14: Use feature branches; merging and deployment require separate authorization.
+- 2026-11-14: Step 5 brand uses off-white editorial canvas, charcoal feature surfaces, Geist typography, and red accent; semantic tokens are scoped under `--cte2-` and not loaded until Step 6.
