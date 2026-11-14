@@ -13,10 +13,12 @@ Updated: 2026-11-14
 
 | 6 — Shared component library | Implemented, CI pending | Scoped component CSS, safe JS renderers, unit tests, CI workflow, component documentation |
 
-Steps 7–32: Not started.
+| 7 — Responsive foundations | Implemented, browser QA pending | Responsive CSS, fixture, source checks, CI workflow, responsive QA documentation |
+
+Steps 8–32: Not started.
 
 ## Next checkpoint
-Confirm Step 4–6 CI checks. Step 7 responsive foundations require new authorization. No production deployment authorized.
+Confirm Step 4–6 CI checks. Step 8 style consolidation requires new authorization. No production deployment authorized.
 
 ## Session rule
 One step per user authorization. Update this file after each session and stop.
