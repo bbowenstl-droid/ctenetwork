@@ -17,3 +17,5 @@ assert.match(css,/@media\(max-width:640px\)/);
 assert.match(css,/prefers-reduced-motion/);
 assert.doesNotMatch(html,/Week 1[012345678]/,'homepage cannot hardcode current week');
 console.log('PASS Step 10 homepage structure and integration checks');
+
+assert.equal((html.match(/<h1(?:\s|>)/g)||[]).length,1,'homepage has one primary heading');

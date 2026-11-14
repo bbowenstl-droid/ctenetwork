@@ -19,10 +19,18 @@ Updated: 2026-11-14
 
 | 9 — Navigation redesign | Implemented, browser QA pending | Shared shell loads grouped searchable navigation, source tests, CI workflow |
 
-Steps 10–32: Not started.
+| 10 — Homepage | Implemented; browser QA in progress | Draft PR #16; Site/Homepage/component/bridge GitHub checks passed; local Site suite passed; live Chromium loaded scores, standings and six playoff positions |
 
-## Next checkpoint
-Confirm Step 4–6 CI checks. Step 10 homepage redesign requires new authorization. No production deployment authorized.
+Steps 11–32: Pending implementation or verification.
 
-## Session rule
-One step per user authorization. Update this file after each session and stop.
+## Release authorization and strategy
+The commissioner authorized completing all remaining steps and deployment after release gates on 2026-11-14. Prior per-step stop instructions are superseded.
+Preserve the stacked drafts as review history. Continue from Step 10 on a consolidated release branch, merge latest main before release, and open one final PR against main. Do not merge any draft into production early. Record main's SHA as rollback target before release.
+
+## Verified this session
+- Integration 8cb8399: GitHub Site check run 43571236363 successful.
+- Step 10 b0e7d5d: Site check 43571980387 and homepage 43571981304 successful.
+- Local link, syntax (114 scripts), history (134 frozen games), sportsbook (31 tests), awards, five component suites and identity checks passed.
+- Browser Chromium: current Week 10, six live matchups, all six playoff positions loaded. Full viewport matrix remains pending.
+- Fixed duplicate H1 detected during review.
+- Firebase repository rules contain PASTE_DEVICE_ID; deployed authorization and account access remain unverified. Do not claim multi-user/admin readiness.

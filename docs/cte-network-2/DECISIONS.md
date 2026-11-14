@@ -14,3 +14,7 @@
 - 2026-11-14: Step 7 uses mobile-first 640/1024px breakpoints, independently scrollable score rails and tables, and opt-in CSS only. Browser QA remains required.
 - 2026-11-14: Step 8 introduces a narrow opt-in CSS compatibility bridge on four pages; no legacy stylesheet deletion until visual regression evidence exists.
 - 2026-11-14: Step 9 preserves the existing shared navigation shell and dialog behaviors while progressively adding grouped searchable destinations. No route changes.
+
+- 2026-11-14 Work handoff supersedes previous stop/approval rules: finish roadmap autonomously; production authorized only after passing release gates.
+- Consolidate on a release branch descended from Step 10; preserve stacked drafts, review final diff against current main, and retain rollback SHA.
+- Keep GitHub Pages hosting and existing Firebase architecture unless investigation establishes a reason to change. Firebase security configuration requires verified project access before release.
