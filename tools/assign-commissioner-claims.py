@@ -35,7 +35,6 @@ def main(argv=None):
     try:
         import firebase_admin
         from firebase_admin import auth
-        from google.auth.exceptions import DefaultCredentialsError
     except ImportError as e:
         p.error(f"Install firebase-admin in a trusted administrator environment: {e}")
 
