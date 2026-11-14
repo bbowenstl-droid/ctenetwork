@@ -41,7 +41,7 @@
         ".read": "auth != null && auth.token.ownerId != null",
         "$round": {
           "$matchup": {
-            ".write": "auth != null && auth.token.commissioner === true && root.child('v2/rounds').child($round).exists() && now >= root.child('v2/rounds').child($round).child('lockAt').val()",
+            ".write": "auth != null && auth.token.commissioner === true && root.child('v2/rounds').child($round).exists() && now >= root.child('v2/rounds').child($round).child('lockAt').val() && root.child('v2/rounds').child($round).child('matchups').child($matchup).exists()",
             ".validate": "newData.isString() && (newData.val() === 'tie' || newData.val() === root.child('v2/rounds').child($round).child('matchups').child($matchup).child('a').val() || newData.val() === root.child('v2/rounds').child($round).child('matchups').child($matchup).child('b').val())"
           }
         }
