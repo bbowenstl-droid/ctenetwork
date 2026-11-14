@@ -13,3 +13,4 @@
 - 2026-11-14: Step 6 components are opt-in and scoped under `.cte2`; legacy pages stay unchanged. Renderers escape external text and require explicit game status.
 - 2026-11-14: Step 7 uses mobile-first 640/1024px breakpoints, independently scrollable score rails and tables, and opt-in CSS only. Browser QA remains required.
 - 2026-11-14: Step 8 introduces a narrow opt-in CSS compatibility bridge on four pages; no legacy stylesheet deletion until visual regression evidence exists.
+- 2026-11-14: Step 9 preserves the existing shared navigation shell and dialog behaviors while progressively adding grouped searchable destinations. No route changes.
