@@ -3,7 +3,7 @@ const view=document.body.dataset.view;if(!view)return;
 const $=id=>document.getElementById(id),esc=CTE_UI.esc,fmt=CTE_UI.fmt;
 const stories=[...(window.CTE_NEWS||[])].sort((a,b)=>b.date.localeCompare(a.date));
 const date=d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
-const href=s=>'article.html?id='+encodeURIComponent(s.id);
+const href=s=>s.id==='2026-state-of-the-union'?'state-of-union.html':'article.html?id='+encodeURIComponent(s.id);
 const picture=s=>/anita|holly/i.test(s.author||s.title)?'anita-headcheck.webp':/carl|scaries/i.test((s.author||'')+' '+s.title)?'concussion-carl.webp':null;
 const shortTitle=s=>s.title.replace(/^ANITA ON THE SIDELINE:\s*/i,'').replace(/^CARL'S RECEIPTS:\s*/i,'');
 const cover=s=>`<a href="${href(s)}" class="n-cover-link ${picture(s)?'':'n-cover-text'}"><div class="n-cover-art ${picture(s)?.includes('carl')?'is-carl':''}"><span class="n-cover-watermark" aria-hidden="true">CTE</span>${picture(s)?`<img src="${picture(s)}" alt="${esc(s.author||'CTE Network analyst')}" fetchpriority="high">`:''}</div><div class="n-cover-copy"><span class="n-cover-category">${esc(s.category)} <i></i> ${date(s.date)}</span><h2>${esc(shortTitle(s))}</h2><p>${esc(s.excerpt)}</p><div class="n-cover-bottom"><span>${esc(s.author||'CTE Network')}</span><span class="n-cover-cta">Read story <b>↗</b></span></div></div></a>`;

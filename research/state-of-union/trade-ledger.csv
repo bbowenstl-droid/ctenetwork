@@ -1,0 +1,89 @@
+trade,completion_date_CT,sender_franchise,receiver_franchise,asset,provider_transaction_id
+T01,2025-09-23,jacob,mike,DJ Moore,1275695802332745728
+T01,2025-09-23,jacob,mike,Javonte Williams,1275695802332745728
+T01,2025-09-23,mike,jacob,Chase Brown,1275695802332745728
+T02,2025-09-30,cotton,brendan,Malik Nabers,1278588974897586176
+T02,2025-09-30,brendan,cotton,2026 round 1 · Brendan franchise,1278588974897586176
+T02,2025-09-30,brendan,cotton,2027 round 3 · Brendan franchise,1278588974897586176
+T03,2025-10-28,brendan,dan,Tre Tucker,1288580844851593216
+T03,2025-10-28,brendan,dan,Cam Skattebo,1288580844851593216
+T03,2025-10-28,dan,brendan,Rico Dowdle,1288580844851593216
+T03,2025-10-28,dan,brendan,Kyren Williams,1288580844851593216
+T03,2025-10-28,brendan,dan,2026 round 2 · Brendan franchise,1288580844851593216
+T03,2025-10-28,dan,brendan,2026 round 1 · Dan franchise,1288580844851593216
+T04,2025-10-28,jacob,cotton,Keenan Allen,1289080335581077504
+T04,2025-10-28,cotton,jacob,Rashid Shaheed,1289080335581077504
+T04,2025-10-28,jacob,cotton,2026 round 4 · Jacob franchise,1289080335581077504
+T04,2025-10-28,jacob,cotton,2027 round 4 · Jacob franchise,1289080335581077504
+T05,2025-11-05,jerry,brendan,Daniel Jones,1291555332920733696
+T05,2025-11-05,brendan,jerry,2026 round 4 · Brendan franchise,1291555332920733696
+T05,2025-11-05,brendan,jerry,2027 round 2 · Brendan franchise,1291555332920733696
+T06,2025-11-05,jacob,mike,Jacory Croskey-Merritt,1291908200404099072
+T06,2025-11-05,mike,jacob,CeeDee Lamb,1291908200404099072
+T06,2025-11-05,jacob,mike,Jordan Addison,1291908200404099072
+T06,2025-11-05,jacob,mike,2028 round 1 · Jacob franchise,1291908200404099072
+T07,2025-11-05,jacob,dan,Harold Fannin Jr.,1291970497227005952
+T07,2025-11-05,dan,jacob,Garrett Wilson,1291970497227005952
+T07,2025-11-05,jacob,dan,Rashid Shaheed,1291970497227005952
+T07,2025-11-05,jacob,dan,2027 round 1 · Jacob franchise,1291970497227005952
+T08,2026-04-13,carter,elijah,Brian Thomas Jr.,1347708941487841281
+T08,2026-04-13,elijah,carter,2026 round 1 · Elijah franchise,1347708941487841281
+T09,2026-04-13,jacob,carter,Michael Wilson,1348459267719442432
+T09,2026-04-13,jacob,carter,Oronde Gadsden,1348459267719442432
+T09,2026-04-13,carter,jacob,TreVeyon Henderson,1348459267719442432
+T09,2026-04-13,jacob,carter,Josh Jacobs,1348459267719442432
+T09,2026-04-13,carter,jacob,2026 round 2 · Carter franchise,1348459267719442432
+T10,2026-04-30,carter,jacob,Drake London,1354597028360880128
+T10,2026-04-30,jacob,carter,Garrett Wilson,1354597028360880128
+T10,2026-04-30,jacob,carter,2028 round 4 · Jacob franchise,1354597028360880128
+T11,2026-05-04,mike,carter,Patrick Mahomes,1355742696706174976
+T11,2026-05-04,carter,mike,2028 round 4 · Jacob franchise,1355742696706174976
+T11,2026-05-04,carter,mike,2026 round 3 · Carter franchise,1355742696706174976
+T11,2026-05-04,carter,mike,2027 round 2 · Carter franchise,1355742696706174976
+T12,2026-07-10,carter,jacob,Jaydon Blue,1380284608855183360
+T12,2026-07-10,jacob,carter,2028 round 3 · Jacob franchise,1380284608855183360
+T13,2026-08-01,carter,mike,Rhamondre Stevenson,1389442656257462272
+T13,2026-08-01,mike,carter,2026 round 1 · Mike franchise,1389442656257462272
+T13,2026-08-01,carter,mike,2026 round 1 · Carter franchise,1389442656257462272
+T14,2026-08-27,jacob,mike,Blake Corum,1397772488838025216
+T14,2026-08-27,jacob,mike,Demond Claiborne,1397772488838025216
+T14,2026-08-27,mike,jacob,Skyler Bell,1397772488838025216
+T14,2026-08-27,mike,jacob,DeVonta Smith,1397772488838025216
+T14,2026-08-27,jacob,mike,Parker Washington,1397772488838025216
+T14,2026-08-27,jacob,mike,2027 round 3 · Jacob franchise,1397772488838025216
+T15,2026-09-12,brett,isaiah,Mike Evans,1403523298037420032
+T15,2026-09-12,isaiah,brett,Kyle Pitts Sr.,1403523298037420032
+T15,2026-09-12,brett,isaiah,2027 round 2 · Brett franchise,1403523298037420032
+T16,2026-09-23,carter,mike,Xavier Worthy,1406437176786309120
+T16,2026-09-23,carter,mike,Courtland Sutton,1406437176786309120
+T16,2026-09-23,mike,carter,Parker Washington,1406437176786309120
+T16,2026-09-23,carter,mike,2028 round 3 · Jacob franchise,1406437176786309120
+T16,2026-09-23,carter,mike,2028 round 2 · Carter franchise,1406437176786309120
+T17,2026-10-10,dan,brendan,Bhayshul Tuten,1414325196642320384
+T17,2026-10-10,brendan,dan,Matthew Golden,1414325196642320384
+T17,2026-10-10,brendan,dan,Rico Dowdle,1414325196642320384
+T17,2026-10-10,dan,brendan,2027 round 1 · Jacob franchise,1414325196642320384
+T18,2026-10-21,dan,troy,Kirk Cousins,1418464722025553920
+T18,2026-10-21,troy,dan,Khalil Shakir,1418464722025553920
+T18,2026-10-21,troy,dan,Brenton Strange,1418464722025553920
+T18,2026-10-21,troy,dan,2027 round 3 · Troy franchise,1418464722025553920
+T19,2026-11-04,elijah,isaiah,Woody Marks,1423374312659775488
+T19,2026-11-04,isaiah,elijah,RJ Harvey,1423374312659775488
+T19,2026-11-04,elijah,isaiah,Lamar Jackson,1423374312659775488
+T19,2026-11-04,isaiah,elijah,DK Metcalf,1423374312659775488
+T19,2026-11-04,elijah,isaiah,Amon-Ra St. Brown,1423374312659775488
+T19,2026-11-04,isaiah,elijah,Ja'Marr Chase,1423374312659775488
+T19,2026-11-04,elijah,isaiah,2027 round 3 · Elijah franchise,1423374312659775488
+T20,2026-11-04,carter,jacob,Bo Nix,1423540939045044224
+T20,2026-11-04,jacob,carter,Devaughn Vele,1423540939045044224
+T20,2026-11-04,jacob,carter,Tyler Shough,1423540939045044224
+T20,2026-11-04,carter,jacob,Jadarian Price,1423540939045044224
+T20,2026-11-04,jacob,carter,DeVonta Smith,1423540939045044224
+T20,2026-11-04,jacob,carter,Isaiah Likely,1423540939045044224
+T20,2026-11-04,carter,jacob,Parker Washington,1423540939045044224
+T20,2026-11-04,jacob,carter,2029 round 3 · Jacob franchise,1423540939045044224
+T20,2026-11-04,carter,jacob,2029 round 2 · Carter franchise,1423540939045044224
+T21,2026-11-12,brendan,jacob,Tyler Warren,1426314032331120640
+T21,2026-11-12,jacob,brendan,Drake London,1426314032331120640
+T21,2026-11-12,brendan,jacob,2028 round 3 · Brendan franchise,1426314032331120640
+T21,2026-11-12,brendan,jacob,2029 round 2 · Brendan franchise,1426314032331120640
