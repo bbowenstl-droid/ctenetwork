@@ -1,0 +1,23 @@
+name: CTE Responsive Foundations
+on:
+  pull_request:
+    paths:
+      - 'css/cte-responsive.css'
+      - 'tests/visual/responsive-fixture.html'
+      - 'tests/components/responsive.test.cjs'
+      - '.github/workflows/cte-responsive.yml'
+  workflow_dispatch:
+jobs:
+  responsive-source-checks:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check responsive layout contract
+        run: node tests/components/responsive.test.cjs
+      - name: Check component renderers
+        run: node tests/components/components.test.cjs
