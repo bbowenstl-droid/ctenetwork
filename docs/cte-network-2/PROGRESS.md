@@ -21,7 +21,29 @@ Updated: 2026-11-14
 
 | 10 — Homepage | Implemented; browser QA in progress | Draft PR #16; Site/Homepage/component/bridge GitHub checks passed; local Site suite passed; live Chromium loaded scores, standings and six playoff positions |
 
-Steps 11–32: Pending implementation or verification.
+| 11 — Contextual homepage | Implemented; QA pending | Provider-boundary context model with offline, draft, recap and postseason tests; existing favorite-team preference retained |
+| 12 — Search/linking | Implemented; QA pending | Search across pages, owners and all loaded stories; deep links validated |
+| 13 — Normalize history | Implemented and live reconciled | New shared model; 152 games, 300 selections, 265 current players and 27 changed picks reconciled |
+| 14 — Owner legacies | Implemented; partial browser QA | Owner/franchise tables, season records, championship/playoff history, rivalries, current roster, articles, drafts and trades; Jeremy browser verified |
+| 15 — Rivalry Center | Implemented; partial browser QA | Scoped meetings, points, closest/largest margins, streaks; Brendan/Jacob browser verified |
+| 16 — Record book | Implemented; QA pending | Scoped records, season leaders, streaks; paired games only |
+| 17 — Fame/shame | Implemented; QA pending | Championships and score/margin extremes derived from actual results |
+| 18 — Weekly awards | Existing system retained and hardened | Correct completion boundary; tied zero-score games no longer imply a win; tests pass |
+| 19 — Pick’em | Source implemented; production blocked | Authenticated shared cards, server deadlines; disabled pending verified Firebase setup |
+| 20 — Pick’em leaderboard | Source implemented; production blocked | Stored-card/result grading with tie pushes, pending outcomes and deterministic ranking |
+| 21 — Polls | Source implemented; production blocked | One vote per owner, validated options, server deadline |
+| 22 — Owner interactions | Source implemented; production blocked | Shared lounge messages/reactions and commissioner moderation |
+| 23 — Trade engine | Implemented and live reconciled | Completed provider events, all weeks, asset replay and explicit unresolved chains |
+| 24 — Trade trees | Implemented; browser QA pending | Interactive connected trade histories, draft conversion and drop boundaries; three-team fixture tests |
+| 25 — Playoff War Room | Implemented; browser QA pending | Seeded bootstrap simulations, schedule validation, four divisions/two wildcards/two byes; conservative proof bounds |
+| 26 — What If? | Implemented; browser QA pending | All-play and symmetric schedule swaps, tested for reversibility and correct game coverage |
+| 27 — Newsroom | Enhanced; browser QA pending | Existing article archive retained; shareable query/category filters |
+| 28 — Media Hub | Implemented; browser QA pending | Carl/Anita archive filters, character pages and pick receipts |
+| 29 — Commissioner Center | Source implemented; production blocked | Server-issued commissioner claim required; round/result/poll tools; no secrets in client |
+| 30 — Performance/accessibility | In progress | Single homepage H1, labelled controls, scrollable tables, lazy history assets; full audit outstanding |
+| 31 — Regression | In progress | Deterministic tests pass except pending rerun after latest changes; emulator initialization currently fails locally before rules evaluation |
+| 32 — Launch | Blocked by release gates | No production merge/deploy; production authorization/backend and full browser gates remain open |
+
 
 ## Release authorization and strategy
 The commissioner authorized completing all remaining steps and deployment after release gates on 2026-11-14. Prior per-step stop instructions are superseded.

@@ -22,3 +22,5 @@ const games=pairs.map(([a,ap,b,bp])=>({ownerA:a,scoreA:ap,ownerB:b,scoreB:bp,mar
 const awards=X.computeAwards([],games,()=>null);const winners=Object.fromEntries(awards.map(a=>[a.key,a.owner]));
 assert.deepEqual(winners,{top:'jacob',blowout:'jacob',close:'isaiah',badbeat:'brendan',low:'elijah'});
 console.log('Weekly awards: stale-leg, finality, season isolation, rollover and award winners passed.');
+
+const zero=X.computeAwards([], [{ownerA:'brendan',ownerB:'jacob',scoreA:0,scoreB:0,margin:0}],()=>null);assert.ok(zero.length);assert.ok(!zero.some(x=>['blowout','close','badbeat'].includes(x.key)),'tied games never award a victory');

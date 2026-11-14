@@ -8,7 +8,11 @@ assert.equal(groups.length,4);
 assert.deepEqual(groups.map(g=>g.title),['Game day','League','History','Media']);
 const hrefs=groups.flatMap(g=>g.items.map(x=>x[0]));
 assert.equal(hrefs.length,new Set(hrefs).size,'duplicate destinations');
-for(const href of hrefs)assert.match(href,/^[a-z-]+\.html$/);
+for(const href of hrefs){
+ assert.match(href,/^[a-z-]+\.html(?:#[a-z-]+)?$/);
+ const [page,fragment]=href.split('#');assert.ok(fs.existsSync(page),'destination exists: '+page);
+ if(fragment)assert.ok(fs.readFileSync(page,'utf8').includes('data-lab="'+fragment+'"'),'explorer destination exists: '+fragment);
+}
 for(const href of ['records.html','league-history.html','rivalries.html','transactions.html','teams.html','news.html','sportsbook.html'])assert.ok(hrefs.includes(href));
 assert.equal(safe('<script>&"'), '&lt;script&gt;&amp;&quot;');
 assert.match(shell,/cte-navigation\.css/);

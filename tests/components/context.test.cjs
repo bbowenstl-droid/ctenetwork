@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict');
+const {context,search}=require('../../js/cte-context.js');
+assert.equal(context(null).kind,'offline');
+assert.equal(context({status:'playoffs_in_progress',settings:{leg:10,last_scored_leg:9,playoff_week_start:15}}).kind,'live');
+assert.equal(context({settings:{leg:10,last_scored_leg:10}}).kind,'recap');
+assert.equal(context({settings:{leg:15,last_scored_leg:14}}).kind,'postseason');
+assert.equal(context({status:'complete',settings:{leg:18}}).kind,'offseason');
+assert.equal(context({status:'pre_draft'}).kind,'draft');
+assert.equal(search([{title:'Brendan trade',author:'Carl'},{title:'Carl preview'}],'TRADE carl').length,1);
+assert.equal(search([{title:'a'}],'<script>').length,0);
+console.log('PASS context boundaries, anomalous provider status, offline and multi-term search');
