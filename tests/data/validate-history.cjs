@@ -111,15 +111,18 @@ async function live() {
     // Sleeper can group preseason trades into week 1. Read all available weeks,
     // dedupe by transaction_id, and never treat pending transactions as completed.
     const tradeIds=new Set();
-    const tradeWeeks=year===2025?18:12;
+    const tradeWeeks=18; // weeks with no transactions return []; covers late-season and playoff trades
     for(let week=1;week<=tradeWeeks;week++) {
       try {
         const rows=await getJson(base+'/league/'+id+'/transactions/'+week);
         for(const t of rows) if(t.type==='trade' && t.status==='complete') tradeIds.add(String(t.transaction_id));
       } catch(e) { failures.push(year+' transaction week '+week+': '+e.message); }
     }
-    console.log('INFO '+year+' unique completed trade IDs: '+tradeIds.size+' (audit reference '+(year===2025?7:14)+')');
-    check(year+' trade count reference',()=>assert.equal(tradeIds.size,year===2025?7:14));
+    // 2025 is closed and must match exactly. 2026 is in season: trades only accumulate,
+    // so the reference is a floor (15 after the Week 10 three-team trade, verified 2026-11-15).
+    const tradeRef=year===2025?7:15;
+    console.log('INFO '+year+' unique completed trade IDs: '+tradeIds.size+' (audit reference '+(year===2025?'':'>=')+tradeRef+')');
+    check(year+' trade count reference',()=>year===2025?assert.equal(tradeIds.size,tradeRef):assert.ok(tradeIds.size>=tradeRef,'2026 completed trades fell below verified floor: '+tradeIds.size+' < '+tradeRef));
   }
 }
 (async()=>{
