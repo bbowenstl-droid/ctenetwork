@@ -118,8 +118,7 @@
     leadEl.innerHTML = `<div><span class="news-badge">NEW • ${esc(lead.kicker)}</span><h2>${esc(lead.title)}</h2><p class="lead-sub">${esc(lead.subtitle)}</p><p>${esc(lead.excerpt)}</p><div class="news-meta">${esc(dateText(lead.date))} • ${esc(lead.category)}</div><span class="read-more">READ FULL STORY →</span></div>`;
     rowEl.innerHTML = older.slice(0, 2).map(article => `<a class="news-card" href="${href(article)}"><span class="news-badge">${esc(article.category)}</span><h3>${esc(article.title)}</h3><p>${esc(article.excerpt)}</p><div class="news-meta">${esc(dateText(article.date))}</div><span class="read-more">READ STORY →</span></a>`).join('');
   }
-  // Deferred scripts run before DOMContentLoaded; wait so later news files have registered.
-  if (document.readyState === 'loading' || (document.currentScript && document.currentScript.defer)) {
+  if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', renderHomeNews, {once: true});
   } else {
     renderHomeNews();
