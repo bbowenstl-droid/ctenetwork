@@ -1,0 +1,61 @@
+name: CTE 2.0 release QA (live data + browsers)
+# Read-only release-gate evidence. Never deploys, never touches Firebase
+# (all Firebase/Google identity traffic is blocked inside the browsers).
+on:
+  workflow_dispatch:
+  push:
+    branches: [release/cte-network-2-completion, qa/**]
+permissions:
+  contents: read
+concurrency:
+  group: cte-release-qa-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  live-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Sleeper trades, statuses and current team names
+        run: mkdir -p qa-out && node tools/qa/sleeper-transactions.cjs qa-out/sleeper-transactions.json | tee qa-out/sleeper-transactions.txt
+      - name: Live history reconciliation
+        run: node tools/audit-cte2-live.cjs 2>&1 | tee qa-out/audit-live.txt; exit ${PIPESTATUS[0]}
+      - name: Live provider validation
+        if: always()
+        run: node tests/data/validate-history.cjs --live 2>&1 | tee qa-out/validate-live.txt; exit ${PIPESTATUS[0]}
+      - name: Summary
+        if: always()
+        run: |
+          { echo '## Live audit'; echo '```'; cat qa-out/audit-live.txt; echo '```'; echo '## Live validation'; echo '```'; tail -40 qa-out/validate-live.txt; echo '```'; echo '## Sleeper trades/teams'; echo '```json'; cat qa-out/sleeper-transactions.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: live-data, path: qa-out, retention-days: 30 }
+
+  browsers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Install Playwright + axe (QA only, not shipped)
+        run: |
+          mkdir -p /tmp/qa && cd /tmp/qa && npm init -y >/dev/null && npm i --no-audit --no-fund playwright@1.49.1 @axe-core/playwright@4.10.1
+          npx playwright install --with-deps chromium webkit
+      - name: Start GitHub Pages-path server
+        run: node tools/qa/serve-pages.cjs 8080 & sleep 1 && curl -fsS -o /dev/null http://localhost:8080/ctenetwork/index.html
+      - name: Browser matrix (Chromium + WebKit, 6 widths, axe)
+        # Copy beside /tmp/qa/node_modules so ESM resolves playwright; cwd stays the repo.
+        run: cp tools/qa/browser-matrix.mjs /tmp/qa/browser-matrix.mjs && OUT=qa-out BASE=http://localhost:8080/ctenetwork/ node /tmp/qa/browser-matrix.mjs
+      - name: Lighthouse
+        if: always()
+        run: bash tools/qa/lighthouse.sh
+      - name: Summary
+        if: always()
+        run: |
+          cat qa-out/browser-matrix.md >> "$GITHUB_STEP_SUMMARY" || true
+          { echo '## Lighthouse'; cat qa-out/lighthouse/summary.md; } >> "$GITHUB_STEP_SUMMARY" || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: browser-qa, path: qa-out, retention-days: 30 }
