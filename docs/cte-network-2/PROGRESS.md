@@ -64,3 +64,9 @@ Preserve the stacked drafts as review history. Continue from Step 10 on a consol
 - Combined local checks: links/assets, 126 JS/inline scripts, 10 component/data suites, history, 31 sportsbook tests, weekly awards, 8 commissioner-tool tests, 8 rules-composer tests, and isolated auth smoke test all passed.
 - Chromium: homepage iframe widths 320/375/390/768/1024/1440 each have one H1 and no document-level horizontal overflow; full-page navigation search and Jeremy site search work; War Room loaded current standings, remaining schedule and simulations. Narrow-frame menu interaction was inconclusive and requires further testing. This is not iPhone Safari certification.
 - Retained the other chat’s Monday November 16 desktop checkpoint for privileged authentication/role setup. Shared participation remains disabled until deployed-rule and end-to-end access tests pass.
+
+## Explorer QA and corrections — 2026-11-15
+- Tested six explorer pages at all six required widths in Chromium (36 combinations); no document overflow or duplicate H1 found. Detailed evidence and limits are in TESTING.md.
+- Fixed trade-tree keyboard focus and return focus, stale asynchronous trade failures overwriting another history view, and the trade retry loading/error state. Added deferred-request regression tests.
+- Corrected current team names in history profiles and search using Sleeper; retained recorded names as search aliases and clearly labeled offline fallback names. Historical ownership records are unchanged.
+- Production remains gated by authenticated Firebase activation, actual iPhone Safari/touch checks, and remaining release audits.

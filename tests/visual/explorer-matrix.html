@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>CTE explorer viewport QA</title>
+<style>body{font:16px system-ui;background:#ddd}iframe{display:block;border:0;height:1000px;margin-bottom:30px}select{padding:12px}</style>
+<h1>Explorer viewport QA</h1><p>Actual Chromium iframe widths; this does not emulate Safari or touch input.</p>
+<label for="page">Page to test</label><select id="page"></select><div id="frames"></div>
+<script>
+const pages=['history-lab.html','playoff-war-room.html','search.html','media-hub.html','league-lounge.html','commissioner-center.html'];
+const select=document.getElementById('page');
+for(const page of pages){const o=document.createElement('option');o.value=page;o.textContent=page;select.append(o);}
+function show(){document.getElementById('frames').replaceChildren();for(const width of [320,375,390,768,1024,1440]){const h=document.createElement('h2');h.textContent=width+' pixels';const f=document.createElement('iframe');f.width=width;f.title=width+' pixels';f.src='../../'+select.value;document.getElementById('frames').append(h,f);}}
+select.addEventListener('change',show);show();
+</script></html>

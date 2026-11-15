@@ -11,5 +11,9 @@
   return {kind:'live',title:'Every week has a story.',copy:'Follow the current matchups, check the title race, and keep the receipts.',href:'game-day.html',action:'Follow the matchups'};
  }
  function search(items,query){const terms=String(query||'').toLowerCase().trim().split(/\s+/).filter(Boolean);return items.filter(x=>terms.every(t=>[x.title,x.excerpt,x.author,x.category,x.keywords].join(' ').toLowerCase().includes(t)));}
- const api={context,search};if(typeof module==='object'&&module.exports)module.exports=api;else root.CTE2Context=api;
+ function ownerSearchItems(config,lookup={}){
+  const live=Object.fromEntries(Object.values(lookup).filter(r=>r.ownerId).map(r=>[r.ownerId,r.sleeperTeamName]));
+  return Object.values(config.owners).map(o=>({title:o.name,excerpt:o.status!=='active'?'Former CTE owner':live[o.id]||(o.currentTeamName?'Recorded team: '+o.currentTeamName:'CTE owner'),href:'team.html?owner='+encodeURIComponent(o.id),category:'Owner',keywords:[o.status,o.currentTeamName||''].join(' ')}));
+ }
+ const api={context,search,ownerSearchItems};if(typeof module==='object'&&module.exports)module.exports=api;else root.CTE2Context=api;
 })(typeof window==='undefined'?globalThis:window);
