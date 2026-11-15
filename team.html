@@ -12,7 +12,7 @@ if(!owner||owner.status!=='active'){
  document.title=`${owner.name} • CTE Network`;
  loadProfile({fresh:true});
 }
-function playerImg(id){return `https://sleepercdn.com/content/nfl/players/${encodeURIComponent(id)}.jpg`}
+function playerImg(id){/* Team defenses use NFL team codes (e.g. BAL), which have no player headshot. */if(/^[A-Z]{2,3}$/.test(String(id)))return `https://sleepercdn.com/images/team_logos/nfl/${encodeURIComponent(String(id).toLowerCase())}.png`;return `https://sleepercdn.com/content/nfl/players/${encodeURIComponent(id)}.jpg`}
 function playerCard(id,players,starter){
  const p=players[id]||{};const name=p.full_name||[p.first_name,p.last_name].filter(Boolean).join(' ')||id;const pos=p.position||'—';const team=p.team||'FA';
  return `<article class="roster-player"><img src="${playerImg(id)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><div class="roster-player-info"><div class="roster-player-name">${esc(name)}</div><div class="roster-player-meta">${esc(pos)} • ${esc(team)}${p.age?' • Age '+esc(p.age):''}</div></div>${starter?'<span class="starter-badge">STARTER</span>':''}</article>`;

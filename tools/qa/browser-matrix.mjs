@@ -29,7 +29,10 @@ const BLOCK = /(firebaseio\.com|firebasedatabase\.app|identitytoolkit\.googleapi
 const IPHONE_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1';
 
 fs.mkdirSync(path.join(OUT, 'shots'), { recursive: true });
-const pages = (process.env.PAGES ? process.env.PAGES.split(',') : fs.readdirSync('.').filter(f => f.endsWith('.html'))).sort();
+// Detail templates are also exercised with real deep-link parameters, as linked from the site.
+const firstArticle = (fs.readFileSync('news-data.js', 'utf8').match(/"id":"([^"]+)"/) || [])[1];
+const DEEP_LINKS = ['article.html?id=' + firstArticle, 'matchup.html?season=2026&week=9&matchup=1', 'rivalry.html?id=duncan', 'team.html?owner=brendan', 'team.html?owner=carter'];
+const pages = (process.env.PAGES ? process.env.PAGES.split(',') : [...fs.readdirSync('.').filter(f => f.endsWith('.html')), ...DEEP_LINKS]).sort();
 
 function contextOptions(engine, width) {
   const mobile = engine === 'webkit' && width <= 390;
@@ -98,11 +101,11 @@ async function checkOne(browser, engine, page, width, { axe, shot }) {
   if (axe && !error) {
     try {
       const r = await new AxeBuilder({ page: tab }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
-      axeResult = r.violations.map(v => ({ id: v.id, impact: v.impact, nodes: v.nodes.length, help: v.help, sample: v.nodes.slice(0, 3).map(n => n.target.join(' ')) }));
+      axeResult = r.violations.map(v => ({ id: v.id, impact: v.impact, nodes: v.nodes.length, help: v.help, sample: v.nodes.slice(0, 6).map(n => n.target.join(' ') + (v.id === 'color-contrast' && n.any && n.any[0] && n.any[0].data ? ` [${n.any[0].data.fgColor} on ${n.any[0].data.bgColor} = ${n.any[0].data.contrastRatio}]` : '')) }));
     } catch (e) { axeResult = [{ id: 'axe-error', impact: 'unknown', nodes: 0, help: String(e.message || e).slice(0, 200), sample: [] }]; }
   }
   if (shot && !error) {
-    try { await tab.screenshot({ path: path.join(OUT, 'shots', `${engine}-${width}-${page.replace('.html', '')}.png`), fullPage: false }); } catch {}
+    try { await tab.screenshot({ path: path.join(OUT, 'shots', `${engine}-${width}-${page.replace('.html', '').replace(/[^a-z0-9-]+/gi, '_')}.png`), fullPage: false }); } catch {}
   }
   await ctx.close();
   return { engine, page, width, status, error, loadMs, consoleErrors: [...new Set(consoleErrors)], pageErrors: [...new Set(pageErrors)], sameOriginFailures: [...new Set(sameOriginFailures)], externalFailures: [...new Set(externalFailures)], blockedFirebase: [...new Set(blocked)].length, ...dom, axe: axeResult };
@@ -185,4 +188,8 @@ for (const m of menus) md += `- ${m.engine} ${m.width}: **${m.pass ? 'PASS' : 'F
 md += '\n## Load times (median ms per engine)\n\n';
 for (const e of Object.keys(browsers)) { const t = results.filter(r => r.engine === e).map(r => r.loadMs).sort((a, b) => a - b); md += `- ${e}: ${t[Math.floor(t.length / 2)]} ms (includes ${SETTLE_MS} ms settle)\n`; }
 fs.writeFileSync(path.join(OUT, 'browser-matrix.md'), md);
-console.log(md.slice(0, 4000));
+console.log(md);
+// Full axe detail (targets) for triage from CI logs.
+console.log('\n## Axe detail');
+const seen = new Set();
+for (const r of results.filter(r => r.axe)) for (const v of r.axe) { const k = r.page + v.id + r.engine; if (seen.has(k)) continue; seen.add(k); console.log(`${r.page} [${r.engine} ${r.width}] ${v.id}: ${v.sample.join(' || ')}`); }

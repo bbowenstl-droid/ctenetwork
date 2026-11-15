@@ -15,7 +15,7 @@ function ownerForRoster(id){const m=lookup?.[String(id)];const o=CTE_UI.owner(m?
 function player(id){return players?.[String(id)]||null}
 function playerName(id){const p=player(id);if(!p)return `Player ${id}`;return p.full_name||[p.first_name,p.last_name].filter(Boolean).join(' ')||p.search_full_name||`Player ${id}`}
 function playerMeta(id){const p=player(id);if(!p)return '';return [p.position,p.team].filter(Boolean).join(' • ')}
-function playerPhoto(id){return `https://sleepercdn.com/content/nfl/players/${encodeURIComponent(id)}.jpg`}
+function playerPhoto(id){/* Team defenses use NFL team codes (e.g. BAL), which have no player headshot. */if(/^[A-Z]{2,3}$/.test(String(id)))return `https://sleepercdn.com/images/team_logos/nfl/${encodeURIComponent(String(id).toLowerCase())}.png`;return `https://sleepercdn.com/content/nfl/players/${encodeURIComponent(id)}.jpg`}
 function txDate(ms){if(!ms)return '';return new Date(Number(ms)).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}
 function typeLabel(t){return t==='trade'?'Trade':t==='waiver'?'Waiver Claim':t==='free_agent'?'Free Agency':String(t||'Transaction').replaceAll('_',' ')}
 function typeIcon(t){return t==='trade'?'⇄':t==='waiver'?'✓':'＋'}
