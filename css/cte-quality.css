@@ -24,19 +24,24 @@ body:is(.n-app,.n-legacy) :where(.n-main,.league-shell,main) { min-width:0; }
    overrides only change colours; layout is untouched. Remove this block to
    roll back. Ratios are against the measured background.
    --------------------------------------------------------------------------- */
-body:is(.n-app,.n-legacy) { --n-muted:#686b71; }                                   /* 4.91 on #f5f5f7 */
-body:is(.n-app,.n-legacy) :is(.n-footer,.footer) { color:#686b71; }                /* was 2.75–3.01 */
-body:is(.n-app,.n-legacy) .n-navigation > :is(a,button) { color:#686b71; }        /* mobile tab labels, was 3.56 */
+body:is(.n-app,.n-legacy) { --n-muted:#5f6268; --n-faint:#5f6268; }                 /* >=5.0 on #e8e8ed–#f5f5f7 */
+body:is(.n-app,.n-legacy) :is(.n-footer,.footer) { color:#5f6268; }                /* was 2.75–3.01 */
+body:is(.n-app,.n-legacy) .n-navigation > :is(a,button) { color:#5f6268; }        /* mobile tab labels, was 3.56 */
 body:is(.n-app,.n-legacy) .n-score-team:nth-of-type(3) .n-avatar { color:#8a5248; } /* 5.27 on #f5eae7 */
-body:is(.n-app,.n-legacy) :is(.n-story-number,.n-rank,.n-points) { color:#686b71; }
+body:is(.n-app,.n-legacy) :is(.n-story-number,.n-rank,.n-points) { color:#5f6268; }
 body:is(.n-app,.n-legacy) .n-segments button:not(.selected) { color:#5c5f66; }     /* 5.24 on #e8e8ed */
-body:is(.n-app,.n-legacy) .carl-stat span { color:#686b71; }
+body:is(.n-app,.n-legacy) .carl-stat span { color:#5f6268; }
 body:is(.n-app,.n-legacy) .rival-stat span { color:#62666e; }                      /* 5.16 on #f2f2f5 */
 body:is(.n-app,.n-legacy) .bk-colhead { color:#8d94a0; }                           /* sportsbook dark grid, 5.88 */
 body:is(.n-app,.n-legacy) .tx-card .tx-status { color:#9aa0aa; }                  /* dark transaction cards, 6.9 */
+body:is(.n-app,.n-legacy) .tx-page-sub { color:#5f6268; }
+body:is(.n-app,.n-legacy) .tx-pager-info { color:#9aa0aa; }                        /* dark pager, 7.2 */
+/* Sportsbook is a dark product: shell footer and tab labels need light grey there. */
+body.bk-page :is(.n-footer,.footer) { color:#9aa0aa; }                             /* 7.29 on #0d0f13 */
+@media (min-width:821px) { body.bk-page .n-navigation > :is(a,button):not([aria-current=page]) { color:#9aa0aa; } } /* dark desktop rail */
 /* Matchup detail on light cards */
 body:is(.n-app,.n-legacy) .matchup-week { color:#8a6414; }                         /* was gold 1.55 */
-body:is(.n-app,.n-legacy) .lineup-player span { color:#686b71; }
+body:is(.n-app,.n-legacy) .lineup-player span { color:#5f6268; }
 /* Team profile activity badges on white */
 body:is(.n-app,.n-legacy) .profile-activity .activity-type { color:#2f5fc4; }
 body:is(.n-app,.n-legacy) .profile-activity .activity-type.waiver { color:#1f7a43; }

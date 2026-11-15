@@ -24,7 +24,7 @@ if(file==='article.html'){const progress=document.createElement('div');progress.
 
 // Step 9: progressive navigation directory, available on every page using this shell.
 const cteNavStyle=document.createElement('link');cteNavStyle.rel='stylesheet';cteNavStyle.href='css/cte-navigation.css?v=1';document.head.append(cteNavStyle);
-const cteQualityStyle=document.createElement('link');cteQualityStyle.rel='stylesheet';cteQualityStyle.href='css/cte-quality.css?v=2';document.head.append(cteQualityStyle);
+const cteQualityStyle=document.createElement('link');cteQualityStyle.rel='stylesheet';cteQualityStyle.href='css/cte-quality.css?v=3';document.head.append(cteQualityStyle);
 const cteNavScript=document.createElement('script');cteNavScript.src='js/cte-navigation.js?v=1';document.body.append(cteNavScript);
 if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw-v22.js').catch(()=>{}));
 })();

@@ -2,7 +2,7 @@ const fs=require('node:fs');
 const {initializeTestEnvironment,assertFails,assertSucceeds}=require('@firebase/rules-unit-testing');
 const {ref,set,get}=require('firebase/database');
 (async()=>{
- const env=await initializeTestEnvironment({projectId:'demo-cte-network',database:{host:'127.0.0.1',port:9000,rules:fs.readFileSync('../../security/participation.rules.json','utf8')}});
+ const env=await initializeTestEnvironment({projectId:'demo-cte-network',database:{host:'127.0.0.1',port:9000,rules:fs.readFileSync(process.env.CTE_RULES||'../../security/participation.rules.json','utf8')}});
  try{
  const anon=env.unauthenticatedContext().database(),brendan=env.authenticatedContext('uid-b',{ownerId:'brendan'}).database(),jacob=env.authenticatedContext('uid-j',{ownerId:'jacob'}).database(),outsider=env.authenticatedContext('uid-x').database(),admin=env.authenticatedContext('uid-c',{ownerId:'brendan',commissioner:true}).database();
  const future=Date.now()+3600000,past=Date.now()-3600000,matchups=Object.fromEntries(Array.from({length:6},(_,i)=>[String(i+1),{a:'brendan',b:'jacob'}]));
@@ -47,6 +47,27 @@ const {ref,set,get}=require('firebase/database');
  await assertSucceeds(set(ref(brendan,'v2/votes/open/brendan'),'a'));await assertFails(set(ref(jacob,'v2/votes/open/brendan'),'b'));await assertFails(set(ref(brendan,'v2/votes/open/brendan'),'z'));await assertFails(set(ref(brendan,'v2/votes/closed/brendan'),'a'));
  await assertSucceeds(set(ref(brendan,'v2/comments/week10/brendan'),{text:'A receipt',updatedAt:Date.now()}));await assertFails(set(ref(jacob,'v2/comments/week10/brendan'),{text:'Forged',updatedAt:Date.now()}));await assertFails(set(ref(brendan,'v2/comments/week10/brendan'),{text:'x'.repeat(501),updatedAt:Date.now()}));await assertSucceeds(set(ref(admin,'v2/comments/week10/brendan'),null));
  await assertSucceeds(set(ref(brendan,'v2/reactions/week10/brendan'),'laugh'));await assertFails(set(ref(brendan,'v2/reactions/week10/brendan'),'bad'));await assertFails(set(ref(brendan,'v2/claims/uid-b/commissioner'),true));
- console.log('PASS participation rules: unauthenticated/unassigned denial, owner isolation, hidden picks, server locks, valid choices, commissioner-only results, immutable closed rounds, polls, moderation, size limits and role escalation denial.');
+ // 2026-11-15 additions: former owners, claim type confusion, outsider/anonymous lounge and poll access.
+ const jeremy=env.authenticatedContext('uid-old1',{ownerId:'jeremy'}).database(),tyler=env.authenticatedContext('uid-old2',{ownerId:'tyler'}).database();
+ const stringAdmin=env.authenticatedContext('uid-s',{ownerId:'mike',commissioner:'true'}).database();
+ await assertFails(set(ref(jeremy,'v2/picks/open/jeremy/1'),'brendan'));
+ await assertFails(set(ref(tyler,'v2/votes/open/tyler'),'a'));
+ await assertFails(set(ref(tyler,'v2/comments/week10/tyler'),{text:'Former owner',updatedAt:Date.now()}));
+ await assertFails(set(ref(jeremy,'v2/reactions/week10/jeremy'),'fire'));
+ await assertFails(set(ref(stringAdmin,'v2/rounds/string-claim'),{season:2026,week:11,lockAt:future,matchups}));
+ await assertFails(set(ref(stringAdmin,'v2/results/closed/2'),'brendan'));
+ await assertFails(set(ref(stringAdmin,'v2/comments/week10/brendan'),null));
+ for(const path of ['v2/polls','v2/votes','v2/results','v2/comments','v2/reactions'])await assertFails(get(ref(anon,path)));
+ for(const path of ['v2/polls','v2/votes','v2/results','v2/comments','v2/reactions'])await assertFails(get(ref(outsider,path)));
+ await assertFails(set(ref(outsider,'v2/votes/open/brendan'),'a'));
+ await assertFails(set(ref(outsider,'v2/comments/week10/outsider'),{text:'hi',updatedAt:Date.now()}));
+ await assertFails(set(ref(anon,'v2/reactions/week10/brendan'),'fire'));
+ await assertFails(set(ref(brendan,'v2/comments/week10/brendan'),{text:'Backdated',updatedAt:Date.now()-3600000}));
+ await assertFails(set(ref(brendan,'v2/comments/bad thread!/brendan'),{text:'x',updatedAt:Date.now()}));
+ await assertFails(set(ref(jacob,'v2/comments/week10/brendan'),null));
+ await assertFails(set(ref(admin,'v2/polls/one-option'),{question:'One?',options:{a:'Only'},closeAt:future}));
+ await assertFails(set(ref(admin,'v2/polls/past'),{question:'Past?',options:{a:'Yes',b:'No'},closeAt:past}));
+ await assertFails(set(ref(admin,'v2/rounds/past-lock'),{season:2026,week:11,lockAt:past,matchups}));
+ console.log('PASS participation rules: unauthenticated/unassigned denial, owner isolation, hidden picks, server locks, valid choices, commissioner-only results, immutable closed rounds, polls, moderation, size limits and role escalation denial; former owners, string-typed commissioner claims, outsider/anonymous lounge and poll access denied.');
  }finally{await env.cleanup();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

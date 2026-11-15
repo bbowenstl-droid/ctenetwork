@@ -93,7 +93,8 @@ async function checkOne(browser, engine, page, width, { axe, shot }) {
         scrollWidth: de.scrollWidth, clientWidth: de.clientWidth, overflow: de.scrollWidth > de.clientWidth + 1, overflowCulprits: wide,
         brokenImages: imgs, duplicateIds: Object.entries(ids).filter(([, n]) => n > 1).map(([k]) => k).slice(0, 10),
         hasMain: !!document.querySelector('main,[role=main]'), viewportMeta: !!document.querySelector('meta[name=viewport]'),
-        bodyTextLength: (document.body && document.body.innerText || '').length
+        bodyTextLength: (document.body && document.body.innerText || '').length,
+        heights: Object.fromEntries(['#playoffField', '#leagueStandings', '#powerRankings', '.cte-home-pulse', '#warOutput', '#bkPersonal'].map(q => [q, document.querySelector(q)]).filter(([, el]) => el).map(([q, el]) => [q, Math.round(el.getBoundingClientRect().height)]))
       };
     });
   } catch (e) { error = error || String(e.message || e).slice(0, 300); }
@@ -189,6 +190,8 @@ md += '\n## Load times (median ms per engine)\n\n';
 for (const e of Object.keys(browsers)) { const t = results.filter(r => r.engine === e).map(r => r.loadMs).sort((a, b) => a - b); md += `- ${e}: ${t[Math.floor(t.length / 2)]} ms (includes ${SETTLE_MS} ms settle)\n`; }
 fs.writeFileSync(path.join(OUT, 'browser-matrix.md'), md);
 console.log(md);
+console.log('\n## Rendered heights (for layout-shift reservations)');
+for (const r of results.filter(r => r.heights && Object.keys(r.heights).length && r.engine === 'chromium')) console.log(`${r.page} ${r.width}: ${JSON.stringify(r.heights)}`);
 // Full axe detail (targets) for triage from CI logs.
 console.log('\n## Axe detail');
 const seen = new Set();

@@ -21,6 +21,9 @@ jobs:
       - run: node tools/test-sportsbook.cjs
       - run: node tools/test-weekly-awards.cjs
       - run: python research/state-of-union/verify.py
+      - run: python tools/test-commissioner-claims.py
+      - run: python tools/test-owner-claims.py
+      - run: python tools/test-stage-v2-firebase-rules.py
   participation-security:
     runs-on: ubuntu-latest
     steps:

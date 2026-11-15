@@ -26,6 +26,7 @@ for f in "$OUT"/*.json; do node -e '
   const r=require(process.argv[1]);const a=r.audits;const n=process.argv[1].split("/").pop();
   const ls=(a["layout-shift-elements"]||a["layout-shifts"]||{}).details;const lcp=(a["largest-contentful-paint-element"]||{}).details;
   const pick=d=>d&&d.items?d.items.slice(0,4).map(i=>(i.node&&i.node.selector||i.items&&JSON.stringify(i.items[0]&&i.items[0].node&&i.items[0].node.selector)||"?")+(i.score!=null?" score="+(+i.score).toFixed(3):"")).join(" | "):"-";
+  const rb=(a["render-blocking-resources"]||{}).details;const rbl=rb&&rb.items?rb.items.map(i=>i.url.replace(/^https?:\/\/[^/]+/,"")+" "+Math.round(i.wastedMs||0)+"ms").slice(0,8).join(", "):"";
   const big=["render-blocking-resources","unused-javascript","total-byte-weight"].map(k=>a[k]?k+"="+(a[k].displayValue||""):"").join("; ");
-  console.log(n+"\n  shifts: "+pick(ls)+"\n  lcp: "+pick(lcp&&lcp.items&&lcp.items[0]&&lcp.items[0].items?lcp.items[0]:lcp)+"\n  "+big);
+  console.log(n+"\n  shifts: "+pick(ls)+"\n  lcp: "+pick(lcp&&lcp.items&&lcp.items[0]&&lcp.items[0].items?lcp.items[0]:lcp)+"\n  "+big+"\n  blocking: "+rbl);
 ' "$PWD/$f"; done
