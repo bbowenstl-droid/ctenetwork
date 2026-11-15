@@ -28,5 +28,5 @@ for f in "$OUT"/*.json; do node -e '
   const pick=d=>d&&d.items?d.items.slice(0,4).map(i=>(i.node&&i.node.selector||i.items&&JSON.stringify(i.items[0]&&i.items[0].node&&i.items[0].node.selector)||"?")+(i.score!=null?" score="+(+i.score).toFixed(3):"")).join(" | "):"-";
   const rb=(a["render-blocking-resources"]||{}).details;const rbl=rb&&rb.items?rb.items.map(i=>i.url.replace(/^https?:\/\/[^/]+/,"")+" "+Math.round(i.wastedMs||0)+"ms").slice(0,8).join(", "):"";
   const big=["render-blocking-resources","unused-javascript","total-byte-weight"].map(k=>a[k]?k+"="+(a[k].displayValue||""):"").join("; ");
-  console.log(n+"\n  shifts: "+pick(ls)+"\n  lcp: "+pick(lcp&&lcp.items&&lcp.items[0]&&lcp.items[0].items?lcp.items[0]:lcp)+"\n  "+big+"\n  blocking: "+rbl);
+  console.log(n+"\n  shifts: "+pick(ls)+"\n  lcp: "+pick(lcp&&lcp.items&&lcp.items[0]&&lcp.items[0].items?lcp.items[0]:lcp)+"\n  "+big+"\n  blocking: "+rbl+"\n  a11y-fail: "+(r.categories.accessibility.auditRefs||[]).map(x=>a[x.id]).filter(x=>x&&x.score===0).map(x=>x.id+"("+((x.details&&x.details.items||[]).slice(0,3).map(i=>i.node&&i.node.selector).join(" | "))+")").join(", "));
 ' "$PWD/$f"; done
