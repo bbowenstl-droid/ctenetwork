@@ -33,6 +33,8 @@ const {ref,set,get}=require('firebase/database');
  await assertFails(set(ref(brendan,'v2/rounds/forged'),{season:2026,week:10,lockAt:future,matchups}));
  await assertSucceeds(set(ref(admin,'v2/rounds/new'),{season:2026,week:10,lockAt:future,matchups}));
  await assertFails(set(ref(admin,'v2/rounds/closed/lockAt'),future));
+ await assertFails(set(ref(admin,'v2/rounds/fractional-season'),{season:2026.5,week:10,lockAt:future,matchups}));
+ await assertFails(set(ref(admin,'v2/rounds/fractional-week'),{season:2026,week:10.5,lockAt:future,matchups}));
  // Once published, even commissioners cannot change matchup choices, lock time,
  // erase an open round or change a poll after votes could be cast.
  await assertFails(set(ref(admin,'v2/rounds/open/matchups/1/a'),'mike'));

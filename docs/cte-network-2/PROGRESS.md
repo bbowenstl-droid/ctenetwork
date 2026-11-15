@@ -41,8 +41,8 @@ Updated: 2026-11-14
 | 28 — Media Hub | Implemented; browser QA pending | Carl/Anita archive filters, character pages and pick receipts |
 | 29 — Commissioner Center | Source implemented; production blocked | Server-issued commissioner claim required; round/result/poll tools; no secrets in client |
 | 30 — Performance/accessibility | Partial hardening implemented; full audit pending | Shared menu state/focus, reduced motion, forced colors, Sleeper preconnect and quality CI; full Lighthouse/axe/device audits outstanding |
-| 31 — Regression | In progress | Deterministic tests pass except pending rerun after latest changes; emulator initialization currently fails locally before rules evaluation |
-| 32 — Launch | Blocked by release gates | No production merge/deploy; production authorization/backend and full browser gates remain open |
+| 31 — Regression | In progress | Combined-branch deterministic tests pass; security emulator and legacy-rule preservation passed GitHub CI at 7a58ca1; full device regression remains pending |
+| 32 — Launch | Blocked by release gates | CTE 2.0 not deployed; isolated auth smoke page from main retained. Backend activation and full browser gates remain open |
 
 
 ## Release authorization and strategy
@@ -56,3 +56,11 @@ Preserve the stacked drafts as review history. Continue from Step 10 on a consol
 - Browser Chromium: current Week 10, six live matchups, all six playoff positions loaded. Full viewport matrix remains pending.
 - Fixed duplicate H1 detected during review.
 - Firebase repository rules contain PASTE_DEVICE_ID; deployed authorization and account access remain unverified. Do not claim multi-user/admin readiness.
+
+## Cross-chat reconciliation — 2026-11-14 (Central)
+- Adopted `quality/cte-network-2-mobile-prep` at `7a58ca18ae0585db3d86a9b4df34f1997db62e47`, which includes this chat’s completed feature work plus the other chat’s quality, claims tooling and security hardening.
+- Merged current main’s isolated auth check without conflicts, preserving both histories. No production branch or deployed Firebase rules changed.
+- Confirmed GitHub runs 43639972604 (Site), 43639972579 (release/security), and 43639972608 (legacy-rule preservation) passed on that source commit.
+- Combined local checks: links/assets, 126 JS/inline scripts, 10 component/data suites, history, 31 sportsbook tests, weekly awards, 8 commissioner-tool tests, 8 rules-composer tests, and isolated auth smoke test all passed.
+- Chromium: homepage iframe widths 320/375/390/768/1024/1440 each have one H1 and no document-level horizontal overflow; full-page navigation search and Jeremy site search work; War Room loaded current standings, remaining schedule and simulations. Narrow-frame menu interaction was inconclusive and requires further testing. This is not iPhone Safari certification.
+- Retained the other chat’s Monday November 16 desktop checkpoint for privileged authentication/role setup. Shared participation remains disabled until deployed-rule and end-to-end access tests pass.

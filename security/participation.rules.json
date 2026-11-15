@@ -9,10 +9,10 @@
           ".write": "auth != null && auth.token.commissioner === true && !data.exists() && newData.exists()",
           ".validate": "newData.hasChildren(['season','week','lockAt','matchups'])",
           "season": {
-            ".validate": "newData.isNumber() && newData.val() >= 2026 && newData.val() <= 2100"
+            ".validate": "newData.isNumber() && newData.val() >= 2026 && newData.val() <= 2100 && newData.val() % 1 === 0"
           },
           "week": {
-            ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 18"
+            ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 18 && newData.val() % 1 === 0"
           },
           "lockAt": {
             ".validate": "newData.isNumber() && newData.val() > now"
