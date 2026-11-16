@@ -5,6 +5,8 @@ root = Path(__file__).resolve().parent.parent
 problems = []
 for page in sorted(root.glob('*.html')):
     text = page.read_text(encoding='utf-8')
+    # <base href="/ctenetwork/"> (404.html) is the Pages project root, not a file.
+    text = re.sub(r'<base href="/ctenetwork/">', '', text)
     for ref in re.findall(r'(?:href|src)="([^"#]+)"', text):
         if ref.startswith(('http:', 'https:', 'mailto:', 'data:', 'tel:')) or '${' in ref:
             continue

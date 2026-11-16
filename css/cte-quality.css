@@ -74,3 +74,27 @@ body.n-app #leagueStandings:has(> .n-skeleton) { min-height:1105px; }
   body.n-app #leagueStandings:has(> .n-skeleton) { min-height:1160px; }
 }
 @media (max-width:340px) { body.n-app #leagueStandings:has(> .n-skeleton) { min-height:1500px; } }
+
+/* Article share button (share/<id>.html carries the Facebook preview card). */
+body:is(.n-app,.n-legacy) .cte-share-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px; }
+body:is(.n-app,.n-legacy) .cte-share-btn { min-height:44px; }
+body:is(.n-app,.n-legacy) .cte-share-status { font-size:14px; color:#5f6268; overflow-wrap:anywhere; }
+
+/* Draft Capital page */
+body.n-app .cap-summary { margin:0 0 18px; color:var(--n-ink,#151619); }
+body.n-app .cap-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+body.n-app .cap-team { background:#fff; border:1px solid var(--n-line,#e4e5e8); border-radius:18px; padding:16px 18px; min-width:0; }
+body.n-app .cap-team header { display:flex; flex-direction:column; gap:2px; }
+body.n-app .cap-team h3 { margin:0; font-size:19px; letter-spacing:-.02em; }
+body.n-app .cap-team h3 a { color:inherit; text-decoration:none; }
+body.n-app .cap-team h3 a:hover { text-decoration:underline; }
+body.n-app .cap-team-name, body.n-app .cap-out { color:#5f6268; font-size:13px; overflow-wrap:anywhere; }
+body.n-app .cap-count { margin:10px 0 8px; font-size:14px; }
+body.n-app .cap-picks { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:6px; }
+body.n-app .cap-pick { display:inline-flex; align-items:baseline; gap:5px; padding:5px 10px; border-radius:999px; background:#f2f2f5; font-size:13px; font-weight:650; color:#151619; }
+body.n-app .cap-pick.cap-first { background:#f6e7c1; color:#5c4410; }
+body.n-app .cap-pick.cap-acquired { box-shadow:inset 0 0 0 2px #151619; }
+body.n-app .cap-via { font-weight:500; color:#4a4d53; }
+body.n-app .cap-first .cap-via { color:#5c4410; }
+body.n-app .cap-out { margin:10px 0 0; }
+body.n-app #capitalBoard:has(> .n-skeleton) { min-height:900px; }
