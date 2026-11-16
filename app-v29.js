@@ -28,6 +28,6 @@ const cteGlow=document.querySelector('link[href*="css/cte-theme.css"]');
 const cteAddStyle=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;if(cteGlow)cteGlow.before(l);else document.head.append(l);return l};
 cteAddStyle('css/cte-navigation.css?v=1');cteAddStyle('css/cte-quality.css?v=6');
 if(!cteGlow){const l=document.createElement('link');l.rel='stylesheet';l.href='css/cte-theme.css?v=1';document.head.append(l)}
-const cteNavScript=document.createElement('script');cteNavScript.src='js/cte-navigation.js?v=3';document.body.append(cteNavScript);
+const cteNavScript=document.createElement('script');cteNavScript.src='js/cte-navigation.js?v=4';document.body.append(cteNavScript);
 if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw-v22.js').catch(()=>{}));
 })();
