@@ -1,0 +1,104 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//CTE Network//League Key Dates//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:CTE League
+X-WR-CALDESC:Key dates for the CTE dynasty fantasy football league.
+REFRESH-INTERVAL;VALUE=DURATION:P1D
+X-PUBLISHED-TTL:P1D
+BEGIN:VEVENT
+UID:cte-2026-rookie-draft@ctenetwork
+DTSTAMP:20261116T000000Z
+DTSTART;VALUE=DATE:20260801
+DTEND;VALUE=DATE:20260802
+SUMMARY:CTE: 2026 rookie draft
+DESCRIPTION:Four-round rookie draft held in Sleeper.\nSource: Sleeper draft
+  record.
+TRANSP:TRANSPARENT
+URL:https://bbowenstl-droid.github.io/ctenetwork/calendar.html
+END:VEVENT
+BEGIN:VEVENT
+UID:cte-2026-kickoff@ctenetwork
+DTSTAMP:20261116T000000Z
+DTSTART;VALUE=DATE:20260909
+DTEND;VALUE=DATE:20260915
+SUMMARY:CTE: Week 1 — season kicks off
+DESCRIPTION:CTE League Week 1.\nSource: NFL schedule.
+TRANSP:TRANSPARENT
+URL:https://bbowenstl-droid.github.io/ctenetwork/calendar.html
+END:VEVENT
+BEGIN:VEVENT
+UID:cte-2026-trade-deadline@ctenetwork
+DTSTAMP:20261116T000000Z
+DTSTART;VALUE=DATE:20261123
+DTEND;VALUE=DATE:20261124
+SUMMARY:CTE: Trade deadline
+DESCRIPTION:Trading closes in Sleeper when the final Week 11 game ends. Get
+  deals accepted before then.\nSource: Sleeper league setting: trade deadli
+ ne Week 11.
+TRANSP:TRANSPARENT
+URL:https://bbowenstl-droid.github.io/ctenetwork/calendar.html
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:CTE: Trade deadline
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:cte-2026-regular-season-ends@ctenetwork
+DTSTAMP:20261116T000000Z
+DTSTART;VALUE=DATE:20261210
+DTEND;VALUE=DATE:20261215
+SUMMARY:CTE: Week 14 — regular season finale
+DESCRIPTION:Last week before the playoff field is locked.\nSource: Sleeper 
+ league setting: playoffs start Week 15.
+TRANSP:TRANSPARENT
+URL:https://bbowenstl-droid.github.io/ctenetwork/calendar.html
+END:VEVENT
+BEGIN:VEVENT
+UID:cte-2026-playoffs-round-1@ctenetwork
+DTSTAMP:20261116T000000Z
+DTSTART;VALUE=DATE:20261217
+DTEND;VALUE=DATE:20261222
+SUMMARY:CTE: Week 15 — Playoffs begin
+DESCRIPTION:6-team playoff field; seeds 1 and 2 have a bye. The consolation
+  (Toilet Bowl) bracket starts the same week.\nSource: Sleeper league setti
+ ngs: 6 playoff teams from Week 15.
+TRANSP:TRANSPARENT
+URL:https://bbowenstl-droid.github.io/ctenetwork/calendar.html
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:CTE: Week 15 — Playoffs begin
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:cte-2026-playoffs-round-2@ctenetwork
+DTSTAMP:20261116T000000Z
+DTSTART;VALUE=DATE:20261224
+DTEND;VALUE=DATE:20261229
+SUMMARY:CTE: Week 16 — Playoff semifinals
+DESCRIPTION:Winners play for the championship next week.\nSource: Sleeper l
+ eague settings: 6 playoff teams from Week 15.
+TRANSP:TRANSPARENT
+URL:https://bbowenstl-droid.github.io/ctenetwork/calendar.html
+END:VEVENT
+BEGIN:VEVENT
+UID:cte-2026-playoffs-round-3@ctenetwork
+DTSTAMP:20261116T000000Z
+DTSTART;VALUE=DATE:20261231
+DTEND;VALUE=DATE:20270105
+SUMMARY:CTE: Week 17 — CTE Championship
+DESCRIPTION:Championship game\, third-place game and the end of the Toilet 
+ Bowl bracket.\nSource: Sleeper league settings: 6 playoff teams from Week 
+ 15.
+TRANSP:TRANSPARENT
+URL:https://bbowenstl-droid.github.io/ctenetwork/calendar.html
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:CTE: Week 17 — CTE Championship
+TRIGGER:-PT15H
+END:VALARM
+END:VEVENT
+END:VCALENDAR

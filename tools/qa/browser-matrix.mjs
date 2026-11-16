@@ -19,6 +19,10 @@ import { chromium, webkit } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
+// SLEEPER_FIXTURES=capture|sunday|final|down answers Sleeper from the frozen capture (tools/qa/sleeper-fixtures.cjs)
+// for environments that cannot reach api.sleeper.app. Unset = live Sleeper, as in CI.
+const sleeperFixtures = process.env.SLEEPER_FIXTURES ? createRequire(path.resolve('tools/qa/browser-matrix.mjs'))('./sleeper-fixtures.cjs') : null;
 
 const BASE = process.env.BASE || 'http://localhost:8080/ctenetwork/';
 const OUT = process.env.OUT || 'qa-out';
@@ -45,12 +49,13 @@ function contextOptions(engine, width) {
 
 async function checkOne(browser, engine, page, width, { axe, shot }) {
   const ctx = await browser.newContext(contextOptions(engine, width));
+  if (sleeperFixtures) await sleeperFixtures.route(ctx, { mode: process.env.SLEEPER_FIXTURES });
   const tab = await ctx.newPage();
   const consoleErrors = [], pageErrors = [], sameOriginFailures = [], externalFailures = [], blocked = [];
   await tab.route('**/*', route => {
     const u = route.request().url();
     if (BLOCK.test(u)) { blocked.push(u.split('?')[0]); return route.abort('blockedbyclient'); }
-    return route.continue();
+    return sleeperFixtures ? route.fallback() : route.continue();
   });
   tab.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text().slice(0, 300)); });
   tab.on('pageerror', e => pageErrors.push(String(e.message || e).slice(0, 300)));
@@ -145,7 +150,10 @@ async function pool(items, n, fn) {
   return results;
 }
 
-const browsers = { chromium: await chromium.launch(), webkit: await webkit.launch() };
+// ENGINES=chromium runs where the WebKit build is not installed; default is both, as in CI.
+const engineTypes = { chromium, webkit };
+const browsers = {};
+for (const name of (process.env.ENGINES || 'chromium,webkit').split(',')) browsers[name] = await engineTypes[name].launch();
 const jobs = [];
 for (const engine of Object.keys(browsers)) for (const page of pages) for (const width of WIDTHS) {
   const axe = (engine === 'webkit' && width === 390) || (engine === 'chromium' && width === 1440);

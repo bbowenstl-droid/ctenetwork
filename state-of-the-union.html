@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0c0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest?v=31">
+<title>State of the Union • CTE Network</title>
+<meta name="description" content="The whole CTE League, live from Sleeper: every champion, every trade and what became of it, every franchise's story, and the record book.">
+<link rel="canonical" href="https://bbowenstl-droid.github.io/ctenetwork/state-of-the-union.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CTE Network">
+<meta property="og:title" content="CTE State of the Union">
+<meta property="og:description" content="Every champion, every trade and what became of it, every franchise's story, and the record book. Live from Sleeper.">
+<meta property="og:url" content="https://bbowenstl-droid.github.io/ctenetwork/state-of-the-union.html">
+<meta property="og:image" content="https://bbowenstl-droid.github.io/ctenetwork/sotu/state-of-the-union.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CTE State of the Union">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://bbowenstl-droid.github.io/ctenetwork/sotu/state-of-the-union.jpg">
+<link rel="preconnect" href="https://api.sleeper.app" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&family=Geist+Mono:wght@500;600&display=swap"></noscript>
+<link rel="stylesheet" href="network-v29.css?v=38">
+<link rel="stylesheet" href="taste-v40.css?v=42">
+<link rel="stylesheet" href="css/cte-tokens.css?v=2">
+<link rel="stylesheet" href="css/cte-theme.css?v=1"><link rel="stylesheet" href="css/cte-sotu.css?v=1">
+</head>
+<body class="n-app sotu-page" data-view="state-of-the-union">
+<main id="main" class="n-main sotu">
+
+<header class="sotu-hero" id="state">
+  <div class="sotu-hero-top">
+    <p class="sotu-kicker">CTE Network <span aria-hidden="true">/</span> Special report</p>
+    <p class="sotu-status" id="sotuStatus" role="status" aria-live="polite">Connecting to Sleeper…</p>
+  </div>
+  <h1>State of the <em>Union.</em></h1>
+  <p class="sotu-dek" id="sotuHeadline">Every champion. Every trade and what became of it. Every franchise’s story. Straight from Sleeper, with receipts.</p>
+  <div class="sotu-progress" id="sotuProgress" hidden><span></span></div>
+  <div id="sotuNotice"></div>
+  <dl class="sotu-tiles" id="sotuTiles" aria-label="The league in numbers">
+    <div class="sotu-tile sotu-skel"><dt>seasons</dt><dd>–</dd></div>
+    <div class="sotu-tile sotu-skel"><dt>games played</dt><dd>–</dd></div>
+    <div class="sotu-tile sotu-skel"><dt>trades</dt><dd>–</dd></div>
+    <div class="sotu-tile sotu-skel"><dt>roster moves</dt><dd>–</dd></div>
+    <div class="sotu-tile sotu-skel"><dt>draft picks made</dt><dd>–</dd></div>
+    <div class="sotu-tile sotu-skel"><dt>managers</dt><dd>–</dd></div>
+  </dl>
+  <section class="sotu-bot" aria-labelledby="sotuBotHeading">
+    <div class="sotu-bot-head">
+      <img src="cte-mark.webp" alt="" width="44" height="44" decoding="async">
+      <div><h2 id="sotuBotHeading">CTE Bot’s read</h2><p id="sotuThrough">Loading the league…</p></div>
+      <button type="button" class="sotu-share" data-share="state" data-share-title="CTE State of the Union">Share</button>
+    </div>
+    <ol class="sotu-takes" id="sotuTakes"><li class="sotu-skel-line"></li><li class="sotu-skel-line"></li><li class="sotu-skel-line"></li></ol>
+  </section>
+  <p class="sotu-sponsor">Presented by <strong>Show Me Industries</strong></p>
+</header>
+
+<nav class="sotu-jump" aria-label="State of the Union sections">
+  <a href="#state">The read</a>
+  <a href="#history">History</a>
+  <a href="#trades">Trade trees</a>
+  <a href="#franchises">Franchises</a>
+  <a href="#records">Record book</a>
+</nav>
+
+<noscript><p class="sotu-note">This page builds itself from live Sleeper data and needs JavaScript. The <a href="state-of-union.html">November 13 written edition</a> works without it.</p></noscript>
+
+<section class="sotu-section" id="history" aria-labelledby="historyHeading" data-section="history">
+  <div class="sotu-section-head">
+    <div><p class="sotu-eyebrow">01 · League history</p><h2 id="historyHeading">Banners, runners-up and the Toilet Bowl</h2></div>
+    <button type="button" class="sotu-share" data-share="history" data-share-title="CTE League history">Share</button>
+  </div>
+  <div class="sotu-body" id="sotuHistory"><div class="sotu-skeleton">Reading the banners…</div></div>
+</section>
+
+<section class="sotu-section" id="trades" aria-labelledby="tradesHeading" data-section="trades">
+  <div class="sotu-section-head">
+    <div><p class="sotu-eyebrow">02 · Trade trees</p><h2 id="tradesHeading">Every trade, and what became of it</h2></div>
+    <button type="button" class="sotu-share" data-share="trades" data-share-title="CTE trade trees">Share</button>
+  </div>
+  <div class="sotu-body" id="sotuTrades"><div class="sotu-skeleton">Following the paper trail…</div></div>
+</section>
+
+<section class="sotu-section" id="franchises" aria-labelledby="franchisesHeading" data-section="franchises">
+  <div class="sotu-section-head">
+    <div><p class="sotu-eyebrow">03 · Team evolution</p><h2 id="franchisesHeading">Twelve franchises, how they got here</h2></div>
+    <button type="button" class="sotu-share" data-share="franchises" data-share-title="CTE franchise histories">Share</button>
+  </div>
+  <div class="sotu-body" id="sotuFranchises"><div class="sotu-skeleton">Pulling the franchise files…</div></div>
+</section>
+
+<section class="sotu-section" id="records" aria-labelledby="recordsHeading" data-section="records">
+  <div class="sotu-section-head">
+    <div><p class="sotu-eyebrow">04 · Stats and superlatives</p><h2 id="recordsHeading">The record book</h2></div>
+    <button type="button" class="sotu-share" data-share="records" data-share-title="CTE record book">Share</button>
+  </div>
+  <div class="sotu-body" id="sotuRecords"><div class="sotu-skeleton">Counting everything…</div></div>
+</section>
+
+<section class="sotu-section sotu-method" aria-labelledby="methodHeading">
+  <h2 id="methodHeading">How this is counted</h2>
+  <ul>
+    <li>Everything is read from the public Sleeper API, following the league back through every season. Only weeks Sleeper has finished scoring are counted.</li>
+    <li>A <strong>franchise</strong> is a roster spot and never changes. A <strong>manager</strong> is a person. When a franchise changed hands (Jeremy to Isaiah, Tyler to Carter) the franchise history continues and each manager keeps their own record.</li>
+    <li>Head-to-head and league-median results are shown separately; “overall” adds them, the way Sleeper’s standings do.</li>
+    <li><strong>Points since</strong> on a trade is every fantasy point the players a side received have scored on a CTE roster after the deal. A traded pick counts as the player drafted with it. Picks not yet used count zero for now.</li>
+    <li><strong>Luck</strong> compares real head-to-head wins with what a team would average playing every opponent every week.</li>
+  </ul>
+  <p id="sotuAudit" class="sotu-audit"></p>
+  <p>Looking for the long read? <a href="state-of-union.html">The November 13 written edition is here.</a></p>
+</section>
+
+</main>
+<footer class="n-footer"><span>CTE NETWORK © 2026</span><span>12 TEAMS. NO INNOCENT BYSTANDERS.</span></footer>
+<div class="sotu-toast" id="sotuToast" role="status" aria-live="polite"></div>
+<script defer src="data/league-data.js"></script>
+<script defer src="js/cte-context.js"></script>
+<script defer src="app-v29.js?v=42"></script>
+<script defer src="network-quality-v41.js?v=42"></script>
+<script defer src="js/cte-sotu-engine.js?v=1"></script>
+<script defer src="js/cte-sotu.js?v=1"></script>
+</body>
+</html>
