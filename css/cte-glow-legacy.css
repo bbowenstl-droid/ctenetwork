@@ -80,10 +80,9 @@ html .n-legacy .carl-stat span{color:#aab0ba}
 html .n-legacy .carl-profile-hero .btn{color:#f4f1ea;background:#131519}
 html .n-legacy select{background:#131519 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23151619' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E") no-repeat right 14px center}
 html .n-legacy :is(.notice,html .notice.error,html .rival-note,html .league-card.notice){background:#131519!important}
-html .n-legacy .notice.error{border-color:#e6b84a!important;color:#171204!important}
+html .n-legacy .notice.error{border-color:#e6b84a!important;color:#e6b84a!important}
 html .n-legacy .filter-chip{background:#131519!important}
 html .n-legacy .change-item{background:#131519!important}
-html .n-legacy .change-item.news .change-item-icon{color:#171204!important}
 html .n-legacy .schedule-status.final{color:#62d896!important}
 html .n-legacy .streak.win,html .n-legacy .win{color:#62d896!important}
 html .n-legacy .streak.loss,html .n-legacy .loss{color:#e6b84a!important}

@@ -76,7 +76,7 @@ for (const file of SOURCES) {
     for (const [prop, value] of seen) {
       if (/^--/.test(prop) || !PROPS.test(prop)) continue;
       if (prop === 'color') hasColor = true;
-      if (/^background(-color)?$/.test(prop) && /^var\(--(n-red|t-red|t-red-deep|gold|gold2|cte2-accent|cte2-accent-strong)\b[^)]*\)\s*(!important)?$/.test(value)) goldBg = true;
+      if (/^background(-color)?$/.test(prop) && /^var\(--(n-red|t-red|t-red-deep|gold|gold2|cte2-accent|cte2-accent-strong)\s*(,[^)]*)?\)\s*(!important)?$/.test(value)) goldBg = true;
       const v = convert(prop, value);
       if (v) { decls.push(prop + ':' + v); if (/^background(-color)?$/.test(prop) && v.includes(GOLD) && !/rgba/.test(v) && !/gradient/.test(v)) goldBg = true; }
     }
