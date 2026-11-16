@@ -111,3 +111,6 @@ Reviewed what similar Sleeper league sites and dynasty league homepages offer (S
 - **404.html** for any missing path (search + main links), fits 320px.
 - `tools/qa/make-preview.sh` rebuilds the iPhone preview branch from the release branch.
 Not built (suggested for after release): all-time 12×12 head-to-head grid, league key-dates calendar (.ics), trophy room.
+
+## 2026-11-16 — Real iPhone Safari checklist
+Brendan ran IPHONE_CHECKLIST.md items 1–17 on his iPhone against the ctenetwork-preview build (release c62e95b + PREVIEW banner): all passed. Items 18–19 wait for Firebase enablement.
