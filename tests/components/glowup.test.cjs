@@ -28,6 +28,12 @@ test('an underdog ahead of the pace is an upset watch; a tight projection is too
   const close = G.model([[row(1, 1, [20, 0], ['a1', 'a2']), row(2, 1, [28, 0], ['b1', 'b2'])]], { status: 'live', averages: avg }).games[0];
   assert.ok(close.tags.includes('close'));
 });
+test('alerts and the median line wait for enough football to be played', () => {
+  const avg = { a1: 30, a2: 30, a3: 30, a4: 30, b1: 20, b2: 20, b3: 20, b4: 20 };
+  const early = G.model([[row(1, 1, [1, 0, 0, 0], ['a1', 'a2', 'a3', 'a4']), row(2, 1, [38, 0, 0, 0], ['b1', 'b2', 'b3', 'b4'])], [row(3, 2, [0, 0], ['a1', 'a2']), row(4, 2, [0, 0], ['b1', 'b2'])]], { status: 'live', averages: avg, median: true });
+  assert.deepEqual(early.games[0].tags, [], '6 of 8 starters still to play: too early for an upset watch');
+  assert.equal(early.median, null, 'half the league has not scored yet');
+});
 test('a scored week is final: no projection, no outlook guesswork, ties are not wins', () => {
   const avg = { a1: 30, a2: 30, b1: 20, b2: 20 };
   const m = G.model([[row(1, 1, [10, 0], ['a1', 'a2']), row(2, 1, [12, 0], ['b1', 'b2'])], [row(3, 2, [9, 1], ['a1', 'a2']), row(4, 2, [10, 0], ['b1', 'b2'])]], { status: 'final', averages: avg });

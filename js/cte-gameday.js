@@ -13,6 +13,7 @@
   'use strict';
   const PER_STARTER_SD = 6.5;          // points of uncertainty per starter still to play
   const UPSET_GAP = 6, CLOSE_GAP = 8, PHOTO_FINISH = 5;
+  const ALERT_MAX_PENDING = 0.5;       // alerts wait until at least half of a matchup's starters have played
   const num = v => (Number.isFinite(Number(v)) ? Number(v) : 0);
   const round2 = v => Math.round(v * 100) / 100;
 
@@ -63,7 +64,7 @@
       if (final) {
         if (A.points !== B.points && Math.abs(A.points - B.points) < PHOTO_FINISH) tags.push('photo-finish');
         if (fav && (fav === 'A' ? B.points > A.points : A.points > B.points)) tags.push('upset');
-      } else if (started && pA != null) {
+      } else if (started && pA != null && pending <= (A.starters + B.starters) * ALERT_MAX_PENDING) {
         if (fav && (fav === 'A' ? pA < 0.4 : pA > 0.6)) tags.push('upset-watch');
         if (Math.abs(margin) < CLOSE_GAP) tags.push('close');
       }
@@ -74,7 +75,7 @@
     const top = scored.slice().sort((x, y) => y.points - x.points)[0] || null;
     const star = scored.filter(s => s.best).map(s => ({ rosterId: s.rosterId, ...s.best })).sort((x, y) => y.points - x.points)[0] || null;
     let median = null;
-    if (opts.median && scored.length && sides.length % 2 === 0) {
+    if (opts.median && scored.length >= sides.length * 0.75 && sides.length % 2 === 0) { // a median of mostly zeros says nothing
       const sorted = sides.map(s => s.points).sort((x, y) => x - y), mid = sorted.length / 2;
       median = round2((sorted[mid - 1] + sorted[mid]) / 2);
     }
