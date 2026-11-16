@@ -50,7 +50,7 @@
     })).sort((a, b) => b.score - a.score || b.firsts - a.firsts || a.rid - b.rid);
     const most = rows[0];
     const fewest = rows[rows.length - 1];
-    let html = `<p class="cap-summary"><strong>${esc(ownerName(most.rid))}</strong> holds the most ${esc(s)} draft capital (${most.picks.length} picks, ${most.firsts} first${most.firsts === 1 ? '' : 's'}). <strong>${esc(ownerName(fewest.rid))}</strong> holds the least (${fewest.picks.length} picks, ${fewest.firsts} first${fewest.firsts === 1 ? '' : 's'}).</p>`;
+    let html = `<p class="cap-summary"><strong>${esc(ownerName(most.rid))}</strong> holds the most ${esc(s)} draft capital (${most.picks.length} pick${most.picks.length === 1 ? '' : 's'}, ${most.firsts} first${most.firsts === 1 ? '' : 's'}). <strong>${esc(ownerName(fewest.rid))}</strong> holds the least (${fewest.picks.length} pick${fewest.picks.length === 1 ? '' : 's'}, ${fewest.firsts} first${fewest.firsts === 1 ? '' : 's'}).</p>`;
     html += '<div class="cap-grid">';
     for (const row of rows) {
       const owner = rosterOwner[row.rid];

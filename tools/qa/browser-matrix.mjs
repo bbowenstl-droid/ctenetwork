@@ -177,7 +177,7 @@ md += '\n## Detail (unique messages per page)\n\n';
 for (const page of pages) {
   const rs = results.filter(r => r.page === page);
   const uniq = key => [...new Set(rs.flatMap(r => r[key] || []))];
-  const items = { pageErrors: uniq('pageErrors'), sameOriginFailures: uniq('sameOriginFailures'), externalFailures: uniq('externalFailures'), overflowCulprits: uniq('overflowCulprits').slice(0, 6), brokenImages: uniq('brokenImages'), duplicateIds: uniq('duplicateIds') };
+  const items = { loadErrors: [...new Set(rs.filter(r => r.error).map(r => `${r.engine}${r.width}: ${r.error}`))], pageErrors: uniq('pageErrors'), sameOriginFailures: uniq('sameOriginFailures'), externalFailures: uniq('externalFailures'), overflowCulprits: uniq('overflowCulprits').slice(0, 6), brokenImages: uniq('brokenImages'), duplicateIds: uniq('duplicateIds') };
   if (Object.values(items).some(a => a.length)) {
     md += `### ${page}\n`;
     for (const [k, a] of Object.entries(items)) if (a.length) md += `- **${k}**: ${a.slice(0, 8).map(s => '`' + s.replace(/`/g, "'") + '`').join(', ')}\n`;
