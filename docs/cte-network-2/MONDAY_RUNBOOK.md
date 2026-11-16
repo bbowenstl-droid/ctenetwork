@@ -2,13 +2,22 @@
 **Prepared:** 2026-11-15. **For:** Brendan, on a trusted desktop signed into the Google account that owns Firebase project `cte-draft-central`.
 **Nothing here is automated.** Every write is a deliberate command you run. Stop at any failed check.
 
-Estimated time: 45–60 minutes, plus waiting for owners to sign in once.
+Estimated time: about 60–75 minutes, plus waiting for owners to sign in once.
 
 ## 0. Before you start
 - Desktop browser + terminal (Cloud Shell from the Firebase/GCP console on desktop is fine).
 - `git clone https://github.com/bbowenstl-droid/ctenetwork && cd ctenetwork && git checkout release/cte-network-2-completion`
 - `pip install firebase-admin` and `gcloud auth application-default login` (your own Google account; no key files).
 - Do **not** download service-account JSON keys. Do not paste tokens into chat, GitHub or the site.
+
+## 0b. iPhone preview site (5 minutes, do first)
+1. github.com/new → name `ctenetwork-preview`, **Public**, leave README/.gitignore/license **unchecked** → Create.
+2. If the Claude GitHub app is limited to selected repositories: GitHub Settings → Applications → Claude → Configure → add `ctenetwork-preview`.
+3. Tell Claude. Claude pushes branch `preview/site` (release build + red PREVIEW banner + noindex) to its `main`.
+4. Repo Settings → Pages → Deploy from a branch → `main` / root → Save.
+5. Run `IPHONE_CHECKLIST.md` on your phone at `https://bbowenstl-droid.github.io/ctenetwork-preview/`.
+   Sportsbook and Draft Central there use the real database — don't bet or draft unless you mean it.
+6. Delete the preview repo after release (Settings → Danger zone). Also delete branch `qa/baseline-predefer` in `ctenetwork`.
 
 ## 1. Back up the rules that are live today (no changes)
 1. Firebase console → Realtime Database → **Rules** tab.
