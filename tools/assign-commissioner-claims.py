@@ -58,6 +58,21 @@ def main(argv=None):
         return 2
 
     existing = user.custom_claims or {}
+    if existing.get("ownerId") not in (None, OWNER):
+        print(f"ABORT: Account already mapped to {existing.get('ownerId')!r}; un-map deliberately before re-mapping.", file=sys.stderr)
+        return 2
+    try:
+        holders = []
+        page = auth.list_users(app=app)
+        while page:
+            holders += [u for u in page.users if u.uid != user.uid and ((u.custom_claims or {}).get("ownerId") == OWNER or (u.custom_claims or {}).get("commissioner") is True)]
+            page = page.get_next_page()
+    except Exception as e:
+        print(f"Could not list users to check for an existing commissioner: {type(e).__name__}: {e}", file=sys.stderr)
+        return 1
+    if holders:
+        print(f"ABORT: commissioner/ownerId {OWNER!r} already held by {', '.join(h.email or h.uid for h in holders)}.", file=sys.stderr)
+        return 2
     next_claims = desired_claims(existing)
     if len(json.dumps(next_claims, separators=(",", ":")).encode("utf-8")) > 1000:
         print("ABORT: Custom claims may exceed Firebase's 1000-byte limit.", file=sys.stderr)

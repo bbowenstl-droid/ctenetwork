@@ -114,3 +114,13 @@ Not built (suggested for after release): all-time 12×12 head-to-head grid, leag
 
 ## 2026-11-16 — Real iPhone Safari checklist
 Brendan ran IPHONE_CHECKLIST.md items 1–17 on his iPhone against the ctenetwork-preview build (release c62e95b + PREVIEW banner): all passed. Items 18–19 wait for Firebase enablement.
+
+## 2026-11-16 — Independent pre-release review fixes
+An independent review (Claude Fable 5.2, read-only) found no merge blockers with cloud off. Fixed before rules publish:
+- Lounge/Commissioner: server time offset now read with `onValue(..., {onlyOnce})` and falls back to 0 (a `get()` on `.info` could fail and blank the page); per-round fallback to own picks if a lock-boundary read is denied.
+- Rules: comments and reactions restricted to the `lounge` thread; votes must be `a`–`d`. Security tests updated (lounge paths, other-thread and blank-vote denial).
+- `assign-commissioner-claims.py`: refuses if another account already holds commissioner/`brendan`, or if the target is mapped to another owner (+2 tests).
+- Former owners (Jeremy, Tyler) profile links redirect to History Lab instead of "Owner not found".
+- Cache versions bumped (`app-v29.js`, `network-v29.js`, `cte-participation.js` → `?v=43`).
+- Share-card workflow no longer uses `[skip ci]`.
+- Runbook step 2 wording corrected (semantic, not byte-for-byte; `//` comments abort).

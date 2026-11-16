@@ -29,7 +29,8 @@ Estimated time: about 60–75 minutes, plus waiting for owners to sign in once.
 python3 tools/stage-v2-firebase-rules.py --deployed deployed-rules.json --output candidate-rules.json
 ```
 - It refuses if the live rules lack `rooms`/`book`, already have `v2`, or grant broad root access. If it refuses, stop and send me the message (not the file).
-- `candidate-rules.json` = your live rules, byte-for-byte for `rooms` and `book`, plus the tested `v2` block.
+- `candidate-rules.json` = your live rules for `rooms` and `book` (identical content; the script re-sorts keys and re-indents, and asserts equality), plus the tested `v2` block.
+- If your console rules contain `//` comments, the script stops with a JSON error. Remove the comments from your copy and rerun.
 
 ## 3. Test the candidate in the emulator
 ```bash

@@ -85,7 +85,7 @@
         "$poll": {
           "$owner": {
             ".write": "auth != null && auth.token.ownerId != null && auth.token.ownerId === $owner && $owner.matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/) && root.child('v2/polls').child($poll).exists() && now < root.child('v2/polls').child($poll).child('closeAt').val()",
-            ".validate": "newData.isString() && root.child('v2/polls').child($poll).child('options').child(newData.val()).exists()"
+            ".validate": "newData.isString() && newData.val().matches(/^[a-d]$/) && root.child('v2/polls').child($poll).child('options').child(newData.val()).exists()"
           }
         }
       },
@@ -94,7 +94,7 @@
         "$thread": {
           "$owner": {
             ".write": "(auth != null && auth.token.ownerId != null && auth.token.ownerId === $owner && $owner.matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/)) || (auth != null && auth.token.commissioner === true && !newData.exists())",
-            ".validate": "newData.hasChildren(['text','updatedAt']) && $thread.matches(/^[a-zA-Z0-9_-]{1,100}$/)",
+            ".validate": "newData.hasChildren(['text','updatedAt']) && $thread === 'lounge'",
             "text": {
               ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 500"
             },
@@ -111,7 +111,7 @@
         ".read": "auth != null && auth.token.ownerId != null",
         "$thread": {
           "$owner": {
-            ".write": "auth != null && auth.token.ownerId != null && auth.token.ownerId === $owner && $owner.matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/) && $thread.matches(/^[a-zA-Z0-9_-]{1,100}$/)",
+            ".write": "auth != null && auth.token.ownerId != null && auth.token.ownerId === $owner && $owner.matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/) && $thread === 'lounge'",
             ".validate": "newData.val() === 'fire' || newData.val() === 'laugh' || newData.val() === 'agree'"
           }
         }

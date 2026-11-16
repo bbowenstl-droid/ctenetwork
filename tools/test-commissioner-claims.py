@@ -28,11 +28,26 @@ class ClaimTests(unittest.TestCase):
         fake_auth = types.ModuleType("firebase_admin.auth")
         fake_auth.get_user = lambda uid, app=None: self.user
         fake_auth.set_custom_user_claims = self._set
+        self.others = []
+        fake_auth.list_users = lambda app=None: types.SimpleNamespace(users=[self.user] + self.others, get_next_page=lambda: None)
         fake_firebase = types.ModuleType("firebase_admin")
         fake_firebase.initialize_app = lambda **kw: "isolated-test-app"
         fake_firebase.auth = fake_auth
         self.mods = patch.dict(sys.modules, {"firebase_admin": fake_firebase, "firebase_admin.auth": fake_auth})
         self.mods.start()
+
+    def test_refuses_second_commissioner(self):
+        other = types.SimpleNamespace(uid="someone-else", email="other@example.test", custom_claims={"commissioner": True})
+        self.others = [other]
+        code, out, err = self.run_cmd("--uid", User.uid, "--expected-email", User.email, "--apply", "--confirm-uid", User.uid)
+        self.assertEqual(code, 2)
+        self.assertEqual(self.calls, [])
+
+    def test_refuses_remap_of_other_owner(self):
+        self.user.custom_claims = {"ownerId": "jacob"}
+        code, out, err = self.run_cmd("--uid", User.uid, "--expected-email", User.email, "--apply", "--confirm-uid", User.uid)
+        self.assertEqual(code, 2)
+        self.assertEqual(self.calls, [])
 
     def tearDown(self):
         self.mods.stop()
