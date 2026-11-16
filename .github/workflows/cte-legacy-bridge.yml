@@ -1,0 +1,27 @@
+name: CTE Legacy Visual Bridge
+on:
+  pull_request:
+    paths:
+      - 'css/cte-legacy-bridge.css'
+      - 'css/cte-tokens.css'
+      - 'index.html'
+      - 'news.html'
+      - 'standings.html'
+      - 'records.html'
+      - 'tests/components/legacy-bridge.test.cjs'
+      - '.github/workflows/cte-legacy-bridge.yml'
+  workflow_dispatch:
+jobs:
+  legacy-bridge-checks:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check bridge integration and CSS scope
+        run: node tests/components/legacy-bridge.test.cjs
+      - name: Check component tests
+        run: node tests/components/components.test.cjs

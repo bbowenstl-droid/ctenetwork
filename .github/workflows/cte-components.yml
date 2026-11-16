@@ -1,0 +1,24 @@
+name: CTE Component Library Checks
+on:
+  pull_request:
+    paths:
+      - 'css/cte-components.css'
+      - 'css/cte-tokens.css'
+      - 'js/cte-components.js'
+      - 'tests/components/**'
+      - '.github/workflows/cte-components.yml'
+  workflow_dispatch:
+jobs:
+  component-unit-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate component renderers
+        run: node tests/components/components.test.cjs
+      - name: Check JavaScript syntax
+        run: node --check js/cte-components.js

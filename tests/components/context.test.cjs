@@ -1,0 +1,20 @@
+const assert=require('node:assert/strict');
+const {context,search,ownerSearchItems}=require('../../js/cte-context.js');
+assert.equal(context(null).kind,'offline');
+assert.equal(context({status:'playoffs_in_progress',settings:{leg:10,last_scored_leg:9,playoff_week_start:15}}).kind,'live');
+assert.equal(context({settings:{leg:10,last_scored_leg:10}}).kind,'recap');
+assert.equal(context({settings:{leg:15,last_scored_leg:14}}).kind,'postseason');
+assert.equal(context({status:'complete',settings:{leg:18}}).kind,'offseason');
+assert.equal(context({status:'pre_draft'}).kind,'draft');
+assert.equal(search([{title:'Brendan trade',author:'Carl'},{title:'Carl preview'}],'TRADE carl').length,1);
+assert.equal(search([{title:'a'}],'<script>').length,0);
+console.log('PASS context boundaries, anomalous provider status, offline and multi-term search');
+
+const ownerConfig={owners:{jacob:{id:'jacob',name:'Jacob',status:'active',currentTeamName:'Likely A Dub'},jeremy:{id:'jeremy',name:'Jeremy',status:'former'}}};
+const liveOwners=ownerSearchItems(ownerConfig,{2:{ownerId:'jacob',sleeperTeamName:'The Strib Club'},7:{ownerId:'jeremy',sleeperTeamName:'Inherited franchise'}});
+assert.equal(liveOwners[0].excerpt,'The Strib Club');
+assert.equal(search(liveOwners,'Likely A Dub')[0].title,'Jacob');
+assert.equal(search(liveOwners,'Strib')[0].title,'Jacob');
+assert.equal(liveOwners[1].excerpt,'Former CTE owner');
+assert.equal(ownerSearchItems(ownerConfig)[0].excerpt,'Recorded team: Likely A Dub');
+console.log('PASS current Sleeper names, recorded-name search fallback, and former-owner identity');

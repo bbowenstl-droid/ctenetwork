@@ -1,0 +1,18 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const H=require('../../js/cte-history.js'),ctx={window:{}};vm.runInNewContext(fs.readFileSync('data/league-data.js','utf8'),ctx);const cfg=ctx.window.CTE_LEAGUE_DATA;
+assert.equal(H.ownerAt(cfg,2025,7,0),'jeremy');assert.equal(H.ownerAt(cfg,2025,7,3),'jeremy');assert.equal(H.ownerAt(cfg,2025,7,4),'isaiah');assert.equal(H.ownerAt(cfg,2025,5),'tyler');assert.equal(H.ownerAt(cfg,2026,5),'carter');
+const raw=JSON.parse(fs.readFileSync('research/state-of-union/games.json','utf8'));const list=H.games([{games:raw.games}]);assert.equal(list.length,152);
+const regular=list.filter(g=>g.type==='regular'),owners=H.records(regular),franchises=H.records(regular,'franchise');assert.equal(regular.length,138);assert.equal(owners.jeremy.games,3);assert.equal(owners.isaiah.games,20);assert.equal(franchises['7'].games,23);assert.equal(franchises['5'].games,23);assert.equal(owners.tyler.games,14);assert.equal(owners.carter.games,9);
+assert.equal(H.allPlay(regular).reduce((n,r)=>n+r.w+r.l+r.t,0),23*12*11);
+const swapped=H.swapSchedule(regular,'1','2');assert.equal(swapped.length,regular.length);const twice=H.swapSchedule(swapped,'1','2');assert.deepEqual(twice.map(g=>[g.ownerA,g.ownerB,g.scoreA,g.scoreB]),regular.map(g=>[g.ownerA,g.ownerB,g.scoreA,g.scoreB]));assert.throws(()=>H.swapSchedule(regular,'1','1'));
+const draft={draft_id:'d',start_time:200,slot_to_roster_id:{1:7}};
+const selections=H.draftSelections(cfg,[{season:2025,draft,picks:[{draft_slot:1,pick_no:1,round:1,roster_id:7,player_id:'chase'}]}]);assert.equal(selections[0].owner,'jeremy');assert.equal(selections[0].asset,'pick:2025:1:7');
+const trade=(id,time,adds,drops,picks=[],teams=[1,2])=>({transaction_id:id,status:'complete',type:'trade',status_updated:time,season:2026,leg:1,adds,drops,draft_picks:picks,roster_ids:teams});
+const tx=[trade('t1',100,{}, {},[{season:2026,round:1,roster_id:3,previous_owner_id:3,owner_id:1}],[3,1]),trade('t2',300,{p:2,q:3,r:1},{p:1,q:2,r:3},[],[1,2,3])];
+const drafted=[{id:'d:1',asset:'pick:2026:1:3',playerId:'p',roster:1,time:200,season:2026}];
+let result=H.ledger(cfg,tx,drafted);assert.equal(result.trades[1].teams.length,3);assert.equal(result.edges.length,1);assert.equal(result.edges[0].via,'pick:2026:1:3');assert.equal(result.edges[0].from,'t1');assert.equal(result.edges[0].to,'t2');assert.equal(result.issues.length,0);
+result=H.ledger(cfg,[...tx,{transaction_id:'drop',status:'complete',type:'free_agent',status_updated:400,season:2026,drops:{p:2},adds:null},{transaction_id:'add',status:'complete',type:'free_agent',status_updated:500,season:2026,adds:{p:2}},trade('t3',600,{p:1},{p:2})],drafted);assert.equal(result.edges.length,1,'drop/reacquisition must break continuous trade custody');
+assert.equal(H.ledger(cfg,[...tx,tx[0]],drafted).trades.length,2,'provider IDs deduplicate');
+assert.equal(H.ledger(cfg,[trade('pending',700,{p:2},{p:1}),{...trade('pending2',800,{q:1},{q:2}),status:'pending'}],[]).trades.length,1);
+result=H.ledger(cfg,[trade('bad1',100,{p:2},{p:1}),trade('bad2',200,{p:3},{p:1})],[]);assert.equal(result.edges.length,0);assert.ok(result.issues.length);
+console.log('PASS 152 normalized games, 138 regular games, owner/franchise attribution, all-play, reversible schedule swaps, draft attribution, 3-team trades, conversion chains, deduplication and custody gaps');

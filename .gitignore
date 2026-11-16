@@ -1,0 +1,10 @@
+.preview/
+.openai/
+node_modules/
+*-debug.log
+.firebase/
+__pycache__/
+
+# Firebase admin checkpoint: never commit live rule exports or candidates
+deployed-*.json
+candidate-rules.json

@@ -1,0 +1,23 @@
+name: CTE Navigation Checks
+on:
+  pull_request:
+    paths:
+      - 'app-v29.js'
+      - 'js/cte-navigation.js'
+      - 'css/cte-navigation.css'
+      - 'tests/components/navigation.test.cjs'
+      - '.github/workflows/cte-navigation.yml'
+  workflow_dispatch:
+jobs:
+  navigation-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check app-v29.js
+      - run: node --check js/cte-navigation.js
+      - run: node tests/components/navigation.test.cjs

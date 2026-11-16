@@ -1,0 +1,100 @@
+/* CTE Network 2.0 — Step 30 shared accessibility hardening.
+   Opt-in through shared app shell; deliberately does not reset legacy layouts. */
+body:is(.n-app,.n-legacy) :where(a,button,input,select,textarea,[role="button"]):focus-visible {
+  outline:3px solid var(--cte2-focus,#b8222f);
+  outline-offset:3px;
+}
+body:is(.n-app,.n-legacy) :where(img,video,iframe) { max-width:100%; }
+body:is(.n-app,.n-legacy) :where(.n-main,.league-shell,main) { min-width:0; }
+#networkMenu :where(.n-menu-close,.n-menu-button) { min-width:44px;min-height:44px; }
+#networkMenu .cte-nav-group-links a[aria-current="page"] { font-weight:850; }
+@media(prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto!important; }
+  body:is(.n-app,.n-legacy) :where(a,button,[role="button"]) { transition:none!important; }
+  body:is(.n-app,.n-legacy) :where(.n-story-row,.n-news-card,.cte-home-shortcut) { animation:none!important;transform:none!important; }
+}
+@media(forced-colors:active) {
+  #networkMenu .cte-nav-group-links a[aria-current="page"] { outline:2px solid Highlight;outline-offset:-2px; }
+}
+
+/* ---------------------------------------------------------------------------
+   Step 30 — WCAG 2.1 AA text contrast (axe, 2026-11-15 release QA run).
+   Legacy dark-theme colours (gold, pale grey, pale blue/green) now render on
+   the light CTE shell, and several shell greys sat just under 4.5:1. These
+   overrides only change colours; layout is untouched. Remove this block to
+   roll back. Ratios are against the measured background.
+   --------------------------------------------------------------------------- */
+body:is(.n-app,.n-legacy) { --n-muted:#5f6268; --n-faint:#5f6268; }                 /* >=5.0 on #e8e8ed–#f5f5f7 */
+body:is(.n-app,.n-legacy) :is(.n-footer,.footer) { color:#5f6268; }                /* was 2.75–3.01 */
+body:is(.n-app,.n-legacy) .n-navigation > :is(a,button) { color:#5f6268; }        /* mobile tab labels, was 3.56 */
+body:is(.n-app,.n-legacy) .n-score-team:nth-of-type(3) .n-avatar { color:#8a5248; } /* 5.27 on #f5eae7 */
+body:is(.n-app,.n-legacy) :is(.n-story-number,.n-rank,.n-points) { color:#5f6268; }
+body:is(.n-app,.n-legacy) .n-segments button:not(.selected) { color:#5c5f66; }     /* 5.24 on #e8e8ed */
+body:is(.n-app,.n-legacy) .carl-stat span { color:#5f6268; }
+body:is(.n-app,.n-legacy) .rival-stat span { color:#62666e; }                      /* 5.16 on #f2f2f5 */
+body:is(.n-app,.n-legacy) .bk-colhead { color:#8d94a0; }                           /* sportsbook dark grid, 5.88 */
+body:is(.n-app,.n-legacy) .tx-card .tx-status { color:#9aa0aa; }                  /* dark transaction cards, 6.9 */
+body:is(.n-app,.n-legacy) .tx-page-sub { color:#5f6268; }
+body:is(.n-app,.n-legacy) .tx-pager-info { color:#9aa0aa; }                        /* dark pager, 7.2 */
+/* Sportsbook is a dark product: shell footer and tab labels need light grey there. */
+body.bk-page :is(.n-footer,.footer) { color:#9aa0aa; }                             /* 7.29 on #0d0f13 */
+@media (min-width:821px) { body.bk-page .n-navigation > :is(a,button):not([aria-current=page]) { color:#9aa0aa; } } /* dark desktop rail */
+/* Matchup detail on light cards */
+body:is(.n-app,.n-legacy) .matchup-week { color:#8a6414; }                         /* was gold 1.55 */
+body:is(.n-app,.n-legacy) .lineup-player span { color:#5f6268; }
+/* Team profile activity badges on white */
+body:is(.n-app,.n-legacy) .profile-activity .activity-type { color:#2f5fc4; }
+body:is(.n-app,.n-legacy) .profile-activity .activity-type.waiver { color:#1f7a43; }
+/* Rivalry timeline: dark legacy rows were showing near-black text (1.04:1).
+   Render the rows in the light shell instead so dates and scores are visible. */
+body:is(.n-app,.n-legacy) .rivalry-meeting { background:#ffffff; border-color:#e2e2e7; color:#14161a; }
+body:is(.n-app,.n-legacy) .rivalry-meeting .muted { color:#5f636c; }
+body:is(.n-app,.n-legacy) .rivalry-meeting .winner { color:#1f7a43; }
+
+/* Detail page titles promoted from h2 to h1 (one h1 per page); keep the hero h2 look. */
+body:is(.n-app,.n-legacy) .feature-hero h1.cte-detail-title { max-width:820px;margin:7px 0 8px;font-size:clamp(34px,4vw,52px);font-weight:750;letter-spacing:-.045em;line-height:1.05;color:var(--n-ink,#14161a); }
+
+/* Matchup detail at 320px: scores overflowed the viewport by ~40px. */
+@media (max-width:380px) {
+  body:is(.n-app,.n-legacy) .matchup-hero { padding:16px 12px; }
+  body:is(.n-app,.n-legacy) .matchup-versus { grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr); gap:6px; }
+  body:is(.n-app,.n-legacy) .matchup-vs { width:36px;height:36px; }
+  body:is(.n-app,.n-legacy) .matchup-side { min-width:0; }
+  body:is(.n-app,.n-legacy) .matchup-side .owner-name { font-size:20px; overflow-wrap:anywhere; }
+  body:is(.n-app,.n-legacy) .matchup-side .big-score { font-size:clamp(26px,9vw,42px); }
+}
+
+/* Standings CLS (~0.3): playoff field and table arrive after Sleeper responds and pushed
+   everything below them. Reserve the measured rendered heights while they are loading. */
+body.n-app #playoffField:empty { min-height:352px; }
+body.n-app #leagueStandings:has(> .n-skeleton) { min-height:1105px; }
+@media (max-width:820px) { body.n-app #playoffField:empty { min-height:470px; } }
+@media (max-width:420px) {
+  body.n-app #playoffField:empty { min-height:557px; }
+  body.n-app #leagueStandings:has(> .n-skeleton) { min-height:1160px; }
+}
+@media (max-width:340px) { body.n-app #leagueStandings:has(> .n-skeleton) { min-height:1500px; } }
+
+/* Article share button (share/<id>.html carries the Facebook preview card). */
+body:is(.n-app,.n-legacy) .cte-share-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px; }
+body:is(.n-app,.n-legacy) .cte-share-btn { min-height:44px; }
+body:is(.n-app,.n-legacy) .cte-share-status { font-size:14px; color:#5f6268; overflow-wrap:anywhere; }
+
+/* Draft Capital page */
+body.n-app .cap-summary { margin:0 0 18px; color:var(--n-ink,#151619); }
+body.n-app .cap-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; }
+body.n-app .cap-team { background:#fff; border:1px solid var(--n-line,#e4e5e8); border-radius:18px; padding:16px 18px; min-width:0; }
+body.n-app .cap-team header { display:flex; flex-direction:column; gap:2px; }
+body.n-app .cap-team h3 { margin:0; font-size:19px; letter-spacing:-.02em; }
+body.n-app .cap-team h3 a { color:inherit; text-decoration:none; }
+body.n-app .cap-team h3 a:hover { text-decoration:underline; }
+body.n-app .cap-team-name, body.n-app .cap-out { color:#5f6268; font-size:13px; overflow-wrap:anywhere; }
+body.n-app .cap-count { margin:10px 0 8px; font-size:14px; }
+body.n-app .cap-picks { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:6px; }
+body.n-app .cap-pick { display:inline-flex; align-items:baseline; gap:5px; padding:5px 10px; border-radius:999px; background:#f2f2f5; font-size:13px; font-weight:650; color:#151619; }
+body.n-app .cap-pick.cap-first { background:#f6e7c1; color:#5c4410; }
+body.n-app .cap-pick.cap-acquired { box-shadow:inset 0 0 0 2px #151619; }
+body.n-app .cap-via { font-weight:500; color:#4a4d53; }
+body.n-app .cap-first .cap-via { color:#5c4410; }
+body.n-app .cap-out { margin:10px 0 0; }
+body.n-app #capitalBoard:has(> .n-skeleton) { min-height:900px; }

@@ -1,0 +1,41 @@
+name: CTE 2.0 release checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  deterministic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python tools/check-site.py
+      - run: node tools/check-syntax.cjs
+      - run: node --test tests/components/*.test.cjs tests/data/*.test.cjs
+      - run: node tests/data/validate-history.cjs
+      - run: node tools/test-history.cjs
+      - run: node tools/test-sportsbook.cjs
+      - run: node tools/test-weekly-awards.cjs
+      - run: python research/state-of-union/verify.py
+      - run: python tools/test-commissioner-claims.py
+      - run: python tools/test-owner-claims.py
+      - run: python tools/test-stage-v2-firebase-rules.py
+  participation-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: tests/security/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci --prefix tests/security --ignore-scripts --no-audit --no-fund
+      - run: npm test --prefix tests/security

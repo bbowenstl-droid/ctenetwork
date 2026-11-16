@@ -319,6 +319,10 @@ a.n-draft-owner:hover{color:var(--n-red)}
 /* Anita's transparent full-body artwork replaces the old portrait crop. */
 .n-talent-card.n-holly img{top:auto;bottom:0;right:0;width:48%;height:96%;object-fit:contain;object-position:center bottom;mix-blend-mode:normal}
 .n-talent-card.n-holly h3{font-size:clamp(26px,2.3vw,31px)}
+/* CTE 2.0 Step 30 (2026-11-15): scripts are deferred, so the page can paint before app-v29.js
+   prepends .n-topbar. Hold its height until it exists so content does not jump (news CLS 0.99). */
+body:is(.n-app,.n-legacy):not(:has(> .n-topbar))::before{content:"";display:block;height:80px}
+@media(max-width:820px){body:is(.n-app,.n-legacy):not(:has(> .n-topbar))::before{height:calc(64px + env(safe-area-inset-top))}}
 
 /* sportsbook-v35.css */
 /* CTE SPORTSBOOK v32 — a dark product inside the CTE Network shell. Fictional CTE$ only. */

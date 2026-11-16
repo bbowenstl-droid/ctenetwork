@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CTE Network 2.0 — Responsive QA Fixture</title>
+<link rel="stylesheet" href="../../css/cte-tokens.css">
+<link rel="stylesheet" href="../../css/cte-components.css">
+<link rel="stylesheet" href="../../css/cte-responsive.css">
+<style>
+body{margin:0;background:#f5f5f7;color:#14161a}
+.fixture-section{margin-block:24px}
+.fixture-caption{font-size:12px;color:#626770;margin:8px 0}
+</style>
+</head>
+<body>
+<main class="cte2">
+<a class="cte2-skip-link" href="#fixture-content">Skip to content</a>
+<div class="cte2-container cte2-safe-top cte2-safe-bottom" id="fixture-content">
+<header class="fixture-section"><span class="cte2-kicker">CTE Network 2.0 · Responsive QA</span><h1 class="cte2-title">Every league has a story.</h1><p class="cte2-dek">Static sample data only. This page does not represent live league results.</p></header>
+<section class="fixture-section" aria-label="Matchups">
+<h2>Score rail</h2><div class="cte2-score-rail" id="fixture-score-rail"></div>
+</section>
+<section class="fixture-section" aria-label="Card grid">
+<h2>Card grid</h2><div class="cte2-grid cte2-grid--three" id="fixture-cards"></div>
+</section>
+<section class="fixture-section" aria-label="Data table">
+<h2>Scrollable table</h2><div id="fixture-table"></div>
+</section>
+<section class="fixture-section" aria-label="Actions">
+<h2>Touch actions</h2><div class="cte2-responsive-actions" id="fixture-actions"></div>
+</section>
+<section class="fixture-section cte2-dark-feature" style="padding:16px;border-radius:16px" aria-label="Dark feature"><div class="cte2-card cte2-card--feature"><span class="cte2-kicker">Feature</span><h2 class="cte2-title">The rivalry report</h2><p class="cte2-dek">A dark editorial surface with legible text and contrast.</p></div></section>
+</div>
+</main>
+<script src="../../js/cte-components.js"></script>
+<script>
+(function(){
+  const c=window.CTE2Components;
+  const score=[
+    {week:10,state:'final',home:{name:'Flowers on your Grave',score:132.75},away:{name:'The Strib Club',score:129.12}},
+    {week:11,state:'live',home:{name:'Hulkamania',score:97.22},away:{name:'DrummaDan',score:103.15}},
+    {week:12,state:'upcoming',home:{name:'EJ Da Best',score:0},away:{name:'Elijah Has No Rizz',score:0}}
+  ];
+  document.querySelector('#fixture-score-rail').innerHTML=score.map(c.scoreboard).join('');
+  document.querySelector('#fixture-cards').innerHTML=[
+    c.card({title:'League news',description:'An editorial-first card.'}),
+    c.card({title:'Owner profiles',description:'Consistent spacing at every width.'}),
+    c.card({title:'Trade history',description:'Long asset names must wrap correctly.'})
+  ].join('');
+  document.querySelector('#fixture-table').innerHTML=c.table({headers:['Team','Owner','Record','Points for'],rows:[['Flowers on your Grave','Brendan','11–7','1234.50'],['The Strib Club','Jacob','16–2','1350.25'],['Elijah Has No Rizz','Isaiah','14–4','1275.75']],numericColumns:[2,3]});
+  document.querySelector('#fixture-actions').innerHTML=c.button({label:'Read the latest',variant:'primary',href:'../../news.html'})+c.button({label:'View standings',variant:'secondary',href:'../../standings.html'});
+})();
+</script>
+</body></html>

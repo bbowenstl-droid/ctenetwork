@@ -1,0 +1,121 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "v2": {
+      "rounds": {
+        ".read": "auth != null && auth.token.ownerId != null",
+        "$round": {
+          ".write": "auth != null && auth.token.commissioner === true && !data.exists() && newData.exists()",
+          ".validate": "newData.hasChildren(['season','week','lockAt','matchups'])",
+          "season": {
+            ".validate": "newData.isNumber() && newData.val() >= 2026 && newData.val() <= 2100 && newData.val() % 1 === 0"
+          },
+          "week": {
+            ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 18 && newData.val() % 1 === 0"
+          },
+          "lockAt": {
+            ".validate": "newData.isNumber() && newData.val() > now"
+          },
+          "matchups": {
+            ".validate": "newData.hasChildren(['1','2','3','4','5','6'])",
+            "$matchup": {
+              ".validate": "$matchup.matches(/^[1-6]$/) && newData.hasChildren(['a','b']) && newData.child('a').val() !== newData.child('b').val()",
+              "a": {
+                ".validate": "newData.isString() && newData.val().matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/)"
+              },
+              "b": {
+                ".validate": "newData.isString() && newData.val().matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/)"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "results": {
+        ".read": "auth != null && auth.token.ownerId != null",
+        "$round": {
+          "$matchup": {
+            ".write": "auth != null && auth.token.commissioner === true && root.child('v2/rounds').child($round).exists() && now >= root.child('v2/rounds').child($round).child('lockAt').val() && root.child('v2/rounds').child($round).child('matchups').child($matchup).exists()",
+            ".validate": "newData.isString() && (newData.val() === 'tie' || newData.val() === root.child('v2/rounds').child($round).child('matchups').child($matchup).child('a').val() || newData.val() === root.child('v2/rounds').child($round).child('matchups').child($matchup).child('b').val())"
+          }
+        }
+      },
+      "picks": {
+        "$round": {
+          ".read": "auth != null && auth.token.ownerId != null && root.child('v2/rounds').child($round).exists() && now >= root.child('v2/rounds').child($round).child('lockAt').val()",
+          "$owner": {
+            ".read": "auth != null && auth.token.ownerId != null && auth.token.ownerId === $owner",
+            "$matchup": {
+              ".write": "auth != null && auth.token.ownerId != null && auth.token.ownerId === $owner && $owner.matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/) && root.child('v2/rounds').child($round).exists() && now < root.child('v2/rounds').child($round).child('lockAt').val() && root.child('v2/rounds').child($round).child('matchups').child($matchup).exists()",
+              ".validate": "newData.isString() && (newData.val() === root.child('v2/rounds').child($round).child('matchups').child($matchup).child('a').val() || newData.val() === root.child('v2/rounds').child($round).child('matchups').child($matchup).child('b').val())"
+            }
+          }
+        }
+      },
+      "polls": {
+        ".read": "auth != null && auth.token.ownerId != null",
+        "$poll": {
+          ".write": "auth != null && auth.token.commissioner === true && !data.exists() && newData.exists()",
+          ".validate": "newData.hasChildren(['question','options','closeAt'])",
+          "question": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 240"
+          },
+          "closeAt": {
+            ".validate": "newData.isNumber() && newData.val() > now"
+          },
+          "options": {
+            ".validate": "newData.hasChildren(['a','b'])",
+            "$option": {
+              ".validate": "$option.matches(/^[a-d]$/) && newData.isString() && newData.val().length > 0 && newData.val().length <= 120"
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "votes": {
+        ".read": "auth != null && auth.token.ownerId != null",
+        "$poll": {
+          "$owner": {
+            ".write": "auth != null && auth.token.ownerId != null && auth.token.ownerId === $owner && $owner.matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/) && root.child('v2/polls').child($poll).exists() && now < root.child('v2/polls').child($poll).child('closeAt').val()",
+            ".validate": "newData.isString() && newData.val().matches(/^[a-d]$/) && root.child('v2/polls').child($poll).child('options').child(newData.val()).exists()"
+          }
+        }
+      },
+      "comments": {
+        ".read": "auth != null && auth.token.ownerId != null",
+        "$thread": {
+          "$owner": {
+            ".write": "(auth != null && auth.token.ownerId != null && auth.token.ownerId === $owner && $owner.matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/)) || (auth != null && auth.token.commissioner === true && !newData.exists())",
+            ".validate": "newData.hasChildren(['text','updatedAt']) && $thread === 'lounge'",
+            "text": {
+              ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 500"
+            },
+            "updatedAt": {
+              ".validate": "newData.isNumber() && newData.val() >= now - 60000 && newData.val() <= now"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        }
+      },
+      "reactions": {
+        ".read": "auth != null && auth.token.ownerId != null",
+        "$thread": {
+          "$owner": {
+            ".write": "auth != null && auth.token.ownerId != null && auth.token.ownerId === $owner && $owner.matches(/^(brendan|troy|mike|jerry|dan|cotton|brett|jacob|jesse|elijah|isaiah|carter)$/) && $thread === 'lounge'",
+            ".validate": "newData.val() === 'fire' || newData.val() === 'laugh' || newData.val() === 'agree'"
+          }
+        }
+      }
+    }
+  }
+}

@@ -10,12 +10,12 @@
 
   /** Awards for one finished week. rows = Sleeper matchup rows, games = resolveGames output. */
   function computeAwards(rows, games, ownerOfRoster) {
-    const real = games.filter(g => g.scoreA || g.scoreB);
+    const real = games.filter(g => Number.isFinite(g.scoreA) && Number.isFinite(g.scoreB));
     if (!real.length) return null;
     const scores = real.flatMap(g => [{ owner: g.ownerA, pts: g.scoreA, opp: g.ownerB, oppPts: g.scoreB, g }, { owner: g.ownerB, pts: g.scoreB, opp: g.ownerA, oppPts: g.scoreA, g }]);
     const by = (arr, f, dir = 1) => arr.slice().sort((a, b) => dir * (f(b) - f(a)))[0];
     const top = by(scores, s => s.pts), low = by(scores, s => s.pts, -1);
-    const blowout = by(real, g => g.margin), decided = real.filter(g => g.margin > 0), close = decided.length ? by(decided, g => g.margin, -1) : null;
+    const decided = real.filter(g => g.margin > 0), blowout = decided.length ? by(decided, g => g.margin) : null, close = decided.length ? by(decided, g => g.margin, -1) : null;
     const losers = scores.filter(s => s.pts < s.oppPts), badBeat = losers.length ? by(losers, s => s.pts) : null;
     let bench = null;
     for (const r of rows || []) {
@@ -26,9 +26,9 @@
     }
     const winner = g => (g.scoreA >= g.scoreB ? [g.ownerA, g.scoreA, g.ownerB, g.scoreB] : [g.ownerB, g.scoreB, g.ownerA, g.scoreA]);
     const out = [
-      { key: 'top', label: 'Top score', icon: '\uD83D\uDC51', owner: top.owner, detail: `${pts(top.pts)} pts vs ${name(top.opp)}` },
-      { key: 'blowout', label: 'Biggest blowout', icon: '\uD83D\uDCA5', owner: winner(blowout)[0], detail: `Beat ${name(winner(blowout)[2])} by ${pts(blowout.margin)}` }
+      { key: 'top', label: 'Top score', icon: '\uD83D\uDC51', owner: top.owner, detail: `${pts(top.pts)} pts vs ${name(top.opp)}` }
     ];
+    if (blowout) out.push({ key: 'blowout', label: 'Biggest blowout', icon: '\uD83D\uDCA5', owner: winner(blowout)[0], detail: `Beat ${name(winner(blowout)[2])} by ${pts(blowout.margin)}` });
     if (close) out.push({ key: 'close', label: 'Nail-biter', icon: '\uD83D\uDE2C', owner: winner(close)[0], detail: `Edged ${name(winner(close)[2])} by ${pts(close.margin)}` });
     if (badBeat) out.push({ key: 'badbeat', label: 'Bad beat', icon: '\uD83D\uDC94', owner: badBeat.owner, detail: `Lost with ${pts(badBeat.pts)} to ${name(badBeat.opp)}` });
     if (bench && bench.pts > 0) out.push({ key: 'bench', label: 'Bench warmer', icon: '\uD83E\uDE91', owner: bench.owner, detail: `${pts(bench.pts)} pts left on the bench` });

@@ -1,0 +1,4 @@
+(function(root){'use strict';
+function leaderboard(rounds,results,cards){const out={};for(const [round,owners] of Object.entries(cards||{}))for(const [owner,picks] of Object.entries(owners||{})){const r=out[owner]||(out[owner]={owner,correct:0,wrong:0,push:0,pending:0});for(const [id,pick] of Object.entries(picks||{})){const match=rounds[round]?.matchups?.[id];if(!match||![match.a,match.b].includes(pick))continue;const winner=results[round]?.[id];if(winner==null)r.pending++;else if(winner==='tie')r.push++;else if([match.a,match.b].includes(winner))r[winner===pick?'correct':'wrong']++;}}return Object.values(out).sort((a,b)=>b.correct-a.correct||a.wrong-b.wrong||a.owner.localeCompare(b.owner));}
+const api={leaderboard};if(typeof module==='object'&&module.exports)module.exports=api;else root.CTE2Participation=api;
+})(typeof window==='undefined'?globalThis:window);

@@ -1,0 +1,20 @@
+name: CTE Historical Data Validation
+on:
+  pull_request:
+    paths:
+      - 'data/league-data.js'
+      - 'tests/data/**'
+      - '.github/workflows/cte-history-validation.yml'
+  workflow_dispatch:
+jobs:
+  static-history-validation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate CTE identity and historical ownership
+        run: node tests/data/validate-history.cjs

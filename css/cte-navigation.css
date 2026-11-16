@@ -1,0 +1,15 @@
+/* Step 9 navigation enhancement. Scoped to the existing shared dialog. */
+#networkMenu .cte-nav-search{padding:12px 20px 16px}
+#networkMenu .cte-nav-search label{display:block;font-size:12px;font-weight:700;margin-bottom:7px;color:var(--n-ink,#14161a)}
+#networkMenu .cte-nav-search input{display:block;width:100%;min-height:44px;border:1px solid var(--n-line,#d9dce1);border-radius:10px;background:var(--n-surface,#fff);color:var(--n-ink,#14161a);padding:10px 14px;font-size:16px}
+#networkMenu .cte-nav-search input:focus-visible{outline:3px solid var(--n-red,#b8222f);outline-offset:2px}
+#networkMenu .cte-nav-empty{margin:12px 0 0;font-size:13px;color:var(--n-muted,#626770)}
+#networkMenu .cte-nav-directory{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:0 20px 20px}
+#networkMenu .cte-nav-group{min-width:0}
+#networkMenu .cte-nav-group h3{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--n-muted,#626770);margin:0 0 8px}
+#networkMenu .cte-nav-group-links{display:grid;gap:4px}
+#networkMenu .cte-nav-group-links a{display:flex;align-items:center;min-height:44px;padding:10px 12px;border-radius:9px;font-size:14px;font-weight:600;color:var(--n-ink,#14161a);text-decoration:none;overflow-wrap:anywhere}
+#networkMenu .cte-nav-group-links a:hover,#networkMenu .cte-nav-group-links a:focus-visible{background:var(--n-bg,#f5f5f7)}
+#networkMenu .cte-nav-group-links a[aria-current="page"]{background:var(--n-bg,#f5f5f7);color:var(--n-red,#b8222f);border-left:3px solid var(--n-red,#b8222f)}
+#networkMenu .cte-nav-group[hidden],#networkMenu .cte-nav-group-links a[hidden],#networkMenu .cte-nav-empty[hidden]{display:none!important}
+@media(max-width:640px){#networkMenu .cte-nav-directory{grid-template-columns:minmax(0,1fr);gap:20px;padding-inline:16px}#networkMenu .cte-nav-search{padding-inline:16px}}
