@@ -47,6 +47,11 @@
     }
     cache = next;
     try { root.localStorage.setItem(KEY, JSON.stringify(next)); } catch (_) {}
+    // Avatars drawn before Sleeper answered get their photo now.
+    for (const el of root.document?.querySelectorAll?.('.g-avatar[data-owner]') || []) {
+      const src = next[el.dataset.owner]?.avatar;
+      if (src && !el.querySelector('img')) el.insertAdjacentHTML('beforeend', '<img src="' + esc(src) + '" alt="" loading="lazy" decoding="async" width="40" height="40">');
+    }
     return next;
   }
   function teamName(id) { return read()[id]?.team || data().owners?.[id]?.currentTeamName || ''; }
@@ -63,7 +68,27 @@
 
   const api = { COLORS, color, name, initials, franchiseOf, avatarUrl, learn, teamName, avatarSrc, avatar, chip };
   if (typeof module === 'object' && module.exports) { module.exports = api; return; }
+  /** Give existing owner-linked cards (power rankings, weekly awards, playoff seeds) their team colour and avatar. */
+  const DECORATE = '.power-row,.x-award,.cte-home-seed,.n-playoff-slot';
+  function decorate(scope) {
+    for (const el of (scope || root.document).querySelectorAll(DECORATE)) {
+      if (el.dataset.gTeam) continue;
+      const id = new URLSearchParams((el.getAttribute('href') || '').split('?')[1] || '').get('owner');
+      if (!id || !data().owners?.[id]) continue;
+      el.dataset.gTeam = id; el.style.setProperty('--team', color(id));
+      const anchor = el.matches('.power-row') ? el.querySelector('.rank-main') : el.querySelector('strong');
+      if (anchor) anchor.insertAdjacentHTML(el.matches('.power-row') ? 'beforebegin' : 'afterbegin', avatar(id, { size: el.matches('.power-row') ? '' : 'sm' }));
+      const move = el.querySelector('.rank-grade');
+      if (move) { const t = move.textContent.trim(); move.classList.add(t.startsWith('↑') ? 'is-up' : t.startsWith('↓') ? 'is-down' : 'is-flat'); if (t.startsWith('↑') || t.startsWith('↓')) move.setAttribute('aria-label', (t.startsWith('↑') ? 'Up ' : 'Down ') + t.slice(1).trim()); else move.setAttribute('aria-label', 'No change'); }
+    }
+  }
+  api.decorate = decorate;
   root.CTE_Teams = api;
+  if (root.document && root.MutationObserver) {
+    let queued = false; const run = () => { queued = false; decorate(); };
+    const start = () => { decorate(); new root.MutationObserver(() => { if (!queued) { queued = true; root.requestAnimationFrame(run); } }).observe(root.document.body, { childList: true, subtree: true }); };
+    if (root.document.readyState === 'loading') root.document.addEventListener('DOMContentLoaded', start); else start();
+  }
   // A broken or blocked image falls back to the initials already underneath it.
   root.document?.addEventListener('error', e => { if (e.target?.matches?.('.g-avatar img')) e.target.remove(); }, true);
 })(typeof window === 'undefined' ? globalThis : window);

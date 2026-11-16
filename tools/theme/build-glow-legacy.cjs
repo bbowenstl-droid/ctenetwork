@@ -87,5 +87,7 @@ for (const file of SOURCES) {
   });
   if (chunks.length) out += '\n/* ' + file + ' */\n' + chunks.join('\n') + '\n';
 }
-fs.writeFileSync(path.join(root, 'css', 'cte-glow-legacy.css'), out);
+const target = path.join(root, 'css', 'cte-glow-legacy.css');
+if (process.argv.includes('--check')) { if (!fs.existsSync(target) || fs.readFileSync(target, 'utf8') !== out) { console.error('css/cte-glow-legacy.css is stale: run node tools/theme/build-glow-legacy.cjs'); process.exit(1); } console.log('PASS css/cte-glow-legacy.css is current'); process.exit(0); }
+fs.writeFileSync(target, out);
 console.log('css/cte-glow-legacy.css: ' + count + ' rules, ' + out.length + ' bytes');
