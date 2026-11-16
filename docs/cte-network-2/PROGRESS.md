@@ -124,3 +124,12 @@ An independent review (Claude Fable 5.2, read-only) found no merge blockers with
 - Cache versions bumped (`app-v29.js`, `network-v29.js`, `cte-participation.js` → `?v=43`).
 - Share-card workflow no longer uses `[skip ci]`.
 - Runbook step 2 wording corrected (semantic, not byte-for-byte; `//` comments abort).
+
+## 2026-11-16 — Firebase activation (MONDAY_RUNBOOK steps 1–8)
+- 11:38 CT: live rules backed up (rollback copy kept by Brendan, outside git).
+- Candidate built with `stage-v2-firebase-rules.py` (rooms/book identical to live, v2 added; fingerprint 91e00e5ffba3); emulator suite PASS in Cloud Shell against the merged file.
+- Commissioner claim applied to Brendan's Google account and verified via Admin SDK.
+- Owner claims: none yet (owners unavailable); to be added after release with `assign-owner-claims.py`. Unmapped accounts see the "not assigned" state.
+- Rules published from the Firebase console; Draft Central and Sportsbook confirmed working afterwards.
+- Live checks on the preview build (cloud on, real database), by Brendan: anonymous REST read of /v2 denied; signed-out Lounge shows sign-in only; commissioner session verified; round/poll creation, own pick, vote, lounge message and reaction save and persist across reload and a second device; commissioner moderation works. Not run live: pick-lock at deadline and cross-owner isolation (need a second mapped owner) — both covered by the emulator suite against the published file; re-check live when the first other owner is mapped.
+- `CTE2_CLOUD_ENABLED = true` set for release.
