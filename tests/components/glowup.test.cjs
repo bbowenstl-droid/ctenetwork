@@ -126,7 +126,8 @@ test('team identity: stable colours, franchise continuity, safe avatar sources',
 
 test('theme and page wiring', () => {
   execFileSync(process.execPath, ['tools/theme/build-glow-legacy.cjs', '--check']);
-  const glow = fs.readFileSync('css/cte-glow.css', 'utf8');
+  const glow = fs.readFileSync('css/cte-glow.css', 'utf8'), bundle = fs.readFileSync('css/cte-theme.css', 'utf8');
+  assert.ok(bundle.includes('.g-gd-card') && bundle.includes('html .n-topbar'), 'bundle holds both layers');
   assert.match(glow, /prefers-reduced-motion:no-preference/); assert.match(glow, /forced-colors:active/);
   assert.doesNotMatch(glow, /url\(\//, 'no root-absolute asset paths (GitHub Pages project site)');
   assert.ok(fs.existsSync('assets/fonts/big-shoulders-display-latin-800-normal.woff2'));
@@ -134,8 +135,8 @@ test('theme and page wiring', () => {
   for (const page of fs.readdirSync('.').filter(f => f.endsWith('.html'))) {
     const html = fs.readFileSync(page, 'utf8');
     if (!/<body class="n-(app|legacy)/.test(html)) continue;
-    const a = html.indexOf('css/cte-glow-legacy.css'), b = html.indexOf('css/cte-glow.css');
-    assert.ok(a > 0 && b > a, page + ' loads the theme, generated layer first');
+    const b = html.indexOf('css/cte-theme.css');
+    assert.ok(b > 0 && html.split('css/cte-theme.css').length === 2, page + ' loads the theme bundle once');
     assert.ok(b > html.lastIndexOf('rel="stylesheet" href="taste-v40.css'), page + ' theme loads after the legacy stack');
     assert.doesNotMatch(html, /(href|src)="\/(?!\/)/, page + ' has a root-absolute path');
   }

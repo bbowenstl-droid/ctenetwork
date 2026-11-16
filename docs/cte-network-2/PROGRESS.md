@@ -111,3 +111,38 @@ Reviewed what similar Sleeper league sites and dynasty league homepages offer (S
 - **404.html** for any missing path (search + main links), fits 320px.
 - `tools/qa/make-preview.sh` rebuilds the iPhone preview branch from the release branch.
 Not built (suggested for after release): all-time 12×12 head-to-head grid, league key-dates calendar (.ics), trophy room.
+
+## Claude session — 2026-11-16 (Central): site glow-up — looks and live features
+Branch `feature/site-glowup` (from `release/cte-network-2-completion` at c62e95b). **Not merged, not deployed.** No Firebase rules, participation/security code, `data/cte-participation-config.js` or `tools/assign-*`/`stage-*` scripts were touched; sportsbook and draft central logic is unchanged.
+
+**Looks (see DESIGN_SYSTEM.md, DECISIONS.md)**
+- Black-and-gold, dark-only theme from the league crest on every shell page (29 pages). Old stylesheets are untouched: `tools/theme/build-glow-legacy.cjs` derives colour-only overrides from them and bundles `css/cte-theme.css` (one render-blocking file, 53 KB / 10 KB gzipped) with the hand-written `css/cte-glow.css`.
+- Display type (Big Shoulders Display, self-hosted 14 KB) for titles, section heads, scores of record; gold wordmark; redesigned hero with the crest, "Presented by Show Me Industries" and the next key date.
+- Team identity (`js/cte-teams.js`): one colour per franchise + Sleeper avatars (initials fallback, cached locally) on the home scoreboard, standings, playoff seeds, power rankings, weekly awards, the grid and the trophy room.
+- Motion only under `prefers-reduced-motion: no-preference`.
+- Power rankings: rank numerals, team bar + avatar, coloured movement chips, the editorial tagline now visible on phones. Weekly awards: team-coloured cards with avatars, two-up on phones.
+
+**Features (all from Sleeper's league endpoints)**
+- **Game Day on the home page** (`js/cte-gameday.js`): live scores with LIVE/FINAL/UPCOMING state, win-outlook bars, projected finals, starters left, upset-watch / too-close-to-call / photo-finish / upset alerts, top score, top starter, the league-median line and the tightest race; my-team matchup pinned first; quiet 60 s refresh while the week is live and the tab is visible. Projection = each starter still on 0 gets his own season average (CTE estimate, labelled; never shown once Sleeper scores the week). Alerts wait until half a matchup's starters have played.
+- **Head-to-head grid** (`head-to-head.html`, `js/cte-h2h.js`): 12×12 all-time grid, tap/Enter a cell for the series (record, points, current run, every meeting linked to its box score). Franchise view by default (Isaiah's line includes Jeremy's 2025 Weeks 1–3, Carter's includes Tyler's 2025); Managers toggle splits them (14 people). Scope filter and shareable URL kept; older `?a=&b=` links stay person-to-person.
+- **Trophy room** (`trophy-room.html`, `js/cte-trophies.js`): per season — CTE Champion, Toilet Bowl Trophy, Last Place Trophy — plus runner-up, third place, best record, scoring title, highest week, most weekly high scores, an all-time count and "how it's decided". Current season shows the live races, no hardware.
+- **Key dates** (`calendar.html`, `js/cte-calendar.js`, `data/cte-calendar.js`): rookie draft, kickoff, trade deadline, regular-season finale, three playoff rounds; week strip; countdown; **Subscribe** (webcal) and **Download .ics** (`calendar/cte-league.ics`, built by `tools/build-calendar.cjs`). Dates are re-checked against live Sleeper settings; unknown dates are omitted.
+- Navigation, search index and home tiles list the new pages. A home tile points at `state-of-union.html`; repoint it if the new State of the Union page ships under another name.
+
+**Needs the commissioner's eye**
+- 2025 trophies are *derived*: Toilet Bowl → **Tyler** (lost out of Sleeper's consolation bracket, which ran losers-advance), Last Place → **Jesse** (6–22, behind Cotton on points for). If the league ruled otherwise, record it in `CTE_LEAGUE_DATA.trophies` (see DECISIONS.md) and the page follows.
+- Trade deadline is shown as **Mon Nov 23, 2026** (Sleeper closes trading when the last Week 11 game ends).
+- The .ics subscription only changes when `data/cte-calendar.js` is edited and `node tools/build-calendar.cjs` is re-run.
+
+**Verification (this sandbox cannot reach api.sleeper.app, so browsers were fed the frozen 2026-11-13 provider capture through `tools/qa/sleeper-fixtures.cjs`: as captured, simulated mid-Sunday, simulated final, and Sleeper down)**
+- Repo checks: `check-site.py`, `check-syntax.cjs`, all `tests/components` + `tests/data` suites (15 new tests in `glowup.test.cjs`), history/sportsbook/awards tests, `validate-history.cjs`, State of the Union `verify.py` — all pass.
+- axe (WCAG 2 A/AA) + overflow + single-h1 + JS-error sweep, Chromium, every shell page and detail deep links at 320/375/390/430/768/1280: clean except the long-standing `matchup.html` with no parameters (no h1).
+- `tools/qa/browser-matrix.mjs` (now accepts `ENGINES=chromium` and `SLEEPER_FIXTURES=`): 264 loads, 44 pages, 6 widths — only the two known exceptions (`matchup.html` bare, frozen `state-of-union.html` h1×2); menu open/Escape/focus-return passes at 4 widths. A second run with Sleeper unreachable showed no overflow, exception or broken same-origin request anywhere.
+- Interaction script: grid 12 rows/132 cells, totals 152 W = 152 L across 152 games, keyboard open + focus move, franchise vs manager split (Isaiah–Brendan 1–2 → 1–1 plus Jeremy 0–1), scope filter, old deep link, trophy holders, 7 calendar events, .ics download, webcal link, Game Day in four data states, avatar-blocked fallback, my-team pin, menu search.
+- Lighthouse (local, uncompressed server, Sleeper unreachable): accessibility 100 on index, head-to-head, standings, trophy room, calendar (mobile + desktop). Mobile performance vs the base commit under the same conditions: index 73 (75), head-to-head 93 (93), standings 89 (95); new pages 93–96. The theme adds one stylesheet.
+
+**Not done / limits**
+- No WebKit or real-iPhone run here (WebKit build unavailable); CI's `cte-release-qa.yml` covers WebKit emulation against live Sleeper. Live Sleeper was not exercised from this sandbox.
+- A starter who plays and scores exactly 0 is treated as "still to play" until Sleeper scores the week; the outlook is an estimate by design.
+- `game-day.html` keeps its own scoreboard (no outlook bars); `admin.html`, `tv.html`, `404.html`, `offline.html` and `state-of-union.html` are outside the theme (the last three were already dark).
+- Share-card images (`share/*.jpg`) still use the previous artwork.

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 /*
- * Derives css/cte-glow-legacy.css: for every rule in the older stylesheets that
+ * Derives css/cte-glow-legacy.css and bundles css/cte-theme.css (the only theme file pages load): for every rule in the older stylesheets that
  * hard-codes a light-shell colour, emit the same selector with the colour moved
  * onto the black-and-gold scale. Only colour declarations are emitted; layout is
  * never touched. Re-run after editing any source sheet:
  *   node tools/theme/build-glow-legacy.cjs
- * Hand-written theme rules live in css/cte-glow.css, which loads after this file.
+ * Hand-written theme rules live in css/cte-glow.css and follow the generated rules in the bundle.
  */
 const fs = require('node:fs');
 const path = require('node:path');
@@ -87,7 +87,13 @@ for (const file of SOURCES) {
   });
   if (chunks.length) out += '\n/* ' + file + ' */\n' + chunks.join('\n') + '\n';
 }
-const target = path.join(root, 'css', 'cte-glow-legacy.css');
-if (process.argv.includes('--check')) { if (!fs.existsSync(target) || fs.readFileSync(target, 'utf8') !== out) { console.error('css/cte-glow-legacy.css is stale: run node tools/theme/build-glow-legacy.cjs'); process.exit(1); } console.log('PASS css/cte-glow-legacy.css is current'); process.exit(0); }
-fs.writeFileSync(target, out);
-console.log('css/cte-glow-legacy.css: ' + count + ' rules, ' + out.length + ' bytes');
+// Pages load ONE render-blocking file: css/cte-theme.css = generated layer + hand-written css/cte-glow.css (comments stripped).
+const hand = fs.readFileSync(path.join(root, 'css', 'cte-glow.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*\n+/g, '\n').trim();
+const bundle = '/* BUILT by tools/theme/build-glow-legacy.cjs from css/cte-glow-legacy.css (generated) + css/cte-glow.css (source). Edit the source, then rebuild. */\n' + out.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*\n+/g, '\n').trim() + '\n' + hand + '\n';
+const targets = [[path.join(root, 'css', 'cte-glow-legacy.css'), out], [path.join(root, 'css', 'cte-theme.css'), bundle]];
+if (process.argv.includes('--check')) {
+  for (const [file, text] of targets) if (!fs.existsSync(file) || fs.readFileSync(file, 'utf8') !== text) { console.error(path.relative(root, file) + ' is stale: run node tools/theme/build-glow-legacy.cjs'); process.exit(1); }
+  console.log('PASS css/cte-glow-legacy.css and css/cte-theme.css are current'); process.exit(0);
+}
+for (const [file, text] of targets) fs.writeFileSync(file, text);
+console.log('css/cte-glow-legacy.css: ' + count + ' rules, ' + out.length + ' bytes; css/cte-theme.css: ' + bundle.length + ' bytes');

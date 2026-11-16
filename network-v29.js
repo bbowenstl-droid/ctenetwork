@@ -35,7 +35,7 @@ function renderHomeContext(){
  if(!window.CTE2Context)return;
  const c=CTE2Context.context(snapshot?.league),hero=document.querySelector('.cte-home-hero');if(!hero)return;
  $('cteHomeTitle').textContent=c.title;hero.querySelector('p').textContent=c.copy;
- const a=hero.querySelector('.cte-home-hero-actions a');a.href=c.href;a.textContent=c.action+' ↗';hero.dataset.context=c.kind;
+ const a=hero.querySelector('.cte-home-hero-actions a');a.href=c.href;a.textContent=c.action+' ↗';hero.dataset.context=c.kind;const second=a.nextElementSibling;if(second)second.hidden=second.getAttribute('href')===c.href;
 }
 function renderHomePulse(){
  const value=$('cteHomePulseValue'),detail=$('cteHomePulseDetail');if(!value||!detail||!snapshot)return;
