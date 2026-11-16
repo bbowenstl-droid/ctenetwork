@@ -13,7 +13,7 @@ Estimated time: about 60–75 minutes, plus waiting for owners to sign in once.
 ## 0b. iPhone preview site (5 minutes, do first)
 1. github.com/new → name `ctenetwork-preview`, **Public**, leave README/.gitignore/license **unchecked** → Create.
 2. If the Claude GitHub app is limited to selected repositories: GitHub Settings → Applications → Claude → Configure → add `ctenetwork-preview`.
-3. Tell Claude. Claude pushes branch `preview/site` (release build + red PREVIEW banner + noindex) to its `main`.
+3. Tell Claude. Claude runs `tools/qa/make-preview.sh` (latest release build + red PREVIEW banner + noindex) and pushes it to the preview repo's `main`.
 4. Repo Settings → Pages → Deploy from a branch → `main` / root → Save.
 5. Run `IPHONE_CHECKLIST.md` on your phone at `https://bbowenstl-droid.github.io/ctenetwork-preview/`.
    Sportsbook and Draft Central there use the real database — don't bet or draft unless you mean it.

@@ -103,3 +103,11 @@ Current Sleeper team names changed since the handoff note (e.g. Carter → "The 
 - `countdown.html`/`history.html` are redirect stubs; their aborted stylesheet requests are expected.
 - Legacy `tools/test-quality-v41.cjs`, `test-sportsbook-ui.cjs`, `data-smoke-v24.cjs` fail identically before and after this session (network/stale sportsbook fixture); not part of CI.
 - Real iPhone Safari pass, Monday Firebase activation, authenticated end-to-end tests, Pages settings confirmation, release merge.
+
+## Claude session — 2026-11-16 (Central): additions from comparable-site review
+Reviewed what similar Sleeper league sites and dynasty league homepages offer (Sleeper League Page template, League Pulse, Leagueyard, MFL/RT Sports dynasty league pages, Yahoo record book). CTE already had a record book, power rankings, history and head-to-head. Built the gaps that need no admin access:
+- **Link previews.** Open Graph/Twitter tags on 25 public pages with a league-branded default card (`share/cte-network.jpg`). Every article gets `share/<id>.html` + a 1200×630 headline card built by `tools/share/build-share-cards.py`; article pages have a **Share story** button that shares that link. New articles on `main` get their preview built and committed by `.github/workflows/cte-share-cards.yml`. Post `share/<id>.html` links on Facebook; use Facebook's Sharing Debugger "Scrape Again" if an old preview is cached.
+- **Draft Capital** (`draft-capital.html`, League menu): live Sleeper ownership of every future rookie pick (seasons +1…+3), first-round and acquired marks, traded-away list, capital ranking. QA: 12 teams, 48 picks for 2027, 9 acquired, both engines.
+- **404.html** for any missing path (search + main links), fits 320px.
+- `tools/qa/make-preview.sh` rebuilds the iPhone preview branch from the release branch.
+Not built (suggested for after release): all-time 12×12 head-to-head grid, league key-dates calendar (.ics), trophy room.
