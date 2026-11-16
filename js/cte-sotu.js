@@ -14,7 +14,7 @@
   const SITE = 'https://bbowenstl-droid.github.io/ctenetwork/';
   const CACHE = 'cte_sotu_v1:';
   const CURRENT_TTL = 5 * 60 * 1000;
-  const REQUEST_TIMEOUT = 9000, OVERALL_TIMEOUT = 25000;
+  const REQUEST_TIMEOUT = 9000, OVERALL_TIMEOUT = 30000, EARLY_MS = 4000;
   const season = String(CONFIG.league.currentSeason);
   const currentLeagueId = CONFIG.league.seasons[season].sleeperLeagueId;
   const $ = id => document.getElementById(id);
@@ -115,20 +115,36 @@
     window.CTESotu = { model, mode }; // for QA probes
   }
 
+  let run = 0, pendingLive = false, shown = false;
+  const loadSnapshot = async () => { const snap = await fetchJson('data/sotu/snapshot.json?v=1', 20000); snapshotMeta = snap; return snap.responses; };
+  function show(responses, as) {
+    try { build(responses); } catch (err) { console.error('State of the Union: build failed', err); if (!shown) fail(); return false; }
+    mode = as; window.CTESotu.mode = as; $('sotuProgress').hidden = true;
+    paintStatus(); renderHero();
+    if (shown) rerender(); else { shown = true; rerender(true); observe(); route(true); }
+    return true;
+  }
+  /* Live first. If Sleeper has not answered within EARLY_MS, paint the saved copy and swap the
+     live numbers in when they arrive. If Sleeper fails outright, stay on the saved copy and say so. */
   async function start(fresh) {
-    mode = 'loading'; $('sotuNotice').innerHTML = ''; $('sotuStatus').textContent = 'Connecting to Sleeper…';
+    const me = ++run;
+    if (!shown) mode = 'loading';
+    $('sotuNotice').innerHTML = ''; $('sotuStatus').textContent = 'Connecting to Sleeper…';
     await loadNames();
-    let responses;
-    try { responses = await deadline(loadLive(fresh), OVERALL_TIMEOUT); mode = 'live'; }
-    catch (err) {
-      console.warn('State of the Union: live load failed, using saved snapshot', err);
-      try { const snap = await fetchJson('data/sotu/snapshot.json?v=1', 20000); responses = snap.responses; snapshotMeta = snap; mode = 'snapshot'; }
-      catch (err2) { return fail(); }
+    const live = deadline(loadLive(fresh), OVERALL_TIMEOUT).then(r => ({ r }), e => ({ e }));
+    let res = await Promise.race([live, new Promise(ok => setTimeout(() => ok(null), EARLY_MS))]);
+    if (me !== run) return;
+    if (!res) {
+      pendingLive = true;
+      if (!shown) { try { show(await loadSnapshot(), 'snapshot'); } catch (_) { /* keep waiting for live */ } }
+      res = await live; pendingLive = false;
+      if (me !== run) return;
     }
-    $('sotuProgress').hidden = true;
-    try { build(responses); } catch (err) { console.error('State of the Union: build failed', err); return fail(); }
-    paintStatus(); renderHero(); rerender(true); observe(); route(true);
-    resolveUnknownNames();
+    if (res.r) { if (show(res.r, 'live')) resolveUnknownNames(); return; }
+    console.warn('State of the Union: live load failed, using saved copy', res.e);
+    if (shown && snapshotMeta && mode === 'snapshot') return paintStatus();
+    if (shown && mode === 'live') { paintStatus(); return toast('Sleeper did not answer. Still showing the last live numbers.'); }
+    try { show(await loadSnapshot(), 'snapshot'); } catch (_) { fail(); }
   }
   function fail() {
     mode = 'error'; $('sotuProgress').hidden = true; $('sotuStatus').textContent = 'Sleeper unavailable';
@@ -139,6 +155,9 @@
     const st = $('sotuStatus');
     if (mode === 'live') {
       st.innerHTML = `<span class="sotu-dot" aria-hidden="true"></span>Live from Sleeper · ${esc(new Date(fetchedAt || Date.now()).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }))} <button type="button" class="sotu-link" data-refresh>Refresh</button>`;
+      $('sotuNotice').innerHTML = '';
+    } else if (pendingLive) {
+      st.textContent = 'Saved copy · still waiting on Sleeper…';
     } else {
       st.textContent = 'Saved copy';
       $('sotuNotice').innerHTML = `<p class="sotu-alert">Sleeper isn’t answering right now, so this is the saved copy from ${esc(day(snapshotMeta.capturedAt))}. Numbers stop there. <button type="button" class="sotu-btn" data-refresh>Try live again</button></p>`;
@@ -363,7 +382,7 @@
         ${s.games ? mixBar(s.mix) : ''}</section>`;
     }).join('');
     const bw = f.bestSeason ? `<p class="sotu-fine"><strong>Best season:</strong> ${f.bestSeason.year} (${f.bestSeason.w}–${f.bestSeason.l}, ${esc(f.bestSeason.result.toLowerCase())})${f.worstSeason && f.worstSeason !== f.bestSeason ? ` · <strong>Worst:</strong> ${f.worstSeason.year} (${f.worstSeason.w}–${f.worstSeason.l}${f.worstSeason.complete ? '' : ', in progress'})` : ''}</p>` : '';
-    return `<article class="sotu-fr" id="franchise-${f.rid}" aria-labelledby="fh-${f.rid}"><header><div><h3 id="fh-${f.rid}">${esc(f.name)}</h3><p>${esc(f.teamName)}${f.division ? ' · ' + esc(f.division) : ''}</p></div>${titles ? `<span class="sotu-banner" aria-label="${plural(titles, 'championship')}">${icon.trophy}${titles > 1 ? '×' + titles : ''}</span>` : ''}</header>
+    return `<article class="sotu-fr" id="franchise-${f.rid}" aria-labelledby="fh-${f.rid}"><header><div><h3 id="fh-${f.rid}">${esc(f.name)}</h3><p>${esc(f.teamName)}${f.division ? ' · ' + esc(f.division) : ''}</p></div>${titles ? `<span class="sotu-banner" role="img" aria-label="${plural(titles, 'championship')}">${icon.trophy}${titles > 1 ? '×' + titles : ''}</span>` : ''}</header>
       <dl class="sotu-mini"><div><dt>All-time</dt><dd>${w}–${l}</dd></div><div><dt>H2H</dt><dd>${rec(tot.h2h)}</dd></div><div><dt>PF / game</dt><dd>${tot.games ? f1(tot.pf / tot.games) : '—'}</dd></div><div><dt>Trades</dt><dd>${f.trades}</dd></div></dl>
       ${mgr}<p class="sotu-identity">${esc(identityLine(f))}</p>${bw}
       <details class="sotu-details"><summary>Season by season<span class="sotu-vh"> for ${esc(f.name)}</span></summary><div class="sotu-fr-seasons">${seasons}</div><p class="sotu-fr-links"><a href="team.html?owner=${encodeURIComponent(f.manager)}">Team page</a><button type="button" class="sotu-link" data-team-trades="${f.rid}">${esc(f.name)}’s trades</button><button type="button" class="sotu-share" data-share-hash="franchise-${f.rid}" data-share-title="${esc(f.name)}: franchise history">Share</button></p></details></article>`;

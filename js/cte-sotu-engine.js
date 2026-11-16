@@ -516,7 +516,7 @@
       rids, games, trades, links, pairs, traderStats: Object.values(traderStats).sort((p, q) => q.trades - p.trades || q.assetsIn + q.assetsOut - p.assetsIn - p.assetsOut), drafts: draftReports, franchises, allTime, records, timeline, searchable,
       counts: { seasons: S.length, games: counted.length, regularGames: games.filter(g => g.type === 'regular').length, trades: trades.length, transactions: txCount, draftPicks: drafts.reduce((a, d) => a + d.picks.length, 0), managers: allTime.manager.length, linkedTrades: new Set(links.flatMap(l => [l.from, l.to])).size },
       audit, issues,
-      name: who.name, managerAt, franchiseLabel, pname, position: id => positions[id] || '', assetInfo, tradeTree, journey, tradeById, ord
+      histories, name: who.name, managerAt, franchiseLabel, pname, position: id => positions[id] || '', assetInfo, tradeTree, journey, tradeById, ord
     };
     model.summary = summarize(model);
     return model;

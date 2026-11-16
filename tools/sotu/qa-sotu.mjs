@@ -22,6 +22,10 @@ const MODE = process.env.MODE || 'mock';
 const WIDTHS = (process.env.WIDTHS || '320,375,390,430,768,1280').split(',').map(Number);
 const ENGINES = (process.env.ENGINES || 'chromium').split(',');
 const snap = JSON.parse(fs.readFileSync('data/sotu/snapshot.json', 'utf8')).responses;
+if (process.env.THREE_TEAM) { // add the three-team deal that completed after the snapshot was taken
+  const k = Object.keys(snap).filter(p => /transactions\/10$/.test(p)).pop();
+  snap[k] = [...snap[k], { type: 'trade', status: 'complete', transaction_id: '1426706170696990720', created: 1794700000000, status_updated: 1794700000000, leg: 10, roster_ids: [1, 4, 6], adds: { 11625: 6, 13301: 4, 7588: 1 }, drops: { 11625: 1, 13301: 6, 7588: 4 }, draft_picks: [{ season: '2027', round: 1, roster_id: 2, owner_id: 4, previous_owner_id: 1 }], waiver_budget: [] }];
+}
 fs.mkdirSync(OUT, { recursive: true });
 
 async function wire(page, stats) {
