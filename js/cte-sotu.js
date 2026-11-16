@@ -328,7 +328,7 @@
   function showJourney(key, focus) {
     ensure('trades');
     const box = $('sotuJourney'); box.innerHTML = journeyHtml(key);
-    if (focus) { box.focus({ preventScroll: true }); box.scrollIntoView({ block: 'center', behavior: reduced() ? 'auto' : 'smooth' }); }
+    if (focus) { box.focus({ preventScroll: true }); box.scrollIntoView({ block: 'center', behavior: reduced() ? 'instant' : 'smooth' }); }
   }
   function openTree(id, scroll) {
     ensure('trades');
@@ -337,7 +337,7 @@
     ui.openTrees.add(id);
     const wrap = card.querySelector('.sotu-tree-wrap'), btn = card.querySelector('[data-tree]');
     wrap.innerHTML = treeHtml(id); wrap.hidden = false; btn.setAttribute('aria-expanded', 'true'); btn.textContent = 'Close trade tree';
-    if (scroll) { card.scrollIntoView({ block: 'start', behavior: reduced() ? 'auto' : 'smooth' }); btn.focus({ preventScroll: true }); }
+    if (scroll) { card.scrollIntoView({ block: 'start', behavior: reduced() ? 'instant' : 'smooth' }); btn.focus({ preventScroll: true }); }
   }
 
   /* ------------------------------------------------------------ franchises */
@@ -466,7 +466,7 @@
     else if (['standings', 'luck', 'traders', 'drafters'].includes(h)) upTo('records');
     else return;
     const target = /^asset-/.test(h) ? $('sotuJourney') : document.getElementById(h);
-    if (target) requestAnimationFrame(() => target.scrollIntoView({ block: 'start', behavior: initial || reduced() ? 'auto' : 'smooth' }));
+    if (target) requestAnimationFrame(() => target.scrollIntoView({ block: 'start', behavior: initial || reduced() ? 'instant' : 'smooth' }));
   }
   addEventListener('hashchange', () => route(false));
 
@@ -497,7 +497,7 @@
     else if (d.asset) { showJourney(d.asset, true); history.replaceState(null, '', '#asset-' + encodeURIComponent(d.asset)); }
     else if ('journeyClose' in d) { $('sotuJourney').innerHTML = ''; const q = $('sotuAssetQuery'); if (q) q.focus(); }
     else if (d.team) { ui.tradeTeam = String(ui.tradeTeam) === d.team ? 'all' : d.team; paintTrades(); }
-    else if (d.teamTrades) { ensure('trades'); ui.tradeTeam = d.teamTrades; paintTrades(); document.getElementById('trades').scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth' }); }
+    else if (d.teamTrades) { ensure('trades'); ui.tradeTeam = d.teamTrades; paintTrades(); document.getElementById('trades').scrollIntoView({ behavior: reduced() ? 'instant' : 'smooth' }); }
     else if (d.standings) { ui.standings = d.standings; $('sotuAllTime').innerHTML = allTimeTable(); $('sotuLuck').innerHTML = luckChart(); document.querySelectorAll('[data-standings]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.standings === ui.standings))); }
     else if (d.draft) { ui.draft = Number(d.draft); $('sotuDrafts').innerHTML = draftBlock(); const b = document.querySelector(`[data-draft="${ui.draft}"]`); if (b) b.focus(); }
   });
