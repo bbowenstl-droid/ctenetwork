@@ -94,7 +94,8 @@ async function checkOne(browser, engine, page, width, { axe, shot }) {
         brokenImages: imgs, duplicateIds: Object.entries(ids).filter(([, n]) => n > 1).map(([k]) => k).slice(0, 10),
         hasMain: !!document.querySelector('main,[role=main]'), viewportMeta: !!document.querySelector('meta[name=viewport]'),
         bodyTextLength: (document.body && document.body.innerText || '').length,
-        probes: Object.fromEntries(['.n-story-row', '.n-news-card', '.n-table-row', '.n-skeleton', '.n-score-team', 'table tr', '.lineup-player', '.rivalry-meeting', '.tx-card'].map(q => [q, document.querySelectorAll(q).length]).filter(([, n]) => n)),
+        capSummary: (document.querySelector('.cap-summary') || {}).textContent || (document.getElementById('capitalStamp') || {}).textContent || null,
+        probes: Object.fromEntries(['.n-story-row', '.n-news-card', '.n-table-row', '.n-skeleton', '.n-score-team', 'table tr', '.lineup-player', '.rivalry-meeting', '.tx-card', '.cap-team', '.cap-pick', '.cap-acquired', '.cte-share-btn'].map(q => [q, document.querySelectorAll(q).length]).filter(([, n]) => n)),
         heights: Object.fromEntries(['#playoffField', '#leagueStandings', '#powerRankings', '.cte-home-pulse', '#warOutput', '#bkPersonal'].map(q => [q, document.querySelector(q)]).filter(([, el]) => el).map(([q, el]) => [q, Math.round(el.getBoundingClientRect().height)]))
       };
     });
@@ -193,6 +194,8 @@ fs.writeFileSync(path.join(OUT, 'browser-matrix.md'), md);
 console.log(md);
 console.log('\n## Content probes (chromium 390 / webkit 390)');
 for (const r of results.filter(r => r.width === 390)) console.log(`${r.engine} ${r.page}: ${JSON.stringify(r.probes || {})} text=${r.bodyTextLength}`);
+console.log('\n## Draft capital detail');
+for (const r of results.filter(r => r.page === 'draft-capital.html' && r.width === 1440)) console.log(`${r.engine}: ${JSON.stringify(r.probes)} capSummary=${JSON.stringify(r.capSummary || '')}`);
 console.log('\n## Rendered heights (for layout-shift reservations)');
 for (const r of results.filter(r => r.heights && Object.keys(r.heights).length && r.engine === 'chromium')) console.log(`${r.page} ${r.width}: ${JSON.stringify(r.heights)}`);
 // Full axe detail (targets) for triage from CI logs.
