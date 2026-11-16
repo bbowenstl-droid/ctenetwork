@@ -307,7 +307,8 @@ body.sotu-page.n-app :is(.n-footer, .footer) { color: var(--sotu-muted); border-
 @media (min-width: 560px) {
   .sotu-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sotu-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .sotu-sides-2, .sotu-sides-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sotu-sides-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sotu-sides-3 { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
   .sotu-branches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sotu-fr-season .sotu-mini { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
@@ -329,7 +330,6 @@ body.sotu-page.n-app :is(.n-footer, .footer) { color: var(--sotu-muted); border-
   .sotu-trades { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
   .sotu-recs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sotu-frs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .sotu-sides-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 359px) {
   .sotu-honors { grid-template-columns: minmax(0, 1fr); }
