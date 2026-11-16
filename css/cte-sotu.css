@@ -1,0 +1,339 @@
+/* CTE State of the Union — black-and-gold special report.
+ * Everything is scoped to body.sotu-page / .sotu so no other page is affected.
+ * Mobile first: one column at 320px, two from 700px, three from 1180px.
+ */
+body.sotu-page {
+  --sotu-bg: #0b0c0f; --sotu-surface: #14161b; --sotu-raise: #1b1e25; --sotu-line: #2d323b;
+  --sotu-ink: #f5f3ee; --sotu-muted: #b6bcc6; --sotu-gold: #d7a83d; --sotu-gold-hi: #f2cf74;
+  --sotu-good: #8bd9a4; --sotu-warn: #ff9ca5; --sotu-blue: #8fb8ff; --sotu-violet: #c9a6ff;
+  --sotu-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sotu-top: calc(64px + env(safe-area-inset-top));
+  background: var(--sotu-bg) !important; color: var(--sotu-ink); color-scheme: dark;
+}
+body.sotu-page .n-menu { color: var(--n-ink); color-scheme: light; }
+@media (min-width: 821px) { body.sotu-page { --sotu-top: 80px; } }
+
+/* ---- shared shell, dark edition (same approach as the sportsbook page) ---- */
+body.sotu-page .n-topbar { background: #0b0c0fee; border-bottom-color: var(--sotu-line); color: var(--sotu-ink); }
+body.sotu-page .n-logo-type { color: var(--sotu-gold); }
+body.sotu-page .n-wordmark-sub { color: var(--sotu-ink); border-left-color: #3a404a; }
+body.sotu-page .n-top-edition { color: var(--sotu-muted); }
+body.sotu-page .n-menu-button { color: var(--sotu-ink); }
+body.sotu-page.n-app .n-navigation > :is(a, button) { color: var(--sotu-muted); }
+body.sotu-page.n-app .n-navigation > :is(a, button):hover { color: var(--sotu-ink); }
+body.sotu-page.n-app :is(.n-footer, .footer) { color: var(--sotu-muted); border-top-color: var(--sotu-line); }
+@media (max-width: 820px) { body.sotu-page .n-navigation { background: #0b0c0ff2; border-top-color: var(--sotu-line); } }
+
+.sotu { color: var(--sotu-ink); font-size: 16px; line-height: 1.55; }
+.sotu *, .sotu *::before, .sotu *::after { box-sizing: border-box; }
+.sotu h1, .sotu h2, .sotu h3, .sotu h4, .sotu h5, .sotu p, .sotu ul, .sotu ol, .sotu dl, .sotu dd, .sotu figure { margin: 0; }
+.sotu ul, .sotu ol { padding: 0; list-style: none; }
+.sotu a { color: var(--sotu-gold-hi); text-underline-offset: 3px; }
+.sotu small { font-size: 12px; font-weight: 500; color: var(--sotu-muted); }
+.sotu strong { font-weight: 700; }
+.sotu :is(a, button, summary, input, select, [tabindex]):focus-visible { outline: 3px solid var(--sotu-gold-hi); outline-offset: 3px; border-radius: 6px; }
+.sotu-vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.sotu .num, .sotu-pts, .sotu-big, .sotu-tile dd, .sotu-mini dd { font-family: var(--sotu-mono); font-variant-numeric: tabular-nums; }
+
+/* ---- hero ---- */
+.sotu-hero { position: relative; padding: 4px 0 8px; }
+.sotu-hero::before { content: ""; position: absolute; inset: -22px 0 auto; height: 300px; z-index: -1; pointer-events: none;
+  background: radial-gradient(120% 90% at 85% 0%, #d7a83d2e 0%, #d7a83d0a 45%, transparent 70%); }
+.sotu-hero-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; align-items: center; min-height: 28px; }
+.sotu-kicker, .sotu-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--sotu-gold); }
+.sotu-status { font-size: 12px; color: var(--sotu-muted); display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.sotu-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sotu-good); box-shadow: 0 0 0 3px #8bd9a433; }
+.sotu-hero h1 { font-size: clamp(42px, 13vw, 104px); line-height: .92; letter-spacing: -.055em; font-weight: 850; margin: 18px 0 14px; }
+.sotu-hero h1 em { font-style: normal; color: var(--sotu-gold); display: block; }
+.sotu-dek { font-size: clamp(17px, 2.2vw, 22px); line-height: 1.4; color: #e6e3db; max-width: 46ch; }
+.sotu-progress { height: 3px; background: var(--sotu-line); border-radius: 3px; margin-top: 16px; overflow: hidden; }
+.sotu-progress span { display: block; height: 100%; width: 0; background: var(--sotu-gold); transition: width .2s ease; }
+.sotu-alert { margin-top: 16px; padding: 14px 16px; border: 1px solid #6b5420; background: #2a2110; border-radius: 12px; font-size: 14px; color: #f6e7bd; }
+.sotu-alert .sotu-btn { margin: 8px 8px 0 0; }
+.sotu-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 22px; }
+.sotu-tile { display: flex; flex-direction: column-reverse; padding: 14px 14px 12px; border: 1px solid var(--sotu-line); border-radius: 16px; background: linear-gradient(180deg, #181b21, #121419); min-width: 0; }
+.sotu-tile dd { font-size: clamp(30px, 8vw, 42px); font-weight: 600; line-height: 1; color: var(--sotu-gold-hi); letter-spacing: -.04em; }
+.sotu-tile dt { font-size: 12px; color: var(--sotu-muted); margin-top: 6px; text-transform: uppercase; letter-spacing: .06em; }
+.sotu-skel dd { color: #3a404a; }
+.sotu-bot { margin-top: 18px; border: 1px solid #5d4a1c; border-radius: 22px; background: linear-gradient(160deg, #1d1a12 0%, #14161b 55%); padding: 16px; }
+.sotu-bot-head { display: flex; align-items: center; gap: 12px; }
+.sotu-bot-head img { width: 44px; height: 44px; border-radius: 12px; background: #000; object-fit: cover; flex: none; }
+.sotu-bot-head > div { flex: 1; min-width: 0; }
+.sotu-bot-head h2 { font-size: 20px; letter-spacing: -.02em; }
+.sotu-bot-head p { font-size: 12px; color: var(--sotu-muted); }
+.sotu-takes { display: grid; gap: 10px; margin-top: 14px; }
+.sotu-takes li { padding: 14px; border-radius: 14px; background: #0f1115; border: 1px solid var(--sotu-line); }
+.sotu-takes p { font-size: 16px; line-height: 1.5; margin: 6px 0 8px; }
+.sotu-tag { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--sotu-gold); }
+.sotu-more { font-size: 13px; font-weight: 600; display: inline-flex; min-height: 44px; align-items: center; margin: -8px 0 -12px; }
+.sotu-skel-line { min-height: 96px; background: linear-gradient(100deg, #14161b 15%, #1e222a 45%, #14161b 75%); background-size: 200% 100%; animation: sotu-shimmer 1.8s ease infinite; }
+.sotu-sponsor { margin-top: 14px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--sotu-muted); }
+.sotu-sponsor strong { color: var(--sotu-ink); }
+@keyframes sotu-shimmer { to { background-position: -200% 0; } }
+
+/* ---- jump bar ---- */
+.sotu-jump { position: sticky; top: calc(var(--sotu-top) + 6px); z-index: 40; display: flex; gap: 6px; overflow-x: auto; margin: 22px 0 0; padding: 6px; border: 1px solid var(--sotu-line); border-radius: 999px; background: #0b0c0ff2; -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); scrollbar-width: none; }
+.sotu-jump::-webkit-scrollbar { display: none; }
+.sotu-jump a { flex: none; min-height: 44px; display: inline-flex; align-items: center; padding: 0 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--sotu-muted); text-decoration: none; border: 1px solid transparent; }
+.sotu-jump a[aria-current] { color: #14110a; background: var(--sotu-gold); }
+.sotu-jump a:hover:not([aria-current]) { color: var(--sotu-ink); border-color: var(--sotu-line); }
+
+/* ---- sections ---- */
+.sotu-section { padding-top: 34px; scroll-margin-top: calc(var(--sotu-top) + 62px); }
+.sotu-hero, .sotu [id^="trade-"], .sotu [id^="franchise-"], .sotu-block, #sotuJourney { scroll-margin-top: calc(var(--sotu-top) + 70px); }
+.sotu-section-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.sotu-section-head h2 { font-size: clamp(26px, 6vw, 40px); line-height: 1.05; letter-spacing: -.04em; font-weight: 800; margin-top: 6px; }
+.sotu-h3 { font-size: 19px; letter-spacing: -.02em; margin: 26px 0 10px; }
+.sotu-fine { font-size: 13px; color: var(--sotu-muted); margin: 8px 0; }
+.sotu-note, .sotu-empty { padding: 16px; border: 1px solid var(--sotu-line); border-radius: 14px; background: var(--sotu-surface); font-size: 14px; margin-top: 16px; }
+.sotu-skeleton { min-height: 320px; border-radius: 18px; padding: 22px; color: var(--sotu-muted); font-size: 13px; background: linear-gradient(100deg, #14161b 15%, #1c2027 45%, #14161b 75%); background-size: 200% 100%; animation: sotu-shimmer 1.8s ease infinite; }
+.sotu-skeleton.is-stopped { animation: none; min-height: 80px; }
+.sotu-chip { display: inline-flex; align-items: center; min-height: 24px; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--sotu-line); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--sotu-muted); white-space: nowrap; }
+.sotu-chip.is-gold { color: #14110a; background: var(--sotu-gold); border-color: var(--sotu-gold); }
+.sotu-ico { width: 1em; height: 1em; }
+
+/* ---- controls ---- */
+.sotu-btn, .sotu-share, .sotu-seg button, .sotu-chipbtn { font: inherit; cursor: pointer; min-height: 44px; border-radius: 999px; border: 1px solid #4a505b; background: transparent; color: var(--sotu-ink); padding: 0 16px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+.sotu-btn { background: var(--sotu-gold); color: #14110a; border-color: var(--sotu-gold); }
+.sotu-btn[aria-expanded="true"] { background: transparent; color: var(--sotu-ink); border-color: #4a505b; }
+.sotu-share { flex: none; }
+.sotu-share::before { content: ""; width: 14px; height: 14px; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3 7 8h3v7h4V8h3l-5-5ZM5 13v7h14v-7h-2v5H7v-5H5Z'/%3E%3C/svg%3E") center/contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3 7 8h3v7h4V8h3l-5-5ZM5 13v7h14v-7h-2v5H7v-5H5Z'/%3E%3C/svg%3E") center/contain no-repeat; }
+.sotu-link { font: inherit; cursor: pointer; background: none; border: 0; padding: 0; color: var(--sotu-gold-hi); text-decoration: underline; text-underline-offset: 3px; font-weight: 600; min-height: 24px; }
+.sotu-status .sotu-link, .sotu-journey-head .sotu-link, .sotu-fr-links .sotu-link, .sotu-fr-links a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 4px; }
+.sotu-seg { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--sotu-surface); border: 1px solid var(--sotu-line); max-width: 100%; overflow-x: auto; }
+.sotu-seg button { border-color: transparent; color: var(--sotu-muted); white-space: nowrap; min-height: 40px; }
+.sotu-seg button[aria-pressed="true"] { background: var(--sotu-gold); color: #14110a; }
+.sotu-controls { display: grid; gap: 10px; margin: 22px 0 6px; }
+.sotu-controls label { display: grid; gap: 4px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--sotu-muted); }
+.sotu-select, .sotu-input { font: inherit; font-size: 16px; min-height: 46px; width: 100%; border-radius: 12px; border: 1px solid #4a505b; background: var(--sotu-surface); color: var(--sotu-ink); padding: 0 12px; text-transform: none; letter-spacing: 0; font-weight: 500; }
+.sotu-input::placeholder { color: #9aa1ad; }
+
+/* ---- tables ---- */
+.sotu-scroll { overflow-x: auto; border: 1px solid var(--sotu-line); border-radius: 14px; background: var(--sotu-surface); -webkit-overflow-scrolling: touch; }
+.sotu-table { border-collapse: collapse; width: 100%; font-size: 13px; }
+.sotu-table th, .sotu-table td { padding: 10px 10px; text-align: left; white-space: nowrap; border-bottom: 1px solid #23272f; }
+.sotu-table thead th { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--sotu-muted); font-weight: 700; background: #101216; }
+.sotu-table tbody tr:last-child :is(th, td) { border-bottom: 0; }
+.sotu-table tbody th { font-weight: 700; position: sticky; left: 0; background: var(--sotu-surface); }
+.sotu-table tbody th small { display: block; font-weight: 500; max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+.sotu-table .num { text-align: right; }
+.sotu-table td strong { color: var(--sotu-gold-hi); }
+.sotu-details { margin-top: 12px; border-top: 1px solid var(--sotu-line); }
+.sotu-details > summary { cursor: pointer; min-height: 48px; display: flex; align-items: center; justify-content: space-between; font-size: 14px; font-weight: 700; color: var(--sotu-gold-hi); list-style: none; }
+.sotu-details > summary::-webkit-details-marker { display: none; }
+.sotu-details > summary::after { content: "+"; font-family: var(--sotu-mono); font-size: 20px; color: var(--sotu-muted); }
+.sotu-details[open] > summary::after { content: "–"; }
+
+/* ---- history ---- */
+.sotu-seasons { display: grid; gap: 14px; }
+.sotu-season { border: 1px solid var(--sotu-line); border-radius: 22px; background: var(--sotu-surface); padding: 16px; min-width: 0; }
+.sotu-season > header { display: flex; justify-content: space-between; align-items: center; }
+.sotu-year { font-family: var(--sotu-mono); font-size: 14px; font-weight: 600; color: var(--sotu-muted); letter-spacing: .08em; }
+.sotu-champ { position: relative; margin: 12px 0 4px; padding: 18px 16px; border-radius: 16px; border: 1px solid #6b5420; background: radial-gradient(140% 120% at 100% 0%, #d7a83d38, #d7a83d0d 55%, #0f1115 100%); overflow: hidden; }
+.sotu-champ.is-open { border-color: var(--sotu-line); background: #0f1115; }
+.sotu-champ-ico { position: absolute; right: 12px; top: 10px; font-size: 54px; color: #d7a83d55; line-height: 1; }
+.sotu-champ-label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--sotu-gold); }
+.sotu-champ-name { font-size: clamp(38px, 11vw, 60px); font-weight: 850; letter-spacing: -.05em; line-height: 1; margin: 6px 0; text-transform: uppercase; overflow-wrap: anywhere; }
+.sotu-champ-sub { font-size: 13px; color: #dcd8cd; max-width: 34ch; }
+.sotu-honors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+.sotu-honor { padding: 10px 12px; border-radius: 12px; background: #0f1115; border: 1px solid #23272f; min-width: 0; }
+.sotu-honor dt { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--sotu-muted); }
+.sotu-honor dd strong { display: block; font-size: 18px; letter-spacing: -.02em; }
+.sotu-honor dd small { display: block; line-height: 1.35; overflow-wrap: anywhere; }
+.sotu-honor.is-low dt { color: var(--sotu-warn); }
+.sotu-games { display: grid; gap: 2px; padding-bottom: 8px; font-size: 14px; }
+.sotu-games li { display: grid; gap: 2px; padding: 8px 0; border-bottom: 1px solid #23272f; }
+.sotu-when { display: block; font-family: var(--sotu-mono); font-size: 12px; color: var(--sotu-muted); }
+.sotu-timeline { position: relative; margin-left: 6px; padding-left: 22px; border-left: 2px solid var(--sotu-line); display: grid; gap: 18px; }
+.sotu-timeline li { position: relative; }
+.sotu-timeline li::before { content: ""; position: absolute; left: -29px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: var(--sotu-bg); border: 2px solid var(--sotu-muted); }
+.sotu-timeline li.is-title::before { background: var(--sotu-gold); border-color: var(--sotu-gold); box-shadow: 0 0 0 4px #d7a83d33; }
+.sotu-timeline li.is-trade::before { border-color: var(--sotu-blue); }
+.sotu-timeline li.is-handoff::before { border-color: var(--sotu-violet); }
+.sotu-timeline h4 { font-size: 17px; letter-spacing: -.02em; margin: 2px 0; }
+.sotu-timeline p { font-size: 14px; color: #dcd8cd; max-width: 60ch; }
+
+/* ---- trades ---- */
+.sotu-trade-top { display: grid; gap: 14px; }
+.sotu-web-card, .sotu-finder { border: 1px solid var(--sotu-line); border-radius: 22px; background: var(--sotu-surface); padding: 16px; min-width: 0; }
+.sotu-web-card .sotu-h3, .sotu-finder .sotu-h3 { margin-top: 0; }
+.sotu-web-card p, .sotu-finder p { font-size: 13px; color: var(--sotu-muted); }
+.sotu-web { display: block; width: 100%; max-width: 460px; height: auto; margin: 4px auto 0; overflow: visible; }
+.sotu-web-edges line { stroke: var(--sotu-gold); stroke-opacity: .34; stroke-linecap: round; }
+.sotu-web.has-pick .sotu-web-edges line { stroke-opacity: .08; }
+.sotu-web .sotu-web-edges line.is-on { stroke-opacity: .95; }
+.sotu-web-node { cursor: pointer; }
+.sotu-web-node circle { fill: #2a2110; stroke: var(--sotu-gold); stroke-width: 1.5; }
+.sotu-web-node .sotu-web-hit { fill: transparent; stroke: none; }
+.sotu-web-node text { fill: var(--sotu-ink); font-size: 12px; font-weight: 600; }
+.sotu-web-node .sotu-web-n { fill: var(--sotu-gold-hi); font-size: 10px; font-family: var(--sotu-mono); pointer-events: none; }
+.sotu-web-node[aria-pressed="true"] circle:not(.sotu-web-hit) { fill: var(--sotu-gold); }
+.sotu-web-node[aria-pressed="true"] .sotu-web-n { fill: #14110a; }
+.sotu-web-node[aria-pressed="true"] text:not(.sotu-web-n) { fill: var(--sotu-gold-hi); font-weight: 800; }
+.sotu-web-node:focus-visible { outline: none; }
+.sotu-web-node:focus-visible .sotu-web-hit { stroke: var(--sotu-gold-hi); stroke-width: 3; }
+.sotu-suggest { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.sotu-chipbtn { background: #0f1115; border-color: var(--sotu-line); min-height: 44px; text-align: left; }
+.sotu-chipbtn small { color: var(--sotu-gold); }
+.sotu-none { font-size: 13px; color: var(--sotu-muted); }
+.sotu-journey-card { margin-top: 14px; padding: 14px; border-radius: 14px; border: 1px solid #6b5420; background: #17140c; }
+.sotu-journey-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.sotu-journey-head h4 { font-size: 20px; letter-spacing: -.02em; overflow-wrap: anywhere; }
+.sotu-now { font-size: 14px; margin: 2px 0 12px; color: #e6e3db; }
+.sotu-journey-list { display: grid; gap: 12px; border-left: 2px solid #6b5420; padding-left: 14px; font-size: 14px; }
+.sotu-journey-list li.is-trade { color: var(--sotu-ink); }
+.sotu-trades { display: grid; gap: 14px; margin-top: 8px; }
+.sotu-trade { border: 1px solid var(--sotu-line); border-radius: 22px; background: var(--sotu-surface); padding: 16px; min-width: 0; }
+.sotu-trade:target { border-color: var(--sotu-gold); }
+.sotu-trade h3 { font-size: 21px; letter-spacing: -.03em; line-height: 1.15; overflow-wrap: anywhere; }
+.sotu-ref { font-family: var(--sotu-mono); font-size: 12px; font-weight: 600; color: #14110a; background: var(--sotu-gold); border-radius: 6px; padding: 2px 6px; vertical-align: middle; letter-spacing: 0; }
+.sotu-trade-meta { font-size: 12px; color: var(--sotu-muted); margin-top: 4px; }
+.sotu-verdict { display: inline-block; margin-top: 10px; padding: 5px 11px; border-radius: 999px; font-size: 13px; font-weight: 700; border: 1px solid var(--sotu-line); }
+.sotu-verdict.is-won { color: #14110a; background: var(--sotu-gold); border-color: var(--sotu-gold); }
+.sotu-verdict.is-leading { color: var(--sotu-gold-hi); border-color: #6b5420; }
+.sotu-verdict.is-even, .sotu-verdict.is-early { color: var(--sotu-muted); }
+.sotu-sides { display: grid; gap: 10px; margin-top: 14px; }
+.sotu-side { padding: 12px; border-radius: 14px; background: #0f1115; border: 1px solid #23272f; min-width: 0; }
+.sotu-side.is-ahead { border-color: #6b5420; }
+.sotu-side h4 { font-size: 16px; }
+.sotu-side h4 small { text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
+.sotu-side ul { margin-top: 6px; }
+.sotu-side li { display: flex; justify-content: space-between; align-items: center; gap: 10px; border-bottom: 1px solid #23272f; }
+.sotu-side li > span:first-child { padding: 12px 0; font-size: 14px; }
+.sotu-asset { font: inherit; cursor: pointer; background: none; border: 0; color: var(--sotu-ink); text-align: left; padding: 8px 0; min-height: 44px; font-size: 15px; font-weight: 600; flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.sotu-asset-name { text-decoration: underline; text-decoration-color: #6b7280; text-underline-offset: 4px; }
+.sotu-asset small { display: block; font-weight: 500; }
+.sotu-asset small strong { color: var(--sotu-ink); }
+.sotu-pts { font-size: 13px; color: var(--sotu-gold-hi); white-space: nowrap; }
+.sotu-pts abbr { text-decoration: none; color: var(--sotu-muted); }
+.sotu-meter { height: 6px; border-radius: 6px; background: #23272f; margin-top: 12px; overflow: hidden; }
+.sotu-meter span { display: block; height: 100%; background: #6f7684; border-radius: 6px; }
+.sotu-side.is-ahead .sotu-meter span { background: var(--sotu-gold); }
+.sotu-total { font-size: 13px; color: var(--sotu-muted); margin-top: 6px; }
+.sotu-total strong { font-family: var(--sotu-mono); font-size: 18px; color: var(--sotu-ink); }
+.sotu-trade > footer { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
+.sotu-linked { font-size: 12px; color: var(--sotu-muted); flex: 1; min-width: 120px; }
+.sotu-trade > footer .sotu-share { margin-left: auto; }
+.sotu-tree-wrap { margin-top: 14px; padding-top: 14px; border-top: 1px dashed #4a505b; }
+.sotu-branches { display: grid; gap: 16px; }
+.sotu-branch h4 { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--sotu-gold); margin-bottom: 8px; }
+.sotu-tree { display: grid; gap: 10px; }
+.sotu-tree > li { position: relative; padding-left: 16px; border-left: 2px solid #6b5420; min-width: 0; }
+.sotu-tree > li::before { content: ""; position: absolute; left: 0; top: 13px; width: 10px; border-top: 2px solid #6b5420; }
+.sotu-node { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; font-size: 15px; font-weight: 700; padding-top: 2px; }
+.sotu-node > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.sotu-steps { margin: 4px 0 2px; display: grid; gap: 6px; font-size: 13px; color: #dcd8cd; }
+.sotu-steps > li { position: relative; padding-left: 16px; }
+.sotu-steps > li::before { content: "↳"; position: absolute; left: 0; color: var(--sotu-muted); }
+.sotu-steps > li.is-end { color: var(--sotu-muted); }
+.sotu-steps .sotu-tree { margin-top: 8px; }
+.sotu-back { display: block; margin-top: 6px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--sotu-gold); }
+.sotu-steps .sotu-link { min-height: 32px; padding: 0 2px; }
+
+/* ---- franchises ---- */
+.sotu-frs { display: grid; gap: 14px; }
+.sotu-fr { border: 1px solid var(--sotu-line); border-radius: 22px; background: var(--sotu-surface); padding: 16px; min-width: 0; }
+.sotu-fr > header { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.sotu-fr h3 { font-size: 26px; letter-spacing: -.04em; line-height: 1.05; }
+.sotu-fr > header p { font-size: 13px; color: var(--sotu-muted); overflow-wrap: anywhere; }
+.sotu-banner { display: inline-flex; align-items: center; gap: 4px; font-size: 22px; color: var(--sotu-gold); font-family: var(--sotu-mono); }
+.sotu-mini { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 12px 0; }
+.sotu-fr-season .sotu-mini { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.sotu-mini div { padding: 8px 6px; border-radius: 10px; background: #0f1115; border: 1px solid #23272f; text-align: center; min-width: 0; }
+.sotu-mini dt { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--sotu-muted); }
+.sotu-mini dd { font-size: 15px; font-weight: 600; white-space: nowrap; }
+.sotu-managers { font-size: 13px; margin-bottom: 8px; }
+.sotu-managers span { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--sotu-violet); margin-right: 4px; }
+.sotu-identity { font-size: 14px; color: #e6e3db; }
+.sotu-fr-seasons { display: grid; gap: 14px; padding-bottom: 6px; }
+.sotu-fr-season { padding: 12px; border-radius: 14px; background: #101216; border: 1px solid #23272f; min-width: 0; }
+.sotu-fr-season > header { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+.sotu-fr-season h4 { font-size: 20px; letter-spacing: -.02em; }
+.sotu-fr-season h4 small { display: block; letter-spacing: 0; overflow-wrap: anywhere; }
+.sotu-fr-season h5 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--sotu-gold); margin-top: 12px; }
+.sotu-fr-season h5 small { text-transform: none; letter-spacing: 0; }
+.sotu-spark { display: block; max-width: 100%; height: 44px; }
+.sotu-spark .w { fill: var(--sotu-gold); }
+.sotu-spark .l { fill: #515865; }
+.sotu-core li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 7px 0; border-bottom: 1px solid #23272f; font-size: 14px; }
+.sotu-core li > span:first-child { overflow-wrap: anywhere; }
+.sotu-how { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; border: 1px solid currentColor; white-space: nowrap; }
+.h-startup, .sotu-mix-key .m-startup { color: var(--sotu-gold-hi); } .h-rookie { color: var(--sotu-good); } .h-trade { color: var(--sotu-blue); } .h-waiver { color: var(--sotu-violet); } .h-unknown { color: var(--sotu-muted); }
+.sotu-mix { display: flex; height: 10px; border-radius: 10px; overflow: hidden; gap: 2px; margin-top: 12px; }
+.sotu-mix span { min-width: 3px; }
+.m-startup { background: var(--sotu-gold); } .m-rookie { background: var(--sotu-good); } .m-trade { background: var(--sotu-blue); } .m-waiver { background: var(--sotu-violet); }
+.sotu-mix-key { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; font-size: 12px; color: var(--sotu-muted); }
+.sotu-mix-key i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; }
+.sotu-fr-links { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; font-size: 14px; padding: 4px 0 8px; }
+.sotu-fr-links .sotu-share { margin-left: auto; }
+
+/* ---- record book ---- */
+.sotu-block { margin-top: 8px; }
+.sotu-block-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin: 18px 0 10px; }
+.sotu-block-head .sotu-h3 { margin: 0; }
+.sotu-luck { display: grid; gap: 4px; border: 1px solid var(--sotu-line); border-radius: 14px; background: var(--sotu-surface); padding: 10px 12px; }
+.sotu-luck li { display: grid; grid-template-columns: 76px minmax(0, 1fr) 48px; gap: 0 8px; align-items: center; padding: 6px 0; font-size: 14px; font-weight: 600; border-bottom: 1px solid #23272f; }
+.sotu-luck li:last-child { border-bottom: 0; }
+.sotu-luck li small { grid-column: 2 / -1; font-size: 11px; }
+.sotu-luck-name { overflow-wrap: anywhere; }
+.sotu-luck-bar { position: relative; height: 12px; border-radius: 6px; background: linear-gradient(90deg, transparent calc(50% - 1px), #5b616c calc(50% - 1px), #5b616c calc(50% + 1px), transparent calc(50% + 1px)); }
+.sotu-luck-bar i { position: absolute; top: 0; bottom: 0; border-radius: 6px; }
+.sotu-luck-bar.is-up i { left: 50%; background: var(--sotu-gold); }
+.sotu-luck-bar.is-down i { right: 50%; background: #7d8594; }
+.sotu-luck-n { font-family: var(--sotu-mono); text-align: right; font-size: 14px; }
+.sotu-recs { display: grid; gap: 12px; }
+.sotu-rec { border: 1px solid var(--sotu-line); border-radius: 18px; background: var(--sotu-surface); padding: 14px; min-width: 0; }
+.sotu-rec h4 { font-size: 17px; letter-spacing: -.02em; }
+.sotu-rec .sotu-fine { margin: 2px 0 8px; }
+.sotu-rec li { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 10px; align-items: baseline; padding: 9px 0; border-top: 1px solid #23272f; font-size: 14px; }
+.sotu-rec li small { display: block; }
+.sotu-big { font-size: 18px; font-weight: 600; color: var(--sotu-gold-hi); letter-spacing: -.03em; }
+.sotu-rec li:first-child .sotu-big { font-size: 20px; }
+#sotuDrafts .sotu-seg { margin-bottom: 10px; }
+#sotuDrafts .sotu-rec { margin-top: 12px; }
+
+/* ---- method + toast ---- */
+.sotu-method { margin-top: 34px; padding: 18px 16px; border: 1px solid var(--sotu-line); border-radius: 18px; background: var(--sotu-surface); font-size: 14px; color: #dcd8cd; }
+.sotu-method h2 { font-size: 18px; margin-bottom: 10px; color: var(--sotu-ink); }
+.sotu-method ul { list-style: disc; padding-left: 18px; display: grid; gap: 8px; margin-bottom: 12px; }
+.sotu-audit { color: var(--sotu-good); margin-bottom: 8px; }
+.sotu-toast { position: fixed; left: 50%; bottom: calc(86px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px); z-index: 120; max-width: calc(100vw - 32px); padding: 12px 18px; border-radius: 14px; background: var(--sotu-gold); color: #14110a; font-size: 14px; font-weight: 700; opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+.sotu-toast.is-on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.sotu-copybox { font: inherit; font-size: 16px; width: min(70vw, 420px); margin-top: 6px; display: block; border: 0; border-radius: 8px; padding: 8px; }
+
+/* ---- wider screens ---- */
+@media (min-width: 560px) {
+  .sotu-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sotu-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sotu-sides-2, .sotu-sides-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sotu-branches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sotu-fr-season .sotu-mini { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@media (min-width: 700px) {
+  .sotu-takes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sotu-seasons, .sotu-frs, .sotu-recs { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .sotu-trade-top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .sotu-bot { padding: 22px; }
+  .sotu-fr-season .sotu-mini { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 821px) {
+  .sotu-jump { top: calc(var(--sotu-top) + 10px); width: fit-content; max-width: 100%; }
+  .sotu-hero::before { height: 380px; }
+  .sotu-section { padding-top: 48px; }
+}
+@media (min-width: 1180px) {
+  .sotu-tiles { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .sotu-takes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sotu-trades { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .sotu-recs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sotu-frs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sotu-sides-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 359px) {
+  .sotu-honors { grid-template-columns: minmax(0, 1fr); }
+  .sotu-mini { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sotu-skeleton, .sotu-skel-line { animation: none; }
+  .sotu-progress span, .sotu-toast { transition: none; }
+}
