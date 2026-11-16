@@ -5,7 +5,7 @@
 const groups=[
  {title:'Game day',items:[['index.html','Home'],['game-day.html','Game Center'],['scores.html','Scores'],['schedule.html','Schedule'],['standings.html','Standings'],['playoff-war-room.html','Playoff War Room'],['sportsbook.html','Sportsbook']]},
  {title:'League',items:[['league-lounge.html','League Lounge'],['teams.html','Owners & teams'],['head-to-head.html','Head-to-head'],['rivalries.html','Rivalries'],['transactions.html','Transactions'],['draft-capital.html','Draft capital'],['changes.html','Activity feed']]},
- {title:'History',items:[['history-lab.html','History Lab'],['history-lab.html#trades','Trade trees'],['history-lab.html#honors','Hall of fame & shame'],['history-lab.html#whatif','What If? Lab'],['records.html','Record book'],['league-history.html','League history'],['draft-central.html','Draft central']]},
+ {title:'History',items:[['state-of-the-union.html','State of the Union'],['history-lab.html','History Lab'],['history-lab.html#trades','Trade trees'],['history-lab.html#honors','Hall of fame & shame'],['history-lab.html#whatif','What If? Lab'],['records.html','Record book'],['league-history.html','League history'],['draft-central.html','Draft central']]},
  {title:'Media',items:[['search.html','Search everything'],['media-hub.html','Media Hub'],['news.html','Newsroom'],['carl.html',"Carl’s office"],['anita.html',"Anita’s sideline"]]}
 ];
 const safe=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
