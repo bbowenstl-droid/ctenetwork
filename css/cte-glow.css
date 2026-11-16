@@ -1,0 +1,30 @@
+/* CTE Network — "Glow-up" theme layer (2026-11-16).
+ * Black-and-gold, dark-first, taken from the league crest. Loaded LAST on every
+ * shell page (n-app / n-legacy). It re-points the existing tokens and repaints
+ * surfaces that older layers hard-coded for the light shell; no layout or
+ * behaviour changes live here. Remove the <link> tags + the shell injection in
+ * app-v29.js to roll back to the light shell.
+ * Sections: 1 tokens · 2 base + type · 3 shell · 4 surfaces · 5 components
+ *           6 legacy pages · 7 motion · 8 team identity
+ */
+@font-face{font-family:"Big Shoulders Display";font-style:normal;font-weight:800;font-display:swap;src:url(../assets/fonts/big-shoulders-display-latin-800-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+/* 1. Tokens ---------------------------------------------------------------- */
+html:has(body:is(.n-app,.n-legacy)){color-scheme:dark;background:#0a0b0d}
+html body:is(.n-app,.n-legacy){
+  --g-canvas:#0a0b0d; --g-surface:#131519; --g-raised:#1a1d23; --g-sunken:#0e1013;
+  --g-ink:#f4f1ea; --g-muted:#aab0ba; --g-faint:#8f96a1; --g-line:#2a2e36; --g-line-strong:#3a3f49;
+  --g-gold:#e6b84a; --g-gold-bright:#f6d57a; --g-gold-deep:#b98b24; --g-gold-wash:rgba(230,184,74,.12);
+  --g-win:#62d896; --g-loss:#ff7a85; --g-live:#62d896; --g-warn:#f2c46b;
+  --g-display:"Big Shoulders Display","Arial Narrow","Roboto Condensed",Impact,sans-serif;
+  --g-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 18px 40px -24px rgba(0,0,0,.9);
+  /* re-point every older token family */
+  --n-bg:var(--g-canvas); --n-surface:var(--g-surface); --n-ink:var(--g-ink); --n-muted:var(--g-muted); --n-faint:var(--g-faint); --n-soft:var(--g-muted);
+  --n-line:var(--g-line); --n-fill:var(--g-raised); --n-red:var(--g-gold); --n-red-soft:var(--g-gold-wash);
+  --t-ink:var(--g-ink); --t-red:var(--g-gold); --t-red-deep:var(--g-gold-bright); --t-win:var(--g-win); --t-loss:var(--g-loss); --t-live:var(--g-live); --t-shadow:0 0 0;
+  --gold:var(--g-gold); --gold2:var(--g-gold-bright); --bg:var(--g-canvas); --panel:var(--g-surface); --panel2:var(--g-raised); --silver:var(--g-ink); --muted:var(--g-muted); --line:var(--g-line); --green:var(--g-win); --red:var(--g-loss);
+  --app-bg:var(--g-canvas); --app-card:var(--g-surface); --app-border:var(--g-line); --app-gold:var(--g-gold);
+  --cte2-canvas:var(--g-canvas); --cte2-surface:var(--g-surface); --cte2-ink:var(--g-ink); --cte2-muted:var(--g-muted); --cte2-border:var(--g-line);
+  --cte2-accent:var(--g-gold); --cte2-accent-strong:var(--g-gold-bright); --cte2-positive:var(--g-win); --cte2-caution:var(--g-warn); --cte2-focus:var(--g-gold-bright);
+  background:var(--g-canvas)!important; color:var(--g-ink);
+}

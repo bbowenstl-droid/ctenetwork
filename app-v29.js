@@ -23,8 +23,11 @@ if(document.body.classList.contains('n-legacy')&&main){const context=document.cr
 if(file==='article.html'){const progress=document.createElement('div');progress.className='n-reading-progress';progress.setAttribute('aria-hidden','true');document.body.append(progress);let ticking=false;const update=()=>{progress.style.transform=`scaleX(${scrollY/Math.max(1,document.documentElement.scrollHeight-innerHeight)})`;ticking=false};addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});update()}
 
 // Step 9: progressive navigation directory, available on every page using this shell.
-const cteNavStyle=document.createElement('link');cteNavStyle.rel='stylesheet';cteNavStyle.href='css/cte-navigation.css?v=1';document.head.append(cteNavStyle);
-const cteQualityStyle=document.createElement('link');cteQualityStyle.rel='stylesheet';cteQualityStyle.href='css/cte-quality.css?v=6';document.head.append(cteQualityStyle);
+// Glow-up theme: older progressive sheets must sit BEFORE the theme layer so the theme wins.
+const cteGlow=document.querySelector('link[href*="css/cte-glow-legacy.css"]')||document.querySelector('link[href*="css/cte-glow.css"]');
+const cteAddStyle=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;if(cteGlow)cteGlow.before(l);else document.head.append(l);return l};
+cteAddStyle('css/cte-navigation.css?v=1');cteAddStyle('css/cte-quality.css?v=6');
+if(!cteGlow)for(const href of ['css/cte-glow-legacy.css?v=1','css/cte-glow.css?v=1']){const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.append(l)}
 const cteNavScript=document.createElement('script');cteNavScript.src='js/cte-navigation.js?v=2';document.body.append(cteNavScript);
 if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw-v22.js').catch(()=>{}));
 })();
