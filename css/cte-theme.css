@@ -200,7 +200,7 @@ html .cte-inst-btn.is-primary{background:var(--bk-sel,#1a1d23);color:#f4f1ea}
 html .cte-inst-ico{color:var(--bk-move,#f2c46b)}
 html .cte-inst-note{color:var(--bk-mute,#9aa1ac)}
 @font-face{font-family:"Big Shoulders Display";font-style:normal;font-weight:800;font-display:swap;src:url(../assets/fonts/big-shoulders-display-latin-800-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-html{color-scheme:dark;background:#0a0b0d}
+html:root{color-scheme:dark;background:#0a0b0d}
 html body:is(.n-app,.n-legacy){
   --g-canvas:#0a0b0d; --g-surface:#131519; --g-raised:#1a1d23; --g-sunken:#0e1013;
   --g-ink:#f4f1ea; --g-muted:#aab0ba; --g-faint:#8f96a1; --g-line:#2a2e36; --g-line-strong:#3a3f49;

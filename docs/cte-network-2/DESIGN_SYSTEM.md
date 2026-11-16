@@ -1,7 +1,7 @@
 # CTE Network 2.0 — Brand & Design System (Step 5)
 
 Status: **applied site-wide on `feature/site-glowup` (2026-11-16 glow-up)** to every shell page (`body.n-app` / `body.n-legacy`). Not applied to `admin.html`, `tv.html`, `404.html`, `offline.html`, the redirect stubs or the generated `state-of-union.html`.
-Source audit: `network-v29.css`, `taste-v40.css`, `design-v23.css`. Theme files: `css/cte-glow.css` (hand-written) and `css/cte-glow-legacy.css` (generated).
+Source audit: `network-v29.css`, `taste-v40.css`, `design-v23.css`. Theme files: `css/cte-glow.css` (hand-written source), `css/cte-glow-legacy.css` (generated) and the bundle pages actually load, `css/cte-theme.css`.
 
 ## Identity
 CTE Network is an independent, editorial-first dynasty fantasy sports publication. Aim for the clarity of a sports newsroom, the utility of a scoreboard, and the irreverence of the league's actual reporting. The look comes from the league crest: **black, gold and brushed steel under stadium lights**. Avoid neon gradients, gratuitous glassmorphism, generic AI sports art and excessive card nesting. Gold glow is reserved for the hero, the champion's trophy and "next/now" states — not every card.
@@ -81,10 +81,10 @@ Short and purposeful, and only inside `@media (prefers-reduced-motion: no-prefer
 Real team/owner imagery and verified league artifacts take priority. Major feature artwork may be expressive, but must not fabricate match results or owner likenesses. No watermarked stock photos. Keep article imagery consistent in aspect ratio and captioning.
 
 ## How the theme is applied (and rolled back)
-1. The older stylesheets stay in place and untouched. `css/cte-glow-legacy.css` is **generated** from them by `node tools/theme/build-glow-legacy.cjs`: for each rule that hard-codes a light-shell color it emits the same selector with only that color moved onto the dark scale. Re-run it after editing any source sheet; `--check` (run by the tests) fails if it is stale.
-2. `css/cte-glow.css` loads last: tokens, shell, shared components, the new pages and motion.
-3. Both are linked in every shell page's `<head>` (no flash of the old theme); `app-v29.js` inserts its late sheets *before* them and adds them itself if a page forgot.
-4. Rollback: remove the two `<link>` tags and the fallback injection in `app-v29.js`; the light shell returns unchanged.
+1. The older stylesheets stay in place and untouched. `node tools/theme/build-glow-legacy.cjs` reads them and, for each rule that hard-codes a light-shell color, emits the same selector with only that color moved onto the dark scale (`css/cte-glow-legacy.css`).
+2. `css/cte-glow.css` is the hand-written source: tokens, shell, shared components, the new pages and motion.
+3. The same script bundles both into `css/cte-theme.css`, the single file linked last in every shell page's `<head>` (no flash of the old theme, one request). **After editing any stylesheet, re-run the script**; `--check` (run by the tests) fails if the generated files are stale. `app-v29.js` inserts its late sheets *before* the bundle and adds the bundle itself if a page forgot.
+4. Rollback: remove the `css/cte-theme.css` link from the pages and the fallback injection in `app-v29.js`; the light shell returns unchanged.
 5. Changes to brand palette or typography require an entry in DECISIONS.md.
 
 ## QA checklist

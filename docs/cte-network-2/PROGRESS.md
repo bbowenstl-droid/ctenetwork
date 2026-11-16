@@ -116,7 +116,7 @@ Not built (suggested for after release): all-time 12×12 head-to-head grid, leag
 Branch `feature/site-glowup` (from `release/cte-network-2-completion` at c62e95b). **Not merged, not deployed.** No Firebase rules, participation/security code, `data/cte-participation-config.js` or `tools/assign-*`/`stage-*` scripts were touched; sportsbook and draft central logic is unchanged.
 
 **Looks (see DESIGN_SYSTEM.md, DECISIONS.md)**
-- Black-and-gold, dark-only theme from the league crest on every shell page (29 pages). Old stylesheets are untouched: `tools/theme/build-glow-legacy.cjs` derives colour-only overrides from them and bundles `css/cte-theme.css` (one render-blocking file, 53 KB / 10 KB gzipped) with the hand-written `css/cte-glow.css`.
+- Black-and-gold, dark-only theme from the league crest on every shell page (28 pages). Old stylesheets are untouched: `tools/theme/build-glow-legacy.cjs` derives colour-only overrides from them and bundles `css/cte-theme.css` (one render-blocking file, 53 KB / 10 KB gzipped) with the hand-written `css/cte-glow.css`.
 - Display type (Big Shoulders Display, self-hosted 14 KB) for titles, section heads, scores of record; gold wordmark; redesigned hero with the crest, "Presented by Show Me Industries" and the next key date.
 - Team identity (`js/cte-teams.js`): one colour per franchise + Sleeper avatars (initials fallback, cached locally) on the home scoreboard, standings, playoff seeds, power rankings, weekly awards, the grid and the trophy room.
 - Motion only under `prefers-reduced-motion: no-preference`.
@@ -135,7 +135,7 @@ Branch `feature/site-glowup` (from `release/cte-network-2-completion` at c62e95b
 - The .ics subscription only changes when `data/cte-calendar.js` is edited and `node tools/build-calendar.cjs` is re-run.
 
 **Verification (this sandbox cannot reach api.sleeper.app, so browsers were fed the frozen 2026-11-13 provider capture through `tools/qa/sleeper-fixtures.cjs`: as captured, simulated mid-Sunday, simulated final, and Sleeper down)**
-- Repo checks: `check-site.py`, `check-syntax.cjs`, all `tests/components` + `tests/data` suites (15 new tests in `glowup.test.cjs`), history/sportsbook/awards tests, `validate-history.cjs`, State of the Union `verify.py` — all pass.
+- Repo checks: `check-site.py`, `check-syntax.cjs`, all `tests/components` + `tests/data` suites (14 new tests in `glowup.test.cjs`), history/sportsbook/awards tests, `validate-history.cjs`, State of the Union `verify.py` — all pass.
 - axe (WCAG 2 A/AA) + overflow + single-h1 + JS-error sweep, Chromium, every shell page and detail deep links at 320/375/390/430/768/1280: clean except the long-standing `matchup.html` with no parameters (no h1).
 - `tools/qa/browser-matrix.mjs` (now accepts `ENGINES=chromium` and `SLEEPER_FIXTURES=`): 264 loads, 44 pages, 6 widths — only the two known exceptions (`matchup.html` bare, frozen `state-of-union.html` h1×2); menu open/Escape/focus-return passes at 4 widths. A second run with Sleeper unreachable showed no overflow, exception or broken same-origin request anywhere.
 - Interaction script: grid 12 rows/132 cells, totals 152 W = 152 L across 152 games, keyboard open + focus move, franchise vs manager split (Isaiah–Brendan 1–2 → 1–1 plus Jeremy 0–1), scope filter, old deep link, trophy holders, 7 calendar events, .ics download, webcal link, Game Day in four data states, avatar-blocked fallback, my-team pin, menu search.
@@ -145,4 +145,3 @@ Branch `feature/site-glowup` (from `release/cte-network-2-completion` at c62e95b
 - No WebKit or real-iPhone run here (WebKit build unavailable); CI's `cte-release-qa.yml` covers WebKit emulation against live Sleeper. Live Sleeper was not exercised from this sandbox.
 - A starter who plays and scores exactly 0 is treated as "still to play" until Sleeper scores the week; the outlook is an estimate by design.
 - `game-day.html` keeps its own scoreboard (no outlook bars); `admin.html`, `tv.html`, `404.html`, `offline.html` and `state-of-union.html` are outside the theme (the last three were already dark).
-- Share-card images (`share/*.jpg`) still use the previous artwork.
