@@ -6,8 +6,8 @@ window.CTE_SPORTSBOOK = {
   "lockAt": "2026-11-22T12:00:00-06:00",
   "lockLabel": "Sunday November 22 at noon Central (CST)",
   "currency": "CTE$",
-  "updatedAt": "2026-11-17T16:50:00Z",
-  "quoteNote": "Week 11 Tuesday early opening board (Nov. 17). Six pairings verified with Sleeper; spreads and moneylines are fictional CTE editorial estimates, not live Vegas odds or Sleeper projections. Friday line refresh should incorporate Thursday scores and updated lineups. Lock Sunday Nov. 22 at 12:00 p.m. CST. Previously saved quotes are preserved.",
+  "updatedAt": "2026-11-17T20:40:00Z",
+  "quoteNote": "Week 11 Tuesday early opening board (Nov. 17). Six pairings verified with Sleeper; spreads and moneylines are fictional CTE editorial estimates, not live Vegas odds or Sleeper projections. Friday line refresh should incorporate Thursday scores and updated lineups. Lock Sunday Nov. 22 at 12:00 p.m. CST. Previously saved quotes are preserved. Carl and Anita's Week 11 Tuesday cards now posted: six selections each, quote-locked to opening prices. Historical bankroll settlement remains unverified; Week 11 editorial cards use explicit 120 CTE$ reserve allocations.",
   "markets": [
     {
       "id": "w5-brendan-brett",
@@ -1473,8 +1473,8 @@ window.CTE_SPORTSBOOK = {
       ],
       "assumptions": "Brendan leads 13–7 to Mike's 1–19 with 134.32 vs 104.94 average PF. Week 10: Brendan 133.26, Mike 99.46. Drake London and Brock Purdy support the favorite; Week 11 lineup selections remain tentative. Editorial opening price; not an official win probability or player projection. Monitor Thursday starters and late injury news.",
       "takes": {
-        "carl": "BRANDON— sorry, BRENDAN— is eighteen and a half better than a team with one win? Mike's still taking phone calls about 2029 picks. I'm laying the points.",
-        "holly": "Brendan's receivers and Purdy provide a much stronger weekly floor. Mike has Corum and Stafford, but a cover requires several things going right."
+        "carl": "BRENDAN OVER MIKE MONEYLINE. A defending champion versus a one-win franchise. If Brendan loses this, take the trophy back and make him explain himself to a room full of children.",
+        "holly": "MIKE +18.5. Brendan should win, but laying eighteen and a half with injuries and a newly shaken-up lineup is a lot. Mike can cover without winning his second game."
       }
     },
     {
@@ -1512,8 +1512,8 @@ window.CTE_SPORTSBOOK = {
       ],
       "assumptions": "Jacob 18–2 and 162.75 PF/week vs Dan 7–13 and 118.08 PF/week. Week 10: Jacob 154.94, Dan 125.54. Allen/Gibbs/Lamb/McBride anchor Jacob; Bijan/Skattebo give Dan upside. Editorial opening price; not an official win probability or player projection. Monitor Thursday starters and late injury news.",
       "takes": {
-        "carl": "Dan has Bijan and Skattebo, which is a fine start. Jacob has an entire witness-protection program of superstars. Twenty-seven and a half is a lot; I'm still taking the Strib Club.",
-        "holly": "Jacob averages 162.75 points to Dan's 118.08, so the favorite is justified. Dan's backs create the clearest path to an upset or a cover."
+        "carl": "JACOB MONEYLINE. Allen, Gibbs, Lamb and McBride against the weekly Bijan-and-a-prayer fundraiser. Dan can scare him, but I am not betting against the league's scoring machine.",
+        "holly": "DAN +27.5. Jacob is the better team, but Bijan and Skattebo can keep this within four touchdowns. Carl is charging a premium for a logo."
       }
     },
     {
@@ -1551,8 +1551,8 @@ window.CTE_SPORTSBOOK = {
       ],
       "assumptions": "Brett 9–11 and 130.09 PF/week vs Jesse 8–12 and 109.92 PF/week. Week 10: Brett 116.90, Jesse 125.86. Spread shaded toward Jesse's better recent output. Editorial opening price; not an official win probability or player projection. Monitor Thursday starters and late injury news.",
       "takes": {
-        "carl": "One guy has a playoff spot and a losing record. The other has a Burrow-themed team and a losing record. It's the CTE Experience, brought to you by poor choices.",
-        "holly": "Brett's top-end Cook, Jefferson and Hall talent supports this price. Jesse's Burrow/A.J. Brown/Kittle ceiling keeps the underdog dangerous."
+        "carl": "JESSE +12.5. Both teams are under .500 and Brett is somehow simultaneously dangerous and disappointing. Burrow and Kittle can make this ugly for the favorite.",
+        "holly": "BRETT MONEYLINE. Jefferson, Cook and Hall are enough to win a matchup that matters. Jesse's roster is basically a vintage store with an injury department."
       }
     },
     {
@@ -1590,8 +1590,8 @@ window.CTE_SPORTSBOOK = {
       ],
       "assumptions": "Jerry 18–2 and 147.02 PF/week vs Carter 9–11 and 118.13 PF/week. Week 10: Jerry 136.62, Carter 131.68. Jerry overcame a 3.02-point outing from Maye with big receiver scores. Editorial opening price; not an official win probability or player projection. Monitor Thursday starters and late injury news.",
       "takes": {
-        "carl": "GRANDPA IS EIGHTEEN AND TWO. Carter is making waiver claims like they count as playoff wins. Hulkamania runs wild again.",
-        "holly": "Jerry's scoring advantage is 28.89 points per week and his receivers have explosive upside. Carter's Hubbard/Likely spike week is a reminder not to dismiss the underdog entirely."
+        "carl": "CARTER +23.5. Hulkamania probably wins, but Jerry's injury list reads like a hospital admissions sheet. Giving Carter more than three touchdowns is begging for a backdoor cover.",
+        "holly": "JERRY MONEYLINE. The 18–2 team with JSN, Pickens and Rice gets the nod. Carter can keep telling himself this is the week a waiver add counts as a playoff berth."
       }
     },
     {
@@ -1629,8 +1629,8 @@ window.CTE_SPORTSBOOK = {
       ],
       "assumptions": "Isaiah 14–6 and 129.91 PF/week vs Troy 12–8 and 132.30 PF/week. Week 10: Isaiah 107.52, Troy 99.68. Troy's Taylor/Etienne/Higgins vs Isaiah's Goff/St. Brown/Nico Collins. Tightest opening line. Editorial opening price; not an official win probability or player projection. Monitor Thursday starters and late injury news.",
       "takes": {
-        "carl": "Troy's name says Hurts, but lately it's been everyone who picked him. Isaiah has a better record; I'm taking Isaiah and the points because somebody has to have some damn courage.",
-        "holly": "Troy holds a small season scoring edge, but Isaiah owns the better combined record. The moneyline is nearly a coin flip; the spread reflects a slight roster-ceiling lean toward Troy."
+        "carl": "ISAIAH +3.5 — CARL'S LOCK. Troy has more injured stars than usable excuses. The kid is 14–6 and we're getting points? Somebody check whether the book got hit in the head harder than I did.",
+        "holly": "TROY MONEYLINE. Taylor and Etienne give him a path, but this is a narrow call. Isaiah has the better record and absolutely enough receiver firepower to ruin Troy's evening."
       }
     },
     {
@@ -1668,8 +1668,8 @@ window.CTE_SPORTSBOOK = {
       ],
       "assumptions": "Cotton 6–14 and 115.67 PF/week vs Elijah 5–15 and 112.65 PF/week. Week 10: Cotton 139.18, Elijah 106.66. McCaffrey scored 46.3 last week, Chase scored 34.1 for Elijah. Editorial opening price; not an official win probability or player projection. Monitor Thursday starters and late injury news.",
       "takes": {
-        "carl": "Cotton won twice this year and apparently decided to save up all his points to embarrass a child. CMC and Henry versus Elijah's running backs isn't a matchup; it's a safety briefing.",
-        "holly": "Cotton has more usable backfield firepower and just scored 139.18. Elijah's Ja'Marr Chase can swing the game, but the running-back gap is significant."
+        "carl": "COTTON MONEYLINE. McCaffrey and Henry versus Elijah's running back room is a violation of multiple local ordinances. Cotton may be 6–14, but he should still win this.",
+        "holly": "ELIJAH +8.5 — ANITA'S LOCK. Chase can make up a lot of ground by himself. Cotton has the better backs, but he has six wins, not a royal decree."
       }
     }
   ],
@@ -1854,6 +1854,61 @@ window.CTE_SPORTSBOOK = {
               "line": 9.5
             }
           ]
+        },
+        "11": {
+          "postedAt": "2026-11-17",
+          "source": "2026-week11-tuesday-opening-board",
+          "releaseLabel": "Tuesday early picks — before Thursday",
+          "allowReserve": true,
+          "note": "Six fictional CTE$ picks (three ML, three ATS), 120 CTE$ reserve allocation while historical personality bankroll settlement is unresolved; quotes pinned to the Nov. 17 early board. Each side has one lock. Injury and lineup changes may alter outcomes, not locked quotes.",
+          "wagers": [
+            {
+              "market": "w11-brendan-mike",
+              "type": "ml",
+              "side": "brendan",
+              "stake": 20,
+              "odds": -320
+            },
+            {
+              "market": "w11-jacob-dan",
+              "type": "ml",
+              "side": "jacob",
+              "stake": 20,
+              "odds": -450
+            },
+            {
+              "market": "w11-cotton-elijah",
+              "type": "ml",
+              "side": "cotton",
+              "stake": 20,
+              "odds": -165
+            },
+            {
+              "market": "w11-brett-jesse",
+              "type": "ats",
+              "side": "jesse",
+              "stake": 20,
+              "odds": -110,
+              "line": 12.5
+            },
+            {
+              "market": "w11-jerry-carter",
+              "type": "ats",
+              "side": "carter",
+              "stake": 20,
+              "odds": -110,
+              "line": 23.5
+            },
+            {
+              "market": "w11-isaiah-troy",
+              "type": "ats",
+              "side": "isaiah",
+              "stake": 20,
+              "odds": -110,
+              "line": 3.5,
+              "lock": true
+            }
+          ]
         }
       }
     },
@@ -2027,6 +2082,61 @@ window.CTE_SPORTSBOOK = {
               "stake": 50,
               "odds": -110,
               "line": -9.5
+            }
+          ]
+        },
+        "11": {
+          "postedAt": "2026-11-17",
+          "source": "2026-week11-tuesday-opening-board",
+          "releaseLabel": "Tuesday early picks — before Thursday",
+          "allowReserve": true,
+          "note": "Six fictional CTE$ picks (three ML, three ATS), 120 CTE$ reserve allocation while historical personality bankroll settlement is unresolved; quotes pinned to the Nov. 17 early board. Each side has one lock. Injury and lineup changes may alter outcomes, not locked quotes.",
+          "wagers": [
+            {
+              "market": "w11-jerry-carter",
+              "type": "ml",
+              "side": "jerry",
+              "stake": 20,
+              "odds": -385
+            },
+            {
+              "market": "w11-brett-jesse",
+              "type": "ml",
+              "side": "brett",
+              "stake": 20,
+              "odds": -205
+            },
+            {
+              "market": "w11-isaiah-troy",
+              "type": "ml",
+              "side": "troy",
+              "stake": 20,
+              "odds": -135
+            },
+            {
+              "market": "w11-brendan-mike",
+              "type": "ats",
+              "side": "mike",
+              "stake": 20,
+              "odds": -110,
+              "line": 18.5
+            },
+            {
+              "market": "w11-jacob-dan",
+              "type": "ats",
+              "side": "dan",
+              "stake": 20,
+              "odds": -110,
+              "line": 27.5
+            },
+            {
+              "market": "w11-cotton-elijah",
+              "type": "ats",
+              "side": "elijah",
+              "stake": 20,
+              "odds": -110,
+              "line": 8.5,
+              "lock": true
             }
           ]
         }
