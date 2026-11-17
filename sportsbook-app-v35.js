@@ -185,7 +185,7 @@ function renderBoard() {
     ${modeSwitch}${submissionsHTML()}
     ${state.ctxError ? `<p class="bk-note" style="margin-bottom:12px">Sleeper is unreachable, so records and scores are hidden. Lines and your card still work. <button type="button" class="bk-link-btn" data-retry>Retry</button></p>` : ''}
     <div class="bk-board">${markets.map(marketCard).join('')}</div>
-    <p class="bk-note" style="margin-top:14px">Opening numbers and Anita's takes first appeared in <a href="article.html?id=${esc(B.sources.open.articleId)}">${esc(B.sources.open.label)}</a>. Records and points come from Sleeper.</p>`;
+    <p class="bk-note" style="margin-top:14px">Opening numbers and Anita's takes: ${B.sources.open.articleId ? `<a href="article.html?id=${esc(B.sources.open.articleId)}">${esc(B.sources.open.label)}</a>` : esc(B.sources.open.label)}. Records and points come from Sleeper.</p>`;
 }
 function submissionsHTML() {
   if (!cloudOn() || !state.cloud.status) return '';
@@ -244,7 +244,7 @@ function takesHTML(m) {
   const t = m.takes || {};
   const source = m.freezeLegacyTickets && B.sources.current ? B.sources.current : B.sources.open;
   const carl = t.carl ? `<p>${esc(t.carl)}</p>` : `<p class="bk-muted">Carl hasn't filed a Week ${B.week} take yet.</p>`;
-  const holly = t.holly ? `<p>${esc(t.holly)}</p><cite>From <a href="article.html?id=${esc(source.articleId)}">${esc(source.label)}</a></cite>` : `<p class="bk-muted">Anita hasn't filed yet.</p>`;
+  const holly = t.holly ? `<p>${esc(t.holly)}</p><cite>From ${source.articleId ? `<a href="article.html?id=${esc(source.articleId)}">${esc(source.label)}</a>` : esc(source.label)}</cite>` : `<p class="bk-muted">Anita hasn't filed yet.</p>`;
   return `<div class="bk-takes"><div class="bk-take is-carl"><img src="concussion-carl.webp" alt="" loading="lazy"><div><strong>Carl's take</strong>${carl}</div></div>
     <div class="bk-take is-holly"><img src="anita-headcheck.webp" alt="" loading="lazy"><div><strong>Anita's take</strong>${holly}</div></div></div>`;
 }
